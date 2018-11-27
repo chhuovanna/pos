@@ -19,6 +19,167 @@ class InventoryController extends Controller
 {
     use ModelForm;
 
+    public $script_form_create = <<<SCRIPT
+
+$(document).off('keyup','#importunit'   );
+$(document).off('keyup','#importpack'   );
+$(document).off('keyup','#importbox'    );
+$(document).off('keyup','#buypriceunit' );
+$(document).off('keyup','#buypricepack' );
+$(document).off('keyup','#buypricebox'  );
+$(document).off('keyup','#unitinstock'  );
+$(document).off('keyup','#packinstock'  );
+$(document).off('keyup','#boxinstock'   );
+
+$(document).on('keyup','#importunit'    ,getTotal);
+$(document).on('keyup','#importpack'    ,getTotal);
+$(document).on('keyup','#importbox'     ,getTotal);
+$(document).on('keyup','#buypriceunit'  ,getTotal);
+$(document).on('keyup','#buypricepack'  ,getTotal);
+$(document).on('keyup','#buypricebox'   ,getTotal);
+$(document).on('keyup','#unitinstock'  ,alertUnmatched);
+$(document).on('keyup','#packinstock'  ,alertUnmatched);
+$(document).on('keyup','#boxinstock'   ,alertUnmatched);
+
+
+function getTotal(){
+    var total   = new Decimal(0);
+    var impup   ;
+    var imppp   ;
+    var impbp   ;
+
+
+    if ( !$('#importunit').val() || isNaN( $('#importunit').val() )){
+        $('#importunit').val(0);
+    }
+
+    if ( !$('#importpack').val() || isNaN( $('#importpack').val() )){
+        $('#importpack').val(0);
+    }
+
+    if ( !$('#importbox').val() || isNaN( $('#importbox').val() )){
+        $('#importbox').val(0);
+    }
+   
+    if ($('#buypriceunit').val()){
+        impup   = new Decimal($('#buypriceunit').val());
+    }else{
+        impup   = new Decimal(0);
+    }
+
+    if ($('#buypricepack').val()){
+        imppp   = new Decimal($('#buypricepack').val());
+    }else{
+        imppp   = new Decimal(0);
+    }
+
+    if ($('#buypricebox').val()){
+        impbp   = new Decimal($('#buypricebox').val());
+    }else{
+        impbp   = new Decimal(0);
+    }
+
+    total       = total.add(    impup.mul(  $('#importunit').val()  )   );
+    total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
+    total       = total.add(    impbp.mul(  $('#importbox').val()  )   );
+    $('#amount').val(total);
+    $('#unitinstock').val(  $('#importunit').val()  );
+    $('#packinstock').val(  $('#importpack').val()  );
+    $('#boxinstock').val(   $('#importbox').val()   );
+}
+
+function alertUnmatched(event){
+    var source = event.target || event.srcElement;
+    
+
+    switch ($(source).attr('id')){
+        case 'unitinstock':
+            if ( $(source).val() != $('#importunit').val() ){
+                alert("The imported unit instock and imported unit in this purcash are unmatched");
+            }
+            break;
+        case 'packinstock':
+            if ( $(source).val() != $('#importpack').val() ){
+                alert("The imported pack instock and imported pack in this purcash are unmatched");
+            }
+            break;
+        case 'boxinstock':
+            if ( $(source).val() != $('#importbox').val() ){
+                alert("The imported box instock and imported box in this purcash are unmatched");
+            }
+            break;
+    }
+    
+}
+
+SCRIPT;
+    protected $script_form_edit = <<<SCRIPT
+
+$(document).off('keyup','#importunit'   );
+$(document).off('keyup','#importpack'   );
+$(document).off('keyup','#importbox'    );
+$(document).off('keyup','#buypriceunit' );
+$(document).off('keyup','#buypricepack' );
+$(document).off('keyup','#buypricebox'  );
+
+
+$(document).on('keyup','#importunit'    ,getTotal);
+$(document).on('keyup','#importpack'    ,getTotal);
+$(document).on('keyup','#importbox'     ,getTotal);
+$(document).on('keyup','#buypriceunit'  ,getTotal);
+$(document).on('keyup','#buypricepack'  ,getTotal);
+$(document).on('keyup','#buypricebox'   ,getTotal);
+
+
+function getTotal(){
+    var total   = new Decimal(0);
+    var impup   ;
+    var imppp   ;
+    var impbp   ;
+
+
+    if ( !$('#importunit').val() || isNaN( $('#importunit').val() )){
+        $('#importunit').val(0);
+    }
+
+    if ( !$('#importpack').val() || isNaN( $('#importpack').val() )){
+        $('#importpack').val(0);
+    }
+
+    if ( !$('#importbox').val() || isNaN( $('#importbox').val() )){
+        $('#importbox').val(0);
+    }
+   
+    if ($('#buypriceunit').val()){
+        impup   = new Decimal($('#buypriceunit').val());
+    }else{
+        impup   = new Decimal(0);
+    }
+
+    if ($('#buypricepack').val()){
+        imppp   = new Decimal($('#buypricepack').val());
+    }else{
+        imppp   = new Decimal(0);
+    }
+
+    if ($('#buypricebox').val()){
+        impbp   = new Decimal($('#buypricebox').val());
+    }else{
+        impbp   = new Decimal(0);
+    }
+
+    total       = total.add(    impup.mul(  $('#importunit').val()  )   );
+    total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
+    total       = total.add(    impbp.mul(  $('#importbox').val()  )   );
+    $('#amount').val(total);
+    alert('Please change the imported storck accordingly');
+}
+
+
+
+SCRIPT;
+
+
     /**
      * Index interface.
      *
@@ -26,6 +187,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
+
         return Admin::content(function (Content $content) {
 
             $content->header('Inventory');
@@ -174,7 +336,8 @@ SCRIPT;
      */
     protected function formCreate()
     {
-        return Admin::form(Inventory::class, function (Form $form) {
+        $script_form_create = $this->script_form_create;
+        return Admin::form(Inventory::class, function (Form $form) use ($script_form_create){
 
             $form->display('invid', 'ID');
 
@@ -209,71 +372,7 @@ SCRIPT;
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
 
-            $script = <<<SCRIPT
-
-$(document).off('keyup','#importunit'   );
-$(document).off('keyup','#importpack'   );
-$(document).off('keyup','#importbox'    );
-$(document).off('keyup','#buypriceunit' );
-$(document).off('keyup','#buypricepack' );
-$(document).off('keyup','#buypricebox'  );
-
-$(document).on('keyup','#importunit'    ,getTotal);
-$(document).on('keyup','#importpack'    ,getTotal);
-$(document).on('keyup','#importbox'     ,getTotal);
-$(document).on('keyup','#buypriceunit'  ,getTotal);
-$(document).on('keyup','#buypricepack'  ,getTotal);
-$(document).on('keyup','#buypricebox'   ,getTotal);
-
-
-function getTotal(){
-    var total   = new Decimal(0);
-    var impup   ;
-    var imppp   ;
-    var impbp   ;
-
-
-    if ( !$('#importunit').val() || isNaN( $('#importunit').val() )){
-        $('#importunit').val(0);
-    }
-
-    if ( !$('#importpack').val() || isNaN( $('#importpack').val() )){
-        $('#importpack').val(0);
-    }
-
-    if ( !$('#importbox').val() || isNaN( $('#importbox').val() )){
-        $('#importbox').val(0);
-    }
-   
-    if ($('#buypriceunit').val()){
-        impup   = new Decimal($('#buypriceunit').val());
-    }else{
-        impup   = new Decimal(0);
-    }
-
-    if ($('#buypricepack').val()){
-        imppp   = new Decimal($('#buypricepack').val());
-    }else{
-        imppp   = new Decimal(0);
-    }
-
-    if ($('#buypricebox').val()){
-        impbp   = new Decimal($('#buypricebox').val());
-    }else{
-        impbp   = new Decimal(0);
-    }
-
-    total       = total.add(    impup.mul(  $('#importunit').val()  )   );
-    total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
-    total       = total.add(    impbp.mul(  $('#importbox').val()  )   );
-    $('#amount').val(total);
-    $('#unitinstock').val(  $('#importunit').val()  );
-    $('#packinstock').val(  $('#importpack').val()  );
-    $('#boxinstock').val(   $('#importbox').val()   );
-}
-
-SCRIPT;
-            Admin::script($script);
+            Admin::script($script_form_create);
 
 
             $form->saved(function (Form $form) {
@@ -286,8 +385,8 @@ SCRIPT;
     protected function formEdit()
     {
 
-        
-        return Admin::form(Inventory::class, function (Form $form) {
+        $script_form_edit = $this->script_form_edit;        
+        return Admin::form(Inventory::class, function (Form $form) use ($script_form_edit){
 
             $form->display('invid', 'ID');
 
@@ -322,69 +421,8 @@ SCRIPT;
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
 
-            $script = <<<SCRIPT
 
-$(document).off('keyup','#importunit'   );
-$(document).off('keyup','#importpack'   );
-$(document).off('keyup','#importbox'    );
-$(document).off('keyup','#buypriceunit' );
-$(document).off('keyup','#buypricepack' );
-$(document).off('keyup','#buypricebox'  );
-
-
-$(document).on('keyup','#importunit'    ,getTotal);
-$(document).on('keyup','#importpack'    ,getTotal);
-$(document).on('keyup','#importbox'     ,getTotal);
-$(document).on('keyup','#buypriceunit'  ,getTotal);
-$(document).on('keyup','#buypricepack'  ,getTotal);
-$(document).on('keyup','#buypricebox'   ,getTotal);
-
-
-function getTotal(){
-    var total   = new Decimal(0);
-    var impup   ;
-    var imppp   ;
-    var impbp   ;
-
-
-    if ( !$('#importunit').val() || isNaN( $('#importunit').val() )){
-        $('#importunit').val(0);
-    }
-
-    if ( !$('#importpack').val() || isNaN( $('#importpack').val() )){
-        $('#importpack').val(0);
-    }
-
-    if ( !$('#importbox').val() || isNaN( $('#importbox').val() )){
-        $('#importbox').val(0);
-    }
-   
-    if ($('#buypriceunit').val()){
-        impup   = new Decimal($('#buypriceunit').val());
-    }else{
-        impup   = new Decimal(0);
-    }
-
-    if ($('#buypricepack').val()){
-        imppp   = new Decimal($('#buypricepack').val());
-    }else{
-        imppp   = new Decimal(0);
-    }
-
-    if ($('#buypricebox').val()){
-        impbp   = new Decimal($('#buypricebox').val());
-    }else{
-        impbp   = new Decimal(0);
-    }
-
-    total       = total.add(    impup.mul(  $('#importunit').val()  )   );
-    total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
-    total       = total.add(    impbp.mul(  $('#importbox').val()  )   );
-    $('#amount').val(total);
-}
-
-SCRIPT;
-            Admin::script($script);
+            Admin::script($script_form_edit);
 
 
             $form->saved(function (Form $form) {
@@ -396,7 +434,8 @@ SCRIPT;
 
     protected function productInventoryForm($product)
     {
-        return Admin::form(Inventory::class, function (Form $form) use ($product) {
+        $script_form_create = $this->script_form_create;
+        return Admin::form(Inventory::class, function (Form $form) use ($product,$script_form_create) {
 
             $form->display('invid', 'ID');
 
@@ -406,7 +445,8 @@ SCRIPT;
 
             $form->select('pid', 'Product')->options([$sp->pid=>$sp->name])->value($product);
 
-            $importedprices = Inventory::where('pid', '=' , $product)->orderBy('invid','desc')->first();
+            //$importedprices = Inventory::where('pid', '=' , $product)->orderBy('invid','desc')->first();
+            $importedprices = Inventory::where('pid', '=' , $product)->orderBy('invid')->first();
 
             $importers = Importer::pluck('name','impid');
 
@@ -453,73 +493,7 @@ SCRIPT;
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
 
-            $script = <<<SCRIPT
-
-$(document).off('keyup','#importunit'   );
-$(document).off('keyup','#importpack'   );
-$(document).off('keyup','#importbox'    );
-$(document).off('keyup','#buypriceunit' );
-$(document).off('keyup','#buypricepack' );
-$(document).off('keyup','#buypricebox'  );
-
-
-$(document).on('keyup','#importunit'    ,getTotal);
-$(document).on('keyup','#importpack'    ,getTotal);
-$(document).on('keyup','#importbox'     ,getTotal);
-$(document).on('keyup','#buypriceunit'  ,getTotal);
-$(document).on('keyup','#buypricepack'  ,getTotal);
-$(document).on('keyup','#buypricebox'   ,getTotal);
-
-
-function getTotal(){
-    var total   = new Decimal(0);
-    var impup   ;
-    var imppp   ;
-    var impbp   ;
-   
-    if ( !$('#importunit').val() || isNaN( $('#importunit').val() )){
-        $('#importunit').val(0);
-    }
-
-    if ( !$('#importpack').val() || isNaN( $('#importpack').val() )){
-        $('#importpack').val(0);
-    }
-
-    if ( !$('#importbox').val() || isNaN( $('#importbox').val() )){
-        $('#importbox').val(0);
-    }
-
-
-
-    if ($('#buypriceunit').val()){
-        impup   = new Decimal($('#buypriceunit').val());
-    }else{
-        impup   = new Decimal(0);
-    }
-
-    if ($('#buypricepack').val()){
-        imppp   = new Decimal($('#buypricepack').val());
-    }else{
-        imppp   = new Decimal(0);
-    }
-
-    if ($('#buypricebox').val()){
-        impbp   = new Decimal($('#buypricebox').val());
-    }else{
-        impbp   = new Decimal(0);
-    }
-
-    total       = total.add(    impup.mul(  $('#importunit').val()  )   );
-    total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
-    total       = total.add(    impbp.mul(  $('#importbox').val()  )   );
-    $('#amount').val(total);
-    $('#unitinstock').val(  $('#importunit').val()  );
-    $('#packinstock').val(  $('#importpack').val()  );
-    $('#boxinstock').val(   $('#importbox').val()   );
-}
-
-SCRIPT;
-            Admin::script($script);
+            Admin::script($script_form_create);
 
 
             $form->saved(function (Form $form) {
