@@ -159,22 +159,10 @@ $(document).ready( function () {
 
 
     if ( $("[name = 'currentrate']").val() == 'on' ){
-        $("[name = 'currentrate']").attr("disabled", true);
-        //var test = $('.bootstrap-switch')[0];
-        var test = $("[type = 'checkbox']")[0];
-
-        $(test).bootstrapSwitch({disabled:true});
-        
-
-
-        //$(test).addClass('bootstrap-switch-disabled');
-
-
-       /* $(test).addClass('bootstrap-switch-disabled');
-        $(test).removeClass('bootstrap-switch-animate');*/
-        //alert($(test).val());
-        //$('.la_checkbox').bootstrapSwitch({ disabled:true });
-       
+        $("[name = 'currentrate']").attr("disabled", true);      
+        var bscheck = $('.la_checkbox')[0]; 
+        $(bscheck).prop('disabled',true);
+        $('.bootstrap-switch').addClass('bootstrap-switch-disabled');
     }
 
 });
