@@ -48,7 +48,7 @@ class ExchangerateController extends Controller
 
             $content->header('Exchange Rate');
             $content->description('Edit Exchange Rate');
-            $content->body($this->form()->edit($id));
+            $content->body($this->formEdit()->edit($id));
             
 
         });
@@ -130,6 +130,58 @@ class ExchangerateController extends Controller
                     }  
                 }
             });
+        });
+    }
+
+    protected function formEdit()
+    {
+        return Admin::form(Exchangerate::class, function (Form $form) {
+
+            $form->display('exrateid', 'ID');
+            $form->number('amount', 'Rate in Riel')->rules('required');
+            $form->switch('currentrate', 'Is Current Rate?');
+            $form->display('created_at', 'Created At');
+            $form->display('updated_at', 'Updated At');
+            
+
+            $form->saved(function (Form $form) {
+                if ($form->currentrate == 'on' ){
+
+                    if ($form->model()->exrateid){
+                        Exchangerate::setnotcurrentrate($form->model()->exrateid);
+                    }  
+                }
+            });
+
+            $script = <<<SCRIPT
+
+$(document).ready( function () {
+
+
+    if ( $("[name = 'currentrate']").val() == 'on' ){
+        $("[name = 'currentrate']").attr("disabled", true);
+        //var test = $('.bootstrap-switch')[0];
+        var test = $("[type = 'checkbox']")[0];
+
+        $(test).bootstrapSwitch({disabled:true});
+        
+
+
+        //$(test).addClass('bootstrap-switch-disabled');
+
+
+       /* $(test).addClass('bootstrap-switch-disabled');
+        $(test).removeClass('bootstrap-switch-animate');*/
+        //alert($(test).val());
+        //$('.la_checkbox').bootstrapSwitch({ disabled:true });
+       
+    }
+
+});
+
+SCRIPT;
+            Admin::script($script);
+
         });
     }
 
