@@ -19,7 +19,7 @@ class ProductController extends Controller
 {
     use ModelForm;
 
-    protected $script = <<<SCRIPT
+    protected $script_form = <<<SCRIPT
 $(document).off('keyup','#salepriceunit');
 $(document).off('keyup','#salepricepack');
 $(document).off('keyup','#salepricebox');
@@ -59,7 +59,7 @@ $(document).on('keyup','#importpricebox',function(){
     var amount = new Decimal( $('#importpricebox').val() );
     $('#ipbr').val(amount.mul( $('#exchangerate').val() ));
 });
-
+alert('lala');
 
 SCRIPT;
 
@@ -242,18 +242,33 @@ SCRIPT;
      */
     protected function form()
     {
-        return Admin::form(Product::class, function (Form $form) {
+        $script = $this->script_form;
+        return Admin::form(Product::class, function (Form $form) use ($script){
 
             $exchangerate = Exchangerate::where('currentrate',1)->first();
 
             $form->display('pid', 'Product ID');
             
             
-            $form->text('barcode','Barcode Number')->rules('unique:products,barcode')->attribute('pattern','[0-9]+');
+            //$form->text('barcode','Barcode Number')->rules('unique:products,barcode')->attribute('pattern','[0-9]+');
             //$form->text('barcode','Barcode Number')->rules('required|regex:[0-9]+|unique:products,barcode');
+
+            $form->text('barcode','Barcode Number')->rules(function ($form) {
+
+                // If it is not an edit state, add field unique verification
+                if (!$id = $form->model()->id) {
+                    return 'unique:products,barcode';
+                }
+
+            })->attribute('pattern','[0-9]+');
+
             
-            $form->text('name','Product Name')->rules('required|unique:products,name');
-            $form->text('shortcut','Shortcut Name');
+            $form->text('name','Product Name')->rules( function ($form) {
+                if (!$id = $form->model()->id) {
+                    return 'required|unique:products,name'
+                }
+            });
+            $form->text('shortcut','Shortcut Name')->rules('unique:products,shortcut');
             $form->textarea('description', 'Description');
 
             $attribute = array('pattern'=>'[0-9]+', "autocomplete"=>"off", "style"=>"width: 200px");            
@@ -289,7 +304,7 @@ SCRIPT;
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
-
+/*
             $script = <<<SCRIPT
 $(document).off('keyup','#salepriceunit');
 $(document).off('keyup','#salepricepack');
@@ -332,7 +347,7 @@ $(document).on('keyup','#importpricebox',function(){
 });
 
 
-SCRIPT;
+SCRIPT;*/
             Admin::script($script);
 
 
@@ -453,7 +468,7 @@ public function update($id)
         return $this->formEdit()->update($id);
     }
 
-
+/*
     protected function formwithimp()
     {
         return Admin::form(Product::class, function (Form $form) {
@@ -501,7 +516,7 @@ public function update($id)
             $form->select('catid', 'Product Category')->options($categories)->value(-1);
             $manufacturers = Manufacturer::pluck('name','mid');
             $form->select('mid', 'Product Manufacturer')->options($manufacturers)->value(-1);
-            /*$form->select('mid', 'Product Manufacturer')->options(Product::getSelectOption());*/
+            
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
@@ -557,7 +572,7 @@ SCRIPT;
 
         });
     }
-
+*/
 
 protected function saveformwithimp(Request $request){
     DB::transaction(function () use ($request){

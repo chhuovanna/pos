@@ -159,10 +159,8 @@ $(document).ready( function () {
 
 
     if ( $("[name = 'currentrate']").val() == 'on' ){
-        $("[name = 'currentrate']").attr("disabled", true);      
-        var bscheck = $('.la_checkbox')[0]; 
-        $(bscheck).prop('disabled',true);
-        $('.bootstrap-switch').addClass('bootstrap-switch-disabled');
+        $('.bootstrap-switch-wrapper').bootstrapSwitch('destroy');
+        $('.bootstrap-switch-wrapper').remove();
     }
 
 });
