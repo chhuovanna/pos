@@ -19,6 +19,32 @@ class ProductController extends Controller
 {
     use ModelForm;
 
+    protected $script_grid = <<<SCRIPT
+$(document).ready(function() {
+    $("[name='catid']").select2();
+    $("[name='mid']").select2();
+    $("[placeholder='Keyword(PID,barcode,name,shortcut,description)']").focus();
+
+    $('th:nth-child(6)').css("background-color", "#ffff99");
+    $('th:nth-child(7)').css("background-color", "#ffff99");
+    $('th:nth-child(8)').css("background-color", "#ffff99");
+    $('th:nth-child(9)').css("background-color", "#ccffcc");
+    $('th:nth-child(10)').css("background-color", "#ccffcc");
+    $('th:nth-child(11)').css("background-color", "#ccffcc");
+    $('th:nth-child(12)').css("background-color", "#66ffcc");
+    $('th:nth-child(13)').css("background-color", "#66ffcc");
+
+    $('td:nth-child(6)').css("background-color", "#ffff99");
+    $('td:nth-child(7)').css("background-color", "#ffff99");
+    $('td:nth-child(8)').css("background-color", "#ffff99");
+    $('td:nth-child(9)').css("background-color", "#ccffcc");
+    $('td:nth-child(10)').css("background-color", "#ccffcc");
+    $('td:nth-child(11)').css("background-color", "#ccffcc");
+    $('td:nth-child(12)').css("background-color", "#66ffcc");
+    $('td:nth-child(13)').css("background-color", "#66ffcc");
+});
+SCRIPT;
+
     protected $script_form = <<<SCRIPT
 $(document).off('keyup','#salepriceunit');
 $(document).off('keyup','#salepricepack');
@@ -59,9 +85,9 @@ $(document).on('keyup','#importpricebox',function(){
     var amount = new Decimal( $('#importpricebox').val() );
     $('#ipbr').val(amount.mul( $('#exchangerate').val() ));
 });
-alert('lala');
-
 SCRIPT;
+    
+    
 
 
     /**
@@ -113,20 +139,6 @@ SCRIPT;
     }
 
 
-    public function createwithimp()
-    {
-        return Admin::content(function (Content $content) {
-
-            $content->header('Product');
-            $content->description('Create New Product With Imported Price');
-
-            $content->body($this->formwithimp());
-        });
-    }
-
-
-
-
     /**
      * Make a grid builder.
      *
@@ -134,7 +146,8 @@ SCRIPT;
      */
     protected function grid()
     {
-        return Admin::grid(Product::class, function (Grid $grid) {
+        $script = $this->script_grid;
+        return Admin::grid(Product::class, function (Grid $grid) use ($script){
 
 
             $grid->filter(function ($filter) {
@@ -160,7 +173,7 @@ SCRIPT;
             $grid->model()->with('category');
             $grid->model()->with('manufacturer');
             $grid->model()->orderBy('pid','DESC');
-            //$grid->paginate(5);
+            $grid->paginate(5);
             $grid->disableBatchDeletion();
             $grid->disableRowSelector();
             
@@ -186,43 +199,9 @@ SCRIPT;
             $grid->isdrugs('Drug?')->display(function ($isdrugs) {
                 return $isdrugs ? 'YES' : 'NO';
             });       
-           
-           
-
+            
             $grid->category()->name('Category');
             $grid->manufacturer()->name('Manuf');
-
-            $script = <<<SCRIPT
-$(document).ready(function() {
-
-    $("[name='catid']").select2();
-    $("[name='mid']").select2();
-
-    $("[placeholder='Keyword(PID,barcode,name,shortcut,description)']").focus();
-
-    $('th:nth-child(6)').css("background-color", "#ffff99");
-    $('th:nth-child(7)').css("background-color", "#ffff99");
-    $('th:nth-child(8)').css("background-color", "#ffff99");
-    $('th:nth-child(9)').css("background-color", "#ccffcc");
-    $('th:nth-child(10)').css("background-color", "#ccffcc");
-    $('th:nth-child(11)').css("background-color", "#ccffcc");
-    $('th:nth-child(12)').css("background-color", "#66ffcc");
-    $('th:nth-child(13)').css("background-color", "#66ffcc");
-
-    $('td:nth-child(6)').css("background-color", "#ffff99");
-    $('td:nth-child(7)').css("background-color", "#ffff99");
-    $('td:nth-child(8)').css("background-color", "#ffff99");
-    $('td:nth-child(9)').css("background-color", "#ccffcc");
-    $('td:nth-child(10)').css("background-color", "#ccffcc");
-    $('td:nth-child(11)').css("background-color", "#ccffcc");
-    $('td:nth-child(12)').css("background-color", "#66ffcc");
-    $('td:nth-child(13)').css("background-color", "#66ffcc");
-});
-
-SCRIPT;
-            Admin::script($script);
-
-
 
             $grid->actions(function ($actions) {
 
@@ -231,7 +210,7 @@ SCRIPT;
 
             });
 
-
+            Admin::script($script);
         });
     }
    
@@ -250,25 +229,11 @@ SCRIPT;
             $form->display('pid', 'Product ID');
             
             
-            //$form->text('barcode','Barcode Number')->rules('unique:products,barcode')->attribute('pattern','[0-9]+');
-            //$form->text('barcode','Barcode Number')->rules('required|regex:[0-9]+|unique:products,barcode');
-
-            $form->text('barcode','Barcode Number')->rules(function ($form) {
-
-                // If it is not an edit state, add field unique verification
-                if (!$id = $form->model()->id) {
-                    return 'unique:products,barcode';
-                }
-
-            })->attribute('pattern','[0-9]+');
-
+            $form->text('barcode','Barcode Number')->rules('unique:products,barcode')->attribute('pattern','[0-9]+');
             
-            $form->text('name','Product Name')->rules( function ($form) {
-                if (!$id = $form->model()->id) {
-                    return 'required|unique:products,name'
-                }
-            });
-            $form->text('shortcut','Shortcut Name')->rules('unique:products,shortcut');
+            
+            $form->text('name','Product Name')->rules( 'required|unique:products,name');
+            $form->text('shortcut','Shortcut Name');
             $form->textarea('description', 'Description');
 
             $attribute = array('pattern'=>'[0-9]+', "autocomplete"=>"off", "style"=>"width: 200px");            
@@ -300,69 +265,20 @@ SCRIPT;
             $form->select('catid', 'Product Category')->options($categories)->value(-1);
             $manufacturers = Manufacturer::pluck('name','mid');
             $form->select('mid', 'Product Manufacturer')->options($manufacturers)->value(-1);
-            /*$form->select('mid', 'Product Manufacturer')->options(Product::getSelectOption());*/
 
-            $form->display('created_at', 'Created At');
+/*            $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
-/*
-            $script = <<<SCRIPT
-$(document).off('keyup','#salepriceunit');
-$(document).off('keyup','#salepricepack');
-$(document).off('keyup','#salepricebox');
-$(document).off('keyup','#importpriceunit');
-$(document).off('keyup','#importpricepack');
-$(document).off('keyup','#importpricebox');
-
-
-$(document).on('keyup','#salepriceunit',function(){
-    var amount = new Decimal( $('#salepriceunit').val() );
-    $('#spur').val(amount.mul( $('#exchangerate').val() ));
-});
-
-
-$(document).on('keyup','#salepricepack',function(){
-    var amount = new Decimal( $('#salepricepack').val() );
-    $('#sppr').val(amount.mul( $('#exchangerate').val() ));
-});
-
-
-$(document).on('keyup','#salepricebox',function(){
-    var amount = new Decimal( $('#salepricebox').val() );
-    $('#spbr').val(amount.mul( $('#exchangerate').val() ));
-});
-
-$(document).on('keyup','#importpriceunit',function(){
-    var amount = new Decimal( $('#importpriceunit').val() );
-    $('#ipur').val(amount.mul( $('#exchangerate').val() ));
-});
-
-$(document).on('keyup','#importpricepack',function(){
-    var amount = new Decimal( $('#importpricepack').val() );
-    $('#ippr').val(amount.mul( $('#exchangerate').val() ));
-});
-
-$(document).on('keyup','#importpricebox',function(){
-    var amount = new Decimal( $('#importpricebox').val() );
-    $('#ipbr').val(amount.mul( $('#exchangerate').val() ));
-});
-
-
-SCRIPT;*/
+*/
             Admin::script($script);
-
-
-
-
-
-
 
         });
     }
 
 
-protected function formEdit()
+    protected function formEdit()
     {
-        return Admin::form(Product::class, function (Form $form) {
+        $script = $this->script_form;
+        return Admin::form(Product::class, function (Form $form) use ($script){
 
             $exchangerate = Exchangerate::where('currentrate',1)->first();
 
@@ -378,7 +294,17 @@ protected function formEdit()
             $attribute = array('pattern'=>'[0-9]+', "autocomplete"=>"off", "style"=>"width: 200px");
             $style = ["style"=>"width:115px"];
             
-            $form->text('exchangerate','Exchange Rate')->readOnly()->attribute($style)->value($exchangerate->amount);
+            $html_exchangerate = <<<SCRIPT
+<label for="exchangerate" class="col-sm-4 control-label">Exchange rate</label>
+<div class="col-sm-8">
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+        <input disabled="1" style="width:115px" type="text" id="exchangerate" name="exchangerate" value="{$exchangerate->amount}" class="form-control spur"  />        
+    </div>        
+</div>
+
+SCRIPT;
+            $form->html($html_exchangerate);
             $form->currency('salepriceunit','Sale Pice Per Unit')->rules('required');
             $form->text('spur','In Riel')->readOnly()->attribute($style);
             $form->currency('salepricepack','Sale Pice Per Pack')->rules('required');
@@ -403,61 +329,10 @@ protected function formEdit()
             $form->select('catid', 'Product Category')->options($categories)->value(-1);
             $manufacturers = Manufacturer::pluck('name','mid');
             $form->select('mid', 'Product Manufacturer')->options($manufacturers)->value(-1);
-            /*$form->select('mid', 'Product Manufacturer')->options(Product::getSelectOption());*/
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
-
-            $script = <<<SCRIPT
-$(document).off('keyup','#salepriceunit');
-$(document).off('keyup','#salepricepack');
-$(document).off('keyup','#salepricebox');
-$(document).off('keyup','#importpriceunit');
-$(document).off('keyup','#importpricepack');
-$(document).off('keyup','#importpricebox');
-
-
-$(document).on('keyup','#salepriceunit',function(){
-    var amount = new Decimal( $('#salepriceunit').val() );
-    $('#spur').val(amount.mul( $('#exchangerate').val() ));
-});
-
-
-$(document).on('keyup','#salepricepack',function(){
-    var amount = new Decimal( $('#salepricepack').val() );
-    $('#sppr').val(amount.mul( $('#exchangerate').val() ));
-});
-
-
-$(document).on('keyup','#salepricebox',function(){
-    var amount = new Decimal( $('#salepricebox').val() );
-    $('#spbr').val(amount.mul( $('#exchangerate').val() ));
-});
-
-$(document).on('keyup','#importpriceunit',function(){
-    var amount = new Decimal( $('#importpriceunit').val() );
-    $('#ipur').val(amount.mul( $('#exchangerate').val() ));
-});
-
-$(document).on('keyup','#importpricepack',function(){
-    var amount = new Decimal( $('#importpricepack').val() );
-    $('#ippr').val(amount.mul( $('#exchangerate').val() ));
-});
-
-$(document).on('keyup','#importpricebox',function(){
-    var amount = new Decimal( $('#importpricebox').val() );
-    $('#ipbr').val(amount.mul( $('#exchangerate').val() ));
-});
-
-SCRIPT;
             Admin::script($script);
-
-
-
-
-
-
-
         });
     }
 
@@ -469,6 +344,16 @@ public function update($id)
     }
 
 /*
+        public function createwithimp()
+    {
+        return Admin::content(function (Content $content) {
+
+            $content->header('Product');
+            $content->description('Create New Product With Imported Price');
+
+            $content->body($this->formwithimp());
+        });
+    }
     protected function formwithimp()
     {
         return Admin::form(Product::class, function (Form $form) {
@@ -572,7 +457,7 @@ SCRIPT;
 
         });
     }
-*/
+
 
 protected function saveformwithimp(Request $request){
     DB::transaction(function () use ($request){
@@ -581,7 +466,7 @@ protected function saveformwithimp(Request $request){
             return $this->formwithimp()->save();
     });
 }
-
+*/
 
 
 }

@@ -13,13 +13,14 @@ Route::group([
     $router->get('/', 'HomeController@index');
     
     
-    $router->get("product/createwithimp", "ProductController@createwithimp");
+    //$router->get('product/createwithimp/save','ProductController@saveformwithimp');
+    //$router->get("product/createwithimp", "ProductController@createwithimp");
     //$router->get('product/createwithimp', 'ProductController@createwithimp');
     
 
     $router->resource('product', ProductController::class);
     
-    $router->get('product/createwithimp/save','ProductController@saveformwithimp');
+    
 
     $router->resource('category', CategoryController::class);
     $router->resource('manufacturer', ManufacturerController::class);

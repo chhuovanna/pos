@@ -113,6 +113,7 @@ function alertUnmatched(event){
 }
 
 SCRIPT;
+    
     protected $script_form_edit = <<<SCRIPT
 
 $(document).off('keyup','#importunit'   );
@@ -245,11 +246,7 @@ SCRIPT;
      */
     protected function grid()
     {
-        return Admin::grid(Inventory::class, function (Grid $grid) {
-
-
-           
-     
+        return Admin::grid(Inventory::class, function (Grid $grid) {    
 
             if (!Admin::user()->isRole('Administrator')){
                 $grid->disableActions();
@@ -259,7 +256,6 @@ SCRIPT;
             $grid->disableRowSelector();
 
             
-
             $grid->filter(function ($filter) {
 
                 $products = Product::getSelectOption();
@@ -271,8 +267,6 @@ SCRIPT;
                 $filter->between('importdate', 'Period')->datetime();
 
             });
-
-
 
 
             $grid->model()->with('product');
@@ -469,9 +463,9 @@ SCRIPT;
                 $form->currency('buypricepack','Imported Pack Price')->value($importedprices->buypricepack)->rules('required');
                 $form->currency('buypricebox','Imported Box Price')->value($importedprices->buypricebox)->rules('required');
             }else{
-                $form->currency('buypriceunit','Imported Unit Price')->rules('required');
-                $form->currency('buypricepack','Imported Pack Price')->rules('required');
-                $form->currency('buypricebox','Imported Box Price')->rules('required');
+                $form->currency('buypriceunit','Imported Unit Price')->rules('required')->value($sp->importpriceunit);
+                $form->currency('buypricepack','Imported Pack Price')->rules('required')->value($sp->importpircepack);
+                $form->currency('buypricebox','Imported Box Price')->rules('required')->value($sp->importpricebox);
             }
 
 
