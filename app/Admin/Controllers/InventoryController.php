@@ -349,7 +349,8 @@ SCRIPT;
             $form->currency('buypriceunit','Imported Unit Price')->rules('required');
             $form->currency('buypricepack','Imported Pack Price')->rules('required');
             $form->currency('buypricebox','Imported Box Price')->rules('required');
-            $form->currency('amount', 'Total')->rules('required');
+            $form->currency('amount', 'Total');
+            //$form->currency('amount', 'Total')->rules('required');
 
             $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
             $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);
@@ -398,7 +399,8 @@ SCRIPT;
             $form->currency('buypriceunit','Imported Unit Price')->rules('required');
             $form->currency('buypricepack','Imported Pack Price')->rules('required');
             $form->currency('buypricebox','Imported Box Price')->rules('required');
-            $form->currency('amount', 'Total')->rules('required')->value(0);
+            $form->currency('amount', 'Total')->value(0);
+            //$form->currency('amount', 'Total')->rules('required')->value(0);
 
             $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
             $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);
@@ -447,7 +449,7 @@ SCRIPT;
             if ($importedprices){
                 $form->select('impid', 'Importer')->options($importers)->rules('required')->value($importedprices->impid);
             }else{
-                $form->select('impid', 'Importer')->options($importers)->rules('required');
+                $form->select('impid', 'Importer')->options($importers)->rules('required')->value(-1);
             }
 
 
@@ -464,13 +466,14 @@ SCRIPT;
                 $form->currency('buypricebox','Imported Box Price')->value($importedprices->buypricebox)->rules('required');
             }else{
                 $form->currency('buypriceunit','Imported Unit Price')->rules('required')->value($sp->importpriceunit);
-                $form->currency('buypricepack','Imported Pack Price')->rules('required')->value($sp->importpircepack);
+                $form->currency('buypricepack','Imported Pack Price')->rules('required')->value($sp->importpricepack);
                 $form->currency('buypricebox','Imported Box Price')->rules('required')->value($sp->importpricebox);
             }
 
 
 
-            $form->currency('amount', 'Total')->rules('required')->value(0);
+            $form->currency('amount', 'Total')->value(0);
+            //$form->currency('amount', 'Total')->rules('required')->value(0);
 
             $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
             $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);

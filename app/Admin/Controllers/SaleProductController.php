@@ -49,11 +49,11 @@ class SaleProductController extends Controller
 
             $content->header('Order Line');
             $content->description('Edit');
-            if (Admin::user()->isRole('Administrator')){
-                $content->body($this->form()->edit($id));
-            }else{
-                $content->body("No Permission");
-            }
+            // if (Admin::user()->isRole('Administrator')){
+            //     $content->body($this->form()->edit($id));
+            // }else{
+            //     $content->body("No Permission");
+            // }
         });
     }
 
@@ -68,11 +68,11 @@ class SaleProductController extends Controller
 
             $content->header('Order Line');
             $content->description('Create New Orfer Line');
-            if (Admin::user()->isRole('Administrator')){
+/*            if (Admin::user()->isRole('Administrator')){
                 $content->body($this->form());
             }else{
                 $content->body("No Permission");
-            }
+            }*/
         });
     }
 

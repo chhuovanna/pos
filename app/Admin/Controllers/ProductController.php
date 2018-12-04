@@ -25,23 +25,36 @@ $(document).ready(function() {
     $("[name='mid']").select2();
     $("[placeholder='Keyword(PID,barcode,name,shortcut,description)']").focus();
 
+    $('th:nth-child(4)').css("background-color", "#ffff99");
+    $('th:nth-child(5)').css("background-color", "#ffff99");
     $('th:nth-child(6)').css("background-color", "#ffff99");
-    $('th:nth-child(7)').css("background-color", "#ffff99");
-    $('th:nth-child(8)').css("background-color", "#ffff99");
-    $('th:nth-child(9)').css("background-color", "#ccffcc");
+    $('td:nth-child(4)').css("background-color", "#ffff99");
+    $('td:nth-child(5)').css("background-color", "#ffff99");
+    $('td:nth-child(6)').css("background-color", "#ffff99");
+    
+
+    $('th:nth-child(7)').css("background-color", "#eefc85");
+    $('th:nth-child(8)').css("background-color", "#eefc85");
+    $('th:nth-child(9)').css("background-color", "#eefc85");
+    $('td:nth-child(7)').css("background-color", "#eefc85");
+    $('td:nth-child(8)').css("background-color", "#eefc85");
+    $('td:nth-child(9)').css("background-color", "#eefc85");
+
     $('th:nth-child(10)').css("background-color", "#ccffcc");
     $('th:nth-child(11)').css("background-color", "#ccffcc");
-    $('th:nth-child(12)').css("background-color", "#66ffcc");
-    $('th:nth-child(13)').css("background-color", "#66ffcc");
-
-    $('td:nth-child(6)').css("background-color", "#ffff99");
-    $('td:nth-child(7)').css("background-color", "#ffff99");
-    $('td:nth-child(8)').css("background-color", "#ffff99");
-    $('td:nth-child(9)').css("background-color", "#ccffcc");
+    $('th:nth-child(12)').css("background-color", "#ccffcc");
     $('td:nth-child(10)').css("background-color", "#ccffcc");
     $('td:nth-child(11)').css("background-color", "#ccffcc");
-    $('td:nth-child(12)').css("background-color", "#66ffcc");
+    $('td:nth-child(12)').css("background-color", "#ccffcc");
+
+
+    $('th:nth-child(13)').css("background-color", "#66ffcc");
+    $('th:nth-child(14)').css("background-color", "#66ffcc");
     $('td:nth-child(13)').css("background-color", "#66ffcc");
+    $('td:nth-child(14)').css("background-color", "#66ffcc");
+
+    
+    
 });
 SCRIPT;
 
@@ -181,13 +194,17 @@ SCRIPT;
             $grid->pid('ID');
             $grid->barcode('Barcode')->sortable();
             $grid->name('Name')->sortable();           
-            $grid->shortcut('Shortcut');
             
+            /*$grid->shortcut('Shortcut');
             $grid->description('Desc')->limit(20)->ucfirst();
-            
+            */
             $grid->salepriceunit('UP')->sortable();
             $grid->salepricepack('PP')->sortable();
             $grid->salepricebox('BP')->sortable();
+
+            $grid->importpriceunit('IUP')->sortable();
+            $grid->importpricepack('IPP')->sortable();
+            $grid->importpricebox('IBP')->sortable();
             //$grid->photopath('Photo');
             
             $grid->unitinstock('SU')->sortable();
@@ -293,12 +310,11 @@ SCRIPT;
 
             $attribute = array('pattern'=>'[0-9]+', "autocomplete"=>"off", "style"=>"width: 200px");
             $style = ["style"=>"width:115px"];
-            
+ 
             $html_exchangerate = <<<SCRIPT
-<label for="exchangerate" class="col-sm-4 control-label">Exchange rate</label>
+<label for="exchangerate" class="col-sm-4 control-label">Exchange rate :</label>
 <div class="col-sm-8">
     <div class="input-group">
-        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
         <input disabled="1" style="width:115px" type="text" id="exchangerate" name="exchangerate" value="{$exchangerate->amount}" class="form-control spur"  />        
     </div>        
 </div>
