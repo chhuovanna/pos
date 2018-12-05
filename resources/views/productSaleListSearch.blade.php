@@ -110,7 +110,7 @@
 
 @endsection
 
-@section('stockouttypes')
+@section('stockouttype')
     @foreach($stockouttypes as $stockouttype)
         <option value="{{  $stockouttype->sotid }}">{{ $stockouttype->type }}</option>
         @endforeach
@@ -289,7 +289,7 @@
             
             row = row + "<td>"
                     +"<input type='hidden' id='" +pid+   "su' name='"   +pid+   "su' value='"    +$(this).data('su')+   "'>"
-                    +"<input id='" +pid+   "qu' name='"    +pid+   "qu' class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' >"
+                    +"<input id='" +pid+   "qu' name='"    +pid+   "qu' class='quantity' value='0' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' >"
                     +"</td>"
                     +"<td>"
                     +"<input id='" +pid+   "up' name='"    +pid+   "up' class='price' value='"    +$(this).data('up')+   "' style='width: 60px'>"
@@ -297,7 +297,7 @@
             row = row + "<td>"
                     +"<input type='hidden' id='" +pid+   "sp' name='"   +pid+   "sp' value='"    +$(this).data('sp')+   "'>"
                     +"<input type='hidden' id='" +pid+   "upp' value='"    +$(this).data('upp')+   "'>"
-                    +"<input id='" +pid+   "qp' name='"    +pid+   "qp'    class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' >"
+                    +"<input id='" +pid+   "qp' name='"    +pid+   "qp'    class='quantity' value='0' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' >"
                     +"</td>"
                     +"<td>"
                     +"<input id='" +pid+   "pp' name='"    +pid+   "pp' class='price' value='"   +$(this).data('pp')+   "' style='width: 60px'>"
@@ -305,7 +305,7 @@
             row = row + "<td>"
                     +"<input type='hidden' id='" +pid+   "sb' name='"   +pid+   "sb' value='"    +$(this).data('sb')+   "'>"
                     +"<input type='hidden' id='" +pid+   "upb' value='"    +$(this).data('upb')+   "'>"
-                    +"<input id='" +pid+   "qb' name='"    +pid+   "qb'  class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' >"
+                    +"<input id='" +pid+   "qb' name='"    +pid+   "qb'  class='quantity' value='0' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' >"
                     +"</td>"
                     +"<td>"                
                     +"<input id='" +pid+   "bp' name='"    +pid+   "bp' class='price' value='"   +$(this).data('bp')+   "' style='width: 60px'>"

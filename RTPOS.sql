@@ -109,7 +109,7 @@ alter table manufacturers add tel1 varchar(50), add tel2 varchar(50);
 alter table saleassistants add tel1 varchar(50), add tel2 varchar(50);
 
 create table stockoutType(sotid int primary key, type varchar(20));
-insert into stockoutType values(1,"Sale"),(6,"Expired"), (2,"Lost") , (3,"Used") ,(4,"Gift"), (5, "Return");
+insert into stockoutType values(1,"Sale"),(2,"Sale with loan"),(6,"Expired"), (7,"Lost") , (3,"Used") ,(4,"Gift"), (5, "Return");
 
 INSERT INTO customers(cusid,name) values(1,"General");
 

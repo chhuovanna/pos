@@ -251,7 +251,8 @@
     
     
 
-    $(document).on('keyup','.quantity',getSubTotal);
+    $(document).on('keyup','.quantity', getSubTotal);
+    $(document).on('keyup','.price', getSubTotal);
 
 
     $(document).off('keyup','#discount');
@@ -301,22 +302,36 @@
     })
 
     function getSubTotal(event){
-        
         var inputid = event.target.id;
-        var pid = inputid.substring(0,inputid.indexOf('q'));
+        var pid = inputid.substring(0, inputid.length - 2);
         var totald= new Decimal(0);
         var totalr= new Decimal(0);
         var exchangerate = $('#exchangerate').val();
         var discount = $('#discount').val();
         var discountamount = new Decimal(0);
         var subtotal= new Decimal(0);
+
+
+        if (!$('#'+pid+'up').val() || isNaN($('#'+pid+'up').val()) ){
+            $('#'+pid+'up').val(0);
+        }
+
+        if (!$('#'+pid+'pp').val() || isNaN($('#'+pid+'pp').val()) ){
+            $('#'+pid+'pp').val(0);
+        }
+
+        if (!$('#'+pid+'bp').val() || isNaN($('#'+pid+'bp').val()) ){
+            $('#'+pid+'bp').val(0);
+        }
+
         
         var up = new Decimal($('#'+pid+'up').val());
         var pp = new Decimal($('#'+pid+'pp').val());
         var bp = new Decimal($('#'+pid+'bp').val());
         var amount = new Decimal(0);
+        var temp = new Decimal(0);
         
-
+        
         if (!$('#'+pid+'qu').val() || isNaN($('#'+pid+'qu').val()) ){
             $('#'+pid+'qu').val(0);
         }
@@ -336,13 +351,12 @@
         subtotal = subtotal.add(pp.mul($('#'+pid+'qp').val()));
         subtotal = subtotal.add(bp.mul($('#'+pid+'qb').val()));
         
-
         //$('#testerror').text('subtotal = ' +subtotal);
 
         $('#'+ pid + 'stt').val(subtotal);
 
         $( '.stt' ).each(function( ) {
-            totald = totald.add( $('#' + inputid + '').val());
+            totald = totald.add($(this).val());
         });
 
         $('.totald').val(totald);
