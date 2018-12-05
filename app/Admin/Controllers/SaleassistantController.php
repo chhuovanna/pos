@@ -97,12 +97,14 @@ class SaleassistantController extends Controller
             $grid->name('Name')->sortable();
             $grid->address('Address');
             $grid->tel('Phone');
+            $grid->tel1('Phone');
+            $grid->tel2('Phone');
             $grid->email('Email');
             $grid->importer()->name('Importer');
 
-            $grid->created_at();
+            /*$grid->created_at();
             $grid->updated_at();
-
+*/
             $script = <<<SCRIPT
 $("[name='impid']").select2();
 SCRIPT;
@@ -124,6 +126,8 @@ SCRIPT;
             $form->text('name', 'Saleassistant Name')->rules('required');
             $form->textarea('address', 'Address');
             $form->text('tel', 'Phone Number');
+            $form->text('tel1', 'Phone Number');
+            $form->text('tel2', 'Phone Number');
             $form->email('email','Email')->rules('nullable');
 
 

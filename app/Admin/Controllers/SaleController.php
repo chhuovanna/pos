@@ -10,6 +10,7 @@ use App\Customer;
 use App\Sale;
 use App\SaleProduct;
 use App\Inventory;
+use App\StockoutType;
 
 use Encore\Admin\Form;
 
@@ -255,12 +256,14 @@ SCRIPT;
     {
         $exchangerate = Exchangerate::where('currentrate',1)->first();
         $products = Product::listWithCatMan();
-        $customers = Customer::all();
+        $customers = Customer::orderBy('cusid')->get();
+        $stockouttypes = StockoutType::orderBy('sotid')->get();
 
         return view('productSaleListSearch',[
             'exchangerate' => $exchangerate->amount,
             'products'     => $products,
-            'customers'    => $customers
+            'customers'    => $customers,
+            'stockouttypes'=> $stockouttypes
         ] );
         /*$productOption = Product::getSelectOption();
         return view('productSale',[

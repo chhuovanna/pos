@@ -16,8 +16,8 @@ class Customer extends Model
     
 
     public static function getSelectOption(){
-        $rows = Customer::all();
-        $result = [null => 'Select Customer'];
+        $rows = Customer::orderBy('cusid')->get();
+        //$result = [null => 'Select Customer'];
         foreach ($rows as $row) {
             $id       = $row->cusid;
             $name     = $row->name;

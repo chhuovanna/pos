@@ -102,12 +102,21 @@
 @endsection
 
 
+
 @section('customers')
     @foreach($customers as $customer)
         <option value="{{  $customer->cusid }}">{{ $customer->name }}</option>
         @endforeach
 
 @endsection
+
+@section('stockouttypes')
+    @foreach($stockouttypes as $stockouttype)
+        <option value="{{  $stockouttype->sotid }}">{{ $stockouttype->type }}</option>
+        @endforeach
+
+@endsection
+
 
 @section('exchangerate')
     <input style="width: 70px" type="number" min="0" id="exchangerate" name="exchangerate" value="{{$exchangerate}}" class="form-control amount" readonly="readonly" />
@@ -251,7 +260,7 @@
     
     $(document).off('click','.grid-row-add-sale');    
     $(document).on('click','.grid-row-add-sale',function() {
-        var prodatt = ["pid","barcode","name"];
+        var prodatt = ["pid","name"];
         var i ;
         var pid = $(this).data('pid');
         var row = "<tr id='tr"+pid+"' name='tr"+pid+"' >";
@@ -262,32 +271,44 @@
             products = $('#products').val() + "," + pid ;
             $('#products').val(products);
 
-
-
-            for (i = 0 ;i< 3 ; i++){
+/*            row = row + "<td><input id='" + pid + "name' name='" 
+                                          + pid + "name' type='text' value='" 
+                                          + $(this).data('name')
+                                          +   "' style='width: 200px' readonly= 'readonly'></td>";
+*/
+            for (i = 0 ;i< 2 ; i++){
                 row = row + "<td><input id='"   +   pid+    prodatt[i]
                                 +   "' name='"  +   pid+    prodatt[i]  
-                    +   "' type='text' value='" +   $(this).data(prodatt[i])
-                    +   "' style='width: 150px' readonly= 'readonly'></td>";
+                    +   "' type='text' value='" +   $(this).data(prodatt[i]);
+                if (i==0){
+                    row = row + "' style='width: 60px";
+                }
+                row = row + "' readonly= 'readonly'></td>";
 
             }
             
             row = row + "<td>"
-                    +"<input type='hidden' id='" +pid+   "up' name='" +pid+   "up' value='"    +$(this).data('up')+   "'>"
                     +"<input type='hidden' id='" +pid+   "su' name='"   +pid+   "su' value='"    +$(this).data('su')+   "'>"
-                    +"<input id='" +pid+   "qu' name='"    +pid+   "qu'     class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' >"
+                    +"<input id='" +pid+   "qu' name='"    +pid+   "qu' class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' >"
+                    +"</td>"
+                    +"<td>"
+                    +"<input id='" +pid+   "up' name='"    +pid+   "up' class='price' value='"    +$(this).data('up')+   "' style='width: 60px'>"
                     +"</td>";
             row = row + "<td>"
-                    +"<input type='hidden' id='" +pid+   "pp' name='" +pid+   "pp' value='"   +$(this).data('pp')+   "'>"
                     +"<input type='hidden' id='" +pid+   "sp' name='"   +pid+   "sp' value='"    +$(this).data('sp')+   "'>"
                     +"<input type='hidden' id='" +pid+   "upp' value='"    +$(this).data('upp')+   "'>"
                     +"<input id='" +pid+   "qp' name='"    +pid+   "qp'    class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' >"
+                    +"</td>"
+                    +"<td>"
+                    +"<input id='" +pid+   "pp' name='"    +pid+   "pp' class='price' value='"   +$(this).data('pp')+   "' style='width: 60px'>"
                     +"</td>";
             row = row + "<td>"
-                    +"<input type='hidden' id='" +pid+   "bp' name='" +pid+   "bp' value='"   +$(this).data('bp')+   "'>"
                     +"<input type='hidden' id='" +pid+   "sb' name='"   +pid+   "sb' value='"    +$(this).data('sb')+   "'>"
                     +"<input type='hidden' id='" +pid+   "upb' value='"    +$(this).data('upb')+   "'>"
                     +"<input id='" +pid+   "qb' name='"    +pid+   "qb'  class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' >"
+                    +"</td>"
+                    +"<td>"                
+                    +"<input id='" +pid+   "bp' name='"    +pid+   "bp' class='price' value='"   +$(this).data('bp')+   "' style='width: 60px'>"
                     +"</td>";
             row = row + "<td>"
                     +"<input id = '" +pid+   "stt' name='"   +pid+   "stt' type='number'   class='stt'     value='0'  style='width: 100px' readonly= 'readonly'>"

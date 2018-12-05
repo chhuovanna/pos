@@ -77,11 +77,14 @@
                 <thead>
                     <tr>
                         <th>PID</th> 
-                        <th>Barcode</th>
+                        <!-- <th>Barcode</th> -->
                         <th>Name</th>
                         <th>U.Q</th>
+                        <th>UP</th>
                         <th>P.Q</th>
+                        <th>PP</th>
                         <th>B.Q</th>
+                        <th>BP</th>
                         <th>Sub Total</th>
                         <th>Remove</th>
                     </tr>
@@ -105,8 +108,22 @@
                     <div class="col-sm-1">
                         <div class="input-group">
                             <select class="form-control customer" name="customer" id="customer" style="width:150px">
-                                    <option value="0">Select Customer</option>
+                                    <!-- <option value="0">Select Customer</option> -->
                                     @section('customers')
+                                        @show
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group 1">
+                    <label for="stockouttype" class="col-sm-2 control-label">Stock out type</label>
+                    <div class="col-sm-1">
+                        <div class="input-group">
+                            <select class="form-control stockouttype" name="stockouttype" id="stockouttype" style="width:150px">
+                                    <!-- <option value="0">Select Customer</option> -->
+                                    @section('stockouttype')
                                         @show
                             </select>
                         </div>
@@ -143,9 +160,9 @@
                             <span class="input-group-addon">%</span>
                             <input style="width: 70px" type='number' step="0.01" min='0' id="discount" name="discount" value="0" class="form-control discount"  />
                             <span class="input-group-addon">$</span>
-                            <input style="width: 140px" type="number" min="0" id="discountd" name="discountd" value="0" class="form-control discountd" placeholder="Discount in USD" readonly="readonly" />
+                            <input style="width: 140px" type="number" min="0" id="discountd" name="discountd" value="0" class="form-control discountd" placeholder="Discount in USD"  />
                             <span class="input-group-addon">៛</span>
-                            <input style="width: 140px" type="number" min="0" id="discountr" name="discountr" value="0" class="form-control discountr" placeholder="Discount in Riel" readonly="readonly" />
+                            <input style="width: 140px" type="number" min="0" id="discountr" name="discountr" value="0" class="form-control discountr" placeholder="Discount in Riel" />
                          </div>
                     </div>
                 </div>
@@ -230,64 +247,11 @@
     var temp = false ;
     
     $(document).off('keyup','.quantity');
-    $(document).on('keyup','.quantity', function(){
-        
-        var inputid = $(this).attr('id');
-        var pid = inputid.substring(0,inputid.indexOf('q'));
-        var totald= new Decimal(0);
-        var totalr= new Decimal(0);
-        var exchangerate = $('#exchangerate').val();
-        var discount = $('#discount').val();
-        var discountamount = new Decimal(0);
-        var subtotal= new Decimal(0);
-        
-        var up = new Decimal($('#'+pid+'up').val());
-        var pp = new Decimal($('#'+pid+'pp').val());
-        var bp = new Decimal($('#'+pid+'bp').val());
-        var amount = new Decimal(0);
-        
+    $(document).off('keyup','.price');
+    
+    
 
-        if (!$('#'+pid+'qu').val() || isNaN($('#'+pid+'qu').val()) ){
-            $('#'+pid+'qu').val(0);
-        }
-
-        if (!$('#'+pid+'qp').val() || isNaN($('#'+pid+'qp').val()) ){
-            $('#'+pid+'qp').val(0);
-        }
-
-        if (!$('#'+pid+'qb').val() || isNaN($('#'+pid+'qb').val()) ){
-            $('#'+pid+'qb').val(0);
-        }
-            
-
-
-
-        subtotal = subtotal.add(up.mul($('#'+pid+'qu').val()));
-        subtotal = subtotal.add(pp.mul($('#'+pid+'qp').val()));
-        subtotal = subtotal.add(bp.mul($('#'+pid+'qb').val()));
-        
-
-        //$('#testerror').text('subtotal = ' +subtotal);
-
-        $('#'+ pid + 'stt').val(subtotal);
-
-        $( '.stt' ).each(function( ) {
-            totald = totald.add( $(this).val());
-        });
-
-        $('.totald').val(totald);
-        totalr = totald.mul(exchangerate);
-        $('.totalr').val(Math.round(totalr));  
-        
-        discountamount = totald.mul(discount).div(100);
-        $('.discountd').val(discountamount);
-        $('.discountr').val(Math.round(discountamount*exchangerate));
-
-        $('.ftotald').val(totald.sub(discountamount));
-        $('.ftotalr').val(Math.round(totald.sub(discountamount).mul(exchangerate)));
-        getChange();
-
-    });
+    $(document).on('keyup','.quantity',getSubTotal);
 
 
     $(document).off('keyup','#discount');
@@ -335,6 +299,65 @@
 
         }
     })
+
+    function getSubTotal(event){
+        
+        var inputid = event.target.id;
+        var pid = inputid.substring(0,inputid.indexOf('q'));
+        var totald= new Decimal(0);
+        var totalr= new Decimal(0);
+        var exchangerate = $('#exchangerate').val();
+        var discount = $('#discount').val();
+        var discountamount = new Decimal(0);
+        var subtotal= new Decimal(0);
+        
+        var up = new Decimal($('#'+pid+'up').val());
+        var pp = new Decimal($('#'+pid+'pp').val());
+        var bp = new Decimal($('#'+pid+'bp').val());
+        var amount = new Decimal(0);
+        
+
+        if (!$('#'+pid+'qu').val() || isNaN($('#'+pid+'qu').val()) ){
+            $('#'+pid+'qu').val(0);
+        }
+
+        if (!$('#'+pid+'qp').val() || isNaN($('#'+pid+'qp').val()) ){
+            $('#'+pid+'qp').val(0);
+        }
+
+        if (!$('#'+pid+'qb').val() || isNaN($('#'+pid+'qb').val()) ){
+            $('#'+pid+'qb').val(0);
+        }
+            
+
+
+
+        subtotal = subtotal.add(up.mul($('#'+pid+'qu').val()));
+        subtotal = subtotal.add(pp.mul($('#'+pid+'qp').val()));
+        subtotal = subtotal.add(bp.mul($('#'+pid+'qb').val()));
+        
+
+        //$('#testerror').text('subtotal = ' +subtotal);
+
+        $('#'+ pid + 'stt').val(subtotal);
+
+        $( '.stt' ).each(function( ) {
+            totald = totald.add( $('#' + inputid + '').val());
+        });
+
+        $('.totald').val(totald);
+        totalr = totald.mul(exchangerate);
+        $('.totalr').val(Math.round(totalr));  
+        
+        discountamount = totald.mul(discount).div(100);
+        $('.discountd').val(discountamount);
+        $('.discountr').val(Math.round(discountamount*exchangerate));
+
+        $('.ftotald').val(totald.sub(discountamount));
+        $('.ftotalr').val(Math.round(totald.sub(discountamount).mul(exchangerate)));
+        getChange();
+
+    }
 
     function getDiscount(){
         

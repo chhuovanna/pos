@@ -262,6 +262,7 @@ SCRIPT;
                 $importers = Importer::getSelectOption();
 
                 $filter->equal('pid')->select($products);
+                $filter->between('amount', 'Amount');
                 $filter->equal('impid')->select($importers);
                 $filter->equal('finish')->select([ '1' => 'Finish' , '0' => 'Not finish']);
                 $filter->between('importdate', 'Period')->datetime();

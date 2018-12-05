@@ -84,10 +84,13 @@ class ImporterController extends Controller
             $grid->name('Name')->sortable();
             $grid->address('Address');
             $grid->tel('Phone');
+            $grid->tel1('Phone1');
+            $grid->tel2('Phone2');
+
             $grid->email('Email');
 
-            $grid->created_at();
-            $grid->updated_at();
+            /*$grid->created_at();
+            $grid->updated_at();*/
         });
     }
 
@@ -104,6 +107,8 @@ class ImporterController extends Controller
             $form->text('name', 'Importer Name')->rules('required');
             $form->textarea('address', 'Address');
             $form->mobile('tel', 'Phone Number');
+            $form->mobile('tel1', 'Phone Number');
+            $form->mobile('tel2', 'Phone Number');
             $form->email('email','Email')->rules('nullable');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');

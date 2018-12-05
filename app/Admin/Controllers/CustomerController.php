@@ -95,9 +95,12 @@ class CustomerController extends Controller
             $grid->name('Name')->sortable();
             $grid->address('Address');
             $grid->email('Email');
+            $grid->tel('Tel');
+            $grid->tel1('Tel1');
+            $grid->tel2('Tel2');
 
             $grid->created_at();
-            $grid->updated_at();
+            /*$grid->updated_at();*/
         });
     }
 
@@ -114,6 +117,8 @@ class CustomerController extends Controller
             $form->text('name', 'Customer Name')->rules('required');
             $form->textarea('address', 'Address');
             $form->mobile('tel', 'Phone Number');
+            $form->mobile('tel1', 'Phone Number');
+            $form->mobile('tel2', 'Phone Number');
             $form->email('email','Email')->rules('nullable');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');

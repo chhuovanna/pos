@@ -198,4 +198,8 @@ from sales;
 EOT;
         return DB::select($sql);
     }
+
+    public static function stockouttype(){
+         return $this->belongsTo('App\StockoutType','sotid');
+    }
 }
