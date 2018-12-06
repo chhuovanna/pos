@@ -14,4 +14,15 @@ class StockoutType extends Model
         return $this->hasMany('App\Sale','saleid');
     }
 
+
+ 	public static function getSelectOption(){
+        $rows = StockoutType::orderBy('sotid')->get();
+        $result = [null => 'Select Stockout Type'];
+        foreach ($rows as $row) {
+            $id       = $row->sotid;
+            $name     = $row->type;
+            $result[$id] = "$id:$name";
+        }
+        return $result;
+    }
 }

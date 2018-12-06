@@ -109,7 +109,16 @@ alter table manufacturers add tel1 varchar(50), add tel2 varchar(50);
 alter table saleassistants add tel1 varchar(50), add tel2 varchar(50);
 
 create table stockoutType(sotid int primary key, type varchar(20));
-insert into stockoutType values(1,"Sale"),(2,"Sale with loan"),(6,"Expired"), (7,"Lost") , (3,"Used") ,(4,"Gift"), (5, "Return");
+insert into stockoutType values(1,"Sale"),(2,"Sale with loan"), (5, "Return"),(6,"Expired"), (7,"Lost") , (8,"Used") ,(9,"Gift");
 
 INSERT INTO customers(cusid,name) values(1,"General");
+#delete return gift... use stockout type instead.
+delete from customers where cusid < 0;
 
+
+#optional
+update stockouttype set sotid = 9 where sotid = 4;
+
+#add fk stockouttype in sale
+alter table sales add sotid int(11);
+alter table sales add foreign key (sotid) references stockouttype (sotid);

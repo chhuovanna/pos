@@ -35,6 +35,14 @@
 
 @endsection
 
+@section('stockouttype')
+    @foreach($stockouttypes as $stockouttype)
+        <option value="{{  $stockouttype->sotid }}">{{ $stockouttype->type }}</option>
+        @endforeach
+
+@endsection
+
+
 @section('exchangerate')
     <input style="width: 70px" type="number" min="0" id="exchangerate" name="exchangerate" value="{{$exchangerate}}" class="form-control amount" readonly="readonly" />
 @endsection
@@ -108,8 +116,6 @@
 
                     //console.log(data);
                     if (data.length == 1){
-                        var prodatt = ["pid","barcode","name"];
-                        var i ;
                         var pid = data[0].pid;
                         var row = "<tr id='tr"+pid+"' name='tr"+pid+"' >";
                         var products;
@@ -124,35 +130,30 @@
                         
     row = row + "<td><input id='" + pid + "pid' name='"
         + pid + "pid' type='text' value='" + data[0].pid 
-        + "' style='width: 100px' readonly= 'readonly'></td>";
-    row = row + "<td><input id='" + pid + "barcode' name='"
-        + pid + "barcode' type='text' class='barcode' value='" + data[0].barcode 
-        + "' style='width: 150px' readonly= 'readonly'></td>";
+        + "' style='width: 60px' readonly= 'readonly'>";
+    row = row + "<input id='" + pid + "barcode' name='"
+        + pid + "barcode' type='hidden' class='barcode' value='" + data[0].barcode + "'></td>";
 
     row = row + "<td><input id='" + pid +"name' name='"
         + pid + "name' type='text' value='" + data[0].name 
-        + "' style='width: 150px' readonly= 'readonly'></td>";
-
-    row = row + "<td><input id='" + pid + "up' name='" 
-        + pid + "up' type='hidden' value='" + data[0].up + "'>" 
-        + "<input id='" +pid+ "su' name='" +pid+ "su' type='hidden' value='" 
-        + data[0].su + "'>" 
-        + "<input id='" +pid+ "qu' name='" +pid+ "qu' class='quantity' value='1' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' >" + "</td>";
+        + "' readonly= 'readonly'></td>";
+    //first scan unit quantity = 1
+    row = row + "<input id='" +pid+ "su' name='" +pid+ "su' type='hidden' value='" + data[0].su + "'>" 
+        + "<td><input id='" +pid+ "qu' name='" +pid+ "qu' class='quantity' value='1' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' ></td>" 
+        + "<td><input id='" +pid+ "up' name='" +pid+ "up' class='price' value='" + data[0].up + "' style='width: 60px' ></td>";
     
-    row = row + "<td><input id='" + pid + "pp' name='" 
-        + pid + "pp' type='hidden' value='" +data[0].pp + "'>"
-        + "<input id='" +pid+ "sp' name='" +pid+  "sp' type='hidden' value='"
-        + data[0].sp + "'>"
+    row = row + "<input id='" +pid+ "sp' name='" +pid+ "sp' type='hidden' value='" + data[0].sp + "'>"
         + "<input id='" +pid+ "upp' type='hidden' value='" +data[0].upp + "'>"
-        + "<input id='" +pid+ "qp' name='" +pid+ "qp' class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' ></td>";
+        + "<td><input id='" +pid+ "qp' name='" +pid+ "qp' class='quantity' value='0' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' ></td>"
+        + "<td><input id='" +pid+ "pp' name='" +pid+ "pp' class='price' value='" +data[0].pp + "' style='width: 60px' ></td>"
+        ;
 
 
-    row = row + "<td><input id='" + pid + "bp' name='" 
-        + pid + "bp' type='hidden' value='" +data[0].bp + "'>"
-        + "<input id='" +pid+ "sb' name='" +pid+  "sb' type='hidden' value='"
-        + data[0].sb + "'>"
+    row = row + "<input id='" +pid+ "sb' name='" +pid+  "sb' type='hidden' value='" + data[0].sb + "'>"
         + "<input id='" +pid+ "upb' type='hidden' value='" +data[0].upb + "'>"
-        + "<input id='" +pid+ "qb' name='" +pid+ "qb' class='quantity' value='0' style='width: 60px' pattern='[-]?[0-9]+' autocomplete='off' ></td>";
+        + "<td><input id='" +pid+ "qb' name='" +pid+ "qb' class='quantity' value='0' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' ></td>"
+        + "<td><input id='" +pid+ "bp' name='" +pid+ "bp' class='price' value='" +data[0].bp + "' style='width: 60px' ></td>"
+        ;
     
     row = row + "<td><input id = '" +pid+   "stt' name='" + pid 
         + "stt' type='number' class='stt' value='0' style='width: 100px' readonly= 'readonly'>"

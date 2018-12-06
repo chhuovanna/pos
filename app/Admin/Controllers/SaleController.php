@@ -141,6 +141,7 @@ SCRIPT;
             $grid->filter(function ($filter) {
 
                 $customers = Customer::getSelectOption();
+                $stockouttypes = StockoutType::getSelectOption();
 
                 $filter->between('saledate','Sale Period')->datetime();
                 
@@ -153,6 +154,7 @@ SCRIPT;
                     }, 'Total or GTD(ex: 1 and 100)');
 
                 $filter->equal('cusid')->select($customers);
+                $filter->equal('sotid')->select($stockouttypes);
 
 
 
@@ -177,8 +179,9 @@ SCRIPT;
 
             $grid->saleid('ID');
             $grid->saledate('Date');
-            $grid->customer()->cusid('CID');
+            //$grid->customer()->cusid('CID');
             $grid->customer()->name('Customer');           
+            $grid->stockouttype()->type('Type');
             $grid->total('Total');            
             $grid->discount('Dis%');
             $grid->ftotal('GTD');
@@ -310,7 +313,7 @@ SCRIPT;
             $products = explode(',', $input['products']);
             $size = sizeof($products);
         
-            print_r($input);
+            //print_r($input);
 
 
             $sale = new Sale;
@@ -323,6 +326,8 @@ SCRIPT;
             $sale->recievedd    = $input['recievedd'];
             $sale->recievedr    = $input['recievedr'];
             $sale->exchangerate = $input['exchangerate'];
+            $sale->sotid        = $input['stockouttype'];
+
             $sale->save();
 
             
@@ -369,13 +374,15 @@ SCRIPT;
 			
 
             $exchangerate = Exchangerate::where('currentrate',1)->first();
-            $customers = Customer::all();
+            $customers = Customer::orderBy('cusid')->get();
+            $stockouttypes = StockoutType::orderBy('sotid')->get();
 
             $content->header('Add Sale');
             $content->description('By Barcode');
             $content->body( view('productSaleBarcode',[
             'exchangerate' => $exchangerate->amount,
-            'customers'    => $customers
+            'customers'    => $customers,
+            'stockouttypes'=> $stockouttypes
             
                 ] ) 
             ) ;
@@ -405,13 +412,15 @@ SCRIPT;
             
 
             $exchangerate = Exchangerate::where('currentrate',1)->first();
-            $customers = Customer::all();
+            $customers = Customer::orderBy('cusid')->get();
+            $stockouttypes = StockoutType::orderBy('sotid')->get();
 
             $content->header('Add Sale');
             $content->description('By Barcode');
             $content->body( view('productSaleBarcodeUnit',[
             'exchangerate' => $exchangerate->amount,
-            'customers'    => $customers
+            'customers'    => $customers,
+            'stockouttypes'=> $stockouttypes
             
                 ] ) 
             ) ;

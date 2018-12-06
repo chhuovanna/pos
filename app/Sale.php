@@ -199,7 +199,7 @@ EOT;
         return DB::select($sql);
     }
 
-    public static function stockouttype(){
+    public function stockouttype(){
          return $this->belongsTo('App\StockoutType','sotid');
     }
 }
