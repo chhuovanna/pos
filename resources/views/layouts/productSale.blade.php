@@ -160,9 +160,9 @@
                             <span class="input-group-addon">%</span>
                             <input style="width: 70px" type='number' step="0.01" min='0' id="discount" name="discount" value="0" class="form-control discount"  />
                             <span class="input-group-addon">$</span>
-                            <input style="width: 140px" type="number" min="0" id="discountd" name="discountd" value="0" class="form-control discountd" placeholder="Discount in USD"  />
+                            <input style="width: 140px" type="number" min="0" id="discountd" name="discountd" value="0" class="form-control discount" placeholder="Discount in USD"  />
                             <span class="input-group-addon">៛</span>
-                            <input style="width: 140px" type="number" min="0" id="discountr" name="discountr" value="0" class="form-control discountr" placeholder="Discount in Riel" />
+                            <input style="width: 140px" type="number" min="0" id="discountr" name="discountr" value="0" class="form-control discount" placeholder="Discount in Riel" />
                          </div>
                     </div>
                 </div>
@@ -255,8 +255,8 @@
     $(document).on('keyup','.price', getSubTotal);
 
 
-    $(document).off('keyup','#discount');
-    $(document).on('keyup','#discount',getDiscount);
+    $(document).off('keyup','.discount');
+    $(document).on('keyup','.discount',getDiscount);
 
     $(document).off('keyup','#recievedd');
     $(document).on('keyup','#recievedd',getChange);
@@ -305,47 +305,26 @@
         var inputid = event.target.id;
         var pid = inputid.substring(0, inputid.length - 2);
         var totald= new Decimal(0);
-        var totalr= new Decimal(0);
+        var totalr;
         var exchangerate = $('#exchangerate').val();
         var discount = $('#discount').val();
-        var discountamount = new Decimal(0);
+        var discountamount;
         var subtotal= new Decimal(0);
 
 
-        if (!$('#'+pid+'up').val() || isNaN($('#'+pid+'up').val()) ){
-            $('#'+pid+'up').val(0);
-        }
-
-        if (!$('#'+pid+'pp').val() || isNaN($('#'+pid+'pp').val()) ){
-            $('#'+pid+'pp').val(0);
-        }
-
-        if (!$('#'+pid+'bp').val() || isNaN($('#'+pid+'bp').val()) ){
-            $('#'+pid+'bp').val(0);
-        }
-
+        initiateNumber(pid + 'up');
+        initiateNumber(pid + 'pp');
+        initiateNumber(pid + 'bp');
         
         var up = new Decimal($('#'+pid+'up').val());
         var pp = new Decimal($('#'+pid+'pp').val());
         var bp = new Decimal($('#'+pid+'bp').val());
-        var amount = new Decimal(0);
-        var temp = new Decimal(0);
+     
         
-        
-        if (!$('#'+pid+'qu').val() || isNaN($('#'+pid+'qu').val()) ){
-            $('#'+pid+'qu').val(0);
-        }
 
-        if (!$('#'+pid+'qp').val() || isNaN($('#'+pid+'qp').val()) ){
-            $('#'+pid+'qp').val(0);
-        }
-
-        if (!$('#'+pid+'qb').val() || isNaN($('#'+pid+'qb').val()) ){
-            $('#'+pid+'qb').val(0);
-        }
-            
-
-
+        initiateNumber(pid + "qu");
+        initiateNumber(pid + "qp");
+        initiateNumber(pid + "qb");
 
         subtotal = subtotal.add(up.mul($('#'+pid+'qu').val()));
         subtotal = subtotal.add(pp.mul($('#'+pid+'qp').val()));
@@ -359,34 +338,71 @@
             totald = totald.add($(this).val());
         });
 
-        $('.totald').val(totald);
+        $('#totald').val(totald);
         totalr = totald.mul(exchangerate);
-        $('.totalr').val(Math.round(totalr));  
+        $('#totalr').val(Math.round(totalr));  
         
-        discountamount = totald.mul(discount).div(100);
-        $('.discountd').val(discountamount);
-        $('.discountr').val(Math.round(discountamount*exchangerate));
+        discountamount = new Decimal(totald.mul(discount).div(100));
+        $('#discountd').val(discountamount);
+        $('#discountr').val(Math.round(discountamount.mul(exchangerate)));
 
-        $('.ftotald').val(totald.sub(discountamount));
-        $('.ftotalr').val(Math.round(totald.sub(discountamount).mul(exchangerate)));
+
+
+        $('#ftotald').val(totald.sub(discountamount));
+        $('#ftotalr').val(Math.round(totald.sub(discountamount).mul(exchangerate)));
+        alert($('#ftotald').val());
         getChange();
 
     }
 
-    function getDiscount(){
+
+    function initiateNumber(id){
+        if (!$('#'+id).val() || isNaN($('#'+id).val()) ){
+            $('#'+id).val(0);
+        }
+    }
+
+    function getDiscount(event){
         
+        var inputid = event.target.id;
         var totald= new Decimal($('#totald').val());
         var exchangerate = $('#exchangerate').val();
-        var discount= $('#discount').val();
-        var discountamount = new Decimal(totald.mul(discount).div(100));
-        var ftotald ;
-        
-        $('.discountd').val(discountamount);
-        $('.discountr').val(Math.round(discountamount.mul(exchangerate)));
+        var discount;
+        var discountamount;
+        var discountr;
+        var ftotald;
+
+        switch (inputid){
+            case 'discount':
+                initiateNumber('discount');
+                discount = $('#discount').val();
+                discountamount = totald.mul(discount).div(100);
+                discountr = Math.round(discountamount.mul(exchangerate));
+                alert('discount');
+                break;
+            case 'discountd':
+                initiateNumber('discountd');
+                discountamount = new Decimal($('#discountd').val());
+                discount = discountamount.div(totald);
+                discountr = discountamount.mul(exchangerate);
+                alert('discountd');
+                break;
+            case 'discountr':
+                initiateNumber('discountr');
+                discountr = new Decimal($('#discountr').val());
+                discountamount = discountr.div(exchangerate);
+                discount = discountamount.div(totald);
+                alert('discountr');
+                break;
+        }
+
+        $('#discount').val(discount);
+        $('#discountd').val(discountamount);
+        $('#discountr').val(discountr);
 
         ftotald = new Decimal(totald.sub(discountamount));
-        $('.ftotald').val(ftotald);
-        $('.ftotalr').val(Math.round(ftotald.mul(exchangerate)));
+        $('#ftotald').val(ftotald);
+        $('#ftotalr').val(Math.round(ftotald.mul(exchangerate)));
 
         getChange();    
     }
