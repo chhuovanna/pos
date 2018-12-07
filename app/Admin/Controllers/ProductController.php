@@ -21,9 +21,11 @@ class ProductController extends Controller
 
     protected $script_grid = <<<SCRIPT
 $(document).ready(function() {
-    $("[name='catid']").select2();
-    $("[name='mid']").select2();
+    $("[name='catid']").select2({ width: '170px' });
+    $("[name='mid']").select2({ width: '170px' });
+
     $("[placeholder='Keyword(PID,barcode,name,shortcut,description)']").focus();
+
 
     $('th:nth-child(4)').css("background-color", "#ffff99");
     $('th:nth-child(5)').css("background-color", "#ffff99");
@@ -115,6 +117,7 @@ SCRIPT;
             $content->header('Product');
             $content->description('List');
             $content->body($this->grid());
+            $content->body($this->stockReminderGrid());
         });
     }
 
@@ -159,6 +162,65 @@ SCRIPT;
      */
     protected function grid()
     {
+        
+        return Admin::grid(Product::class, function (Grid $grid) {
+
+            $grid->model()->orderBy('pid','DESC');
+            $grid->paginate(5);
+            $grid->disableBatchDeletion();
+            $grid->disableRowSelector();
+            
+           
+            $grid->pid('ID');
+            $grid->barcode('Barcode')->sortable();
+            $grid->name('Name')->sortable();           
+            $sql = "select pid, name, unitinstock,packinstock,boxinstock,unitperpack, unitperbox, (unitinstock+(packinstock*unitperpack)+(boxinstock*unitperpack)) as totalunit
+, (unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox as totalbox
+ from products 
+where (unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox < 5;";
+            /*$grid->shortcut('Shortcut');
+            $grid->description('Desc')->limit(20)->ucfirst();
+            */
+            $grid->salepriceunit('UnitPri')->sortable();
+            $grid->salepricepack('PackPri')->sortable();
+            $grid->salepricebox('BoxPri')->sortable();
+
+            $grid->importpriceunit('ImpoUnitPri')->sortable();
+            $grid->importpricepack('ImpoPackPri')->sortable();
+            $grid->importpricebox('ImpoBoxPri')->sortable();
+            //$grid->photopath('Photo');
+            
+            $grid->unitinstock('UnitSto')->sortable();
+            $grid->packinstock('PackSto')->sortable();
+            $grid->boxinstock('BoxSto')->sortable();
+            $grid->unitperpack('Unit/Pack');
+            $grid->unitperbox('Unit/Box');
+            
+/*            $grid->isdrugs('Drug?')->display(function ($isdrugs) {
+                return $isdrugs ? 'YES' : 'NO';
+            }); */      
+            
+            $grid->category()->name('Category');
+            $grid->manufacturer()->name('Manuf');
+
+            $grid->actions(function ($actions) {
+
+                // append an action.
+                $actions->append('<a title="Add Inventory" href="inventory/create/' .$actions->getKey(). '"><i class="fa fa-plus"></i></a>');
+
+            });
+
+            Admin::script($script);
+        });
+    }
+
+    /**
+     * Make a grid builder.
+     *
+     * @return Grid
+     */
+    protected function stockReminderGrid()
+    {
         $script = $this->script_grid;
         return Admin::grid(Product::class, function (Grid $grid) use ($script){
 
@@ -167,13 +229,14 @@ SCRIPT;
 
                 $filter->disableIdFilter();
 
+                $filter->equal('pid');
                 $filter->where(function ($query) {
 
                     $query->whereRaw("`pid` like '%{$this->input}%' OR `barcode` like '%{$this->input}%' OR `name` like '%{$this->input}%' OR `shortcut` like '%{$this->input}%' OR `description` like '%{$this->input}%'");
 
-                    }, 'Keyword(PID,barcode,name,shortcut,description)');
+                    }, 'Keyword');
 
-
+                
                 $categories = Category::getSelectOption();
                 $filter->equal('catid')->select($categories);
 
@@ -198,24 +261,24 @@ SCRIPT;
             /*$grid->shortcut('Shortcut');
             $grid->description('Desc')->limit(20)->ucfirst();
             */
-            $grid->salepriceunit('UP')->sortable();
-            $grid->salepricepack('PP')->sortable();
-            $grid->salepricebox('BP')->sortable();
+            $grid->salepriceunit('UnitPri')->sortable();
+            $grid->salepricepack('PackPri')->sortable();
+            $grid->salepricebox('BoxPri')->sortable();
 
-            $grid->importpriceunit('IUP')->sortable();
-            $grid->importpricepack('IPP')->sortable();
-            $grid->importpricebox('IBP')->sortable();
+            $grid->importpriceunit('ImpoUnitPri')->sortable();
+            $grid->importpricepack('ImpoPackPri')->sortable();
+            $grid->importpricebox('ImpoBoxPri')->sortable();
             //$grid->photopath('Photo');
             
-            $grid->unitinstock('SU')->sortable();
-            $grid->packinstock('SP')->sortable();
-            $grid->boxinstock('SB')->sortable();
-            $grid->unitperpack('UPP');
-            $grid->unitperbox('UPB');
+            $grid->unitinstock('UnitSto')->sortable();
+            $grid->packinstock('PackSto')->sortable();
+            $grid->boxinstock('BoxSto')->sortable();
+            $grid->unitperpack('Unit/Pack');
+            $grid->unitperbox('Unit/Box');
             
-            $grid->isdrugs('Drug?')->display(function ($isdrugs) {
+/*            $grid->isdrugs('Drug?')->display(function ($isdrugs) {
                 return $isdrugs ? 'YES' : 'NO';
-            });       
+            }); */      
             
             $grid->category()->name('Category');
             $grid->manufacturer()->name('Manuf');
@@ -276,7 +339,7 @@ SCRIPT;
             $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute);
             $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute);
             
-            $form->switch('isdrugs', 'Is Drug?');
+            //$form->switch('isdrugs', 'Is Drug?');
 
             $categories = Category::pluck('name','catid');
             $form->select('catid', 'Product Category')->options($categories)->value(-1);
@@ -339,7 +402,7 @@ SCRIPT;
             $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute);
             $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute);
             
-            $form->switch('isdrugs', 'Is Drug?');
+            //$form->switch('isdrugs', 'Is Drug?');
 
             $categories = Category::pluck('name','catid');
             $form->select('catid', 'Product Category')->options($categories)->value(-1);

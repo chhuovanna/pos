@@ -47,10 +47,10 @@ th, td {
                     <th bgcolor="#f4f442">Sum Unit</th>
                     <th bgcolor="#f4f442">Sum Pack</th>
                     <th bgcolor="#f4f442">Sum Box</th>
-                    <th bgcolor="#b8f441">Avg UP</th>
-                    <th bgcolor="#b8f441">Avg PP</th>
-                    <th bgcolor="#b8f441">Avg BP</th>
-                    <th bgcolor="#41f4f1">Sum STT</th>
+                    <th bgcolor="#b8f441">Avg UnitPri</th>
+                    <th bgcolor="#b8f441">Avg PackPri</th>
+                    <th bgcolor="#b8f441">Avg BoxPri</th>
+                    <th bgcolor="#41f4f1">Sum SubTotal</th>
                 </tr>
             <!-- </thead> -->
             <tbody id="saleprodutreportbody" >

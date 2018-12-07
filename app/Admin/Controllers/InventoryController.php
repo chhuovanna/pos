@@ -280,29 +280,29 @@ SCRIPT;
             //$grid->importer()->impid('Impo.ID');
             $grid->importer()->name('Impo.Name');
                         
-            $grid->importunit('ImpU');
-            $grid->importpack('ImpP');
-            $grid->importbox('ImpB');
-            $grid->buypriceunit('IUP');
-            $grid->buypricepack('IPP');
-            $grid->buypricebox('IBP');
+            $grid->importunit('ImpUnit');
+            $grid->importpack('ImpPack');
+            $grid->importbox('ImpBox');
+            $grid->buypriceunit('ImpUnitPri');
+            $grid->buypricepack('ImpPackPri');
+            $grid->buypricebox('ImpBoxPri');
             $grid->amount('Total Amount');  
             
-            $grid->unitinstock('SU');
-            $grid->packinstock('SP');
-            $grid->boxinstock('SB');
+            $grid->unitinstock('UnitSto');
+            $grid->packinstock('PackSto');
+            $grid->boxinstock('BoxSto');
             $grid->finish('Finish?')->display(function ($finish) {
                 return $finish ? 'YES' : 'NO';
             }); 
             
             $grid->importdate('Impo.Date');
-            $grid->mfg('MFG');
+            //$grid->mfg('MFG');
             $grid->exp('EXP');
             $grid->shelf('Shelf');
             
             $script = <<<SCRIPT
 $("[name='pid']").select2();
-$("[name='impid']").select2();
+$("[name='impid']").select2({ width: '170px' });
 
 
 

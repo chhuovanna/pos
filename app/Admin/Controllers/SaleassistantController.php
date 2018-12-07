@@ -106,7 +106,7 @@ class SaleassistantController extends Controller
             $grid->updated_at();
 */
             $script = <<<SCRIPT
-$("[name='impid']").select2();
+$("[name='impid']").select2({ width: '170px' });
 SCRIPT;
             Admin::script($script);
         });

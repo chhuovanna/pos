@@ -52,10 +52,20 @@ th, td {
     border-left: 1px solid #ddd;
 	
 }
-
+table th{
+    font-size: 14px;
+    
+}
 
 
 /*
+
+
+table th{
+    font-size: 14px;
+    
+}
+
 table thead tr{
     display:block;
    

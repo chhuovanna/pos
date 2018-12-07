@@ -130,13 +130,13 @@ class SaleProductController extends Controller
             $grid->pid('PID');
             $grid->product()->name('Product');
 
-            $grid->unitquantity('UQ');
-            $grid->packquantity('PQ');
-            $grid->boxquantity('BQ');
+            $grid->unitquantity('UnitQty');
+            $grid->packquantity('PackQty');
+            $grid->boxquantity('BoxQty');
 
-            $grid->salepriceunit('UP');
-            $grid->salepricepack('PP');
-            $grid->salepricebox('BP');
+            $grid->salepriceunit('UnitPri');
+            $grid->salepricepack('PackPri');
+            $grid->salepricebox('BoxPri');
 
             $grid->stock('StockUPB');
 

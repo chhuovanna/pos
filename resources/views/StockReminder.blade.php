@@ -55,12 +55,15 @@ tbody.saleprodutreportbody td:nth-child(10), tbody.saleprodutreportbody td:nth-c
 }
 </style>
 <div class="box">
-    <div class="box-header">Inventory Report</div>
+    <div class="box-header">Stock Reminder</div>
     <div class="box-body table-responsive no-padding">
         <table  id="saleproductreporttable">
            <!--  <thead> -->
                 <tr>
                     <th>PID</th>
+                    <th>Barcode</th>
+                    <th>Pro</th>
+                    <th>Product</th>
                     <th>Product</th>
                     <th bgcolor="#ffff99">Sum Unit</th>
                     <th bgcolor="#ffff99">Sum Pack</th>
