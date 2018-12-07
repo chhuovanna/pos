@@ -40,14 +40,14 @@
                     <th>Barcode</th>
                     <th>Name</th>
                     <th>Shortcut</th>
-                    <th bgcolor="#f4f442">UP</th>
-                    <th bgcolor="#f4f442">PP</th>
-                    <th bgcolor="#f4f442">BP</th>
-                    <th bgcolor="#b8f441">SU</th>
-                    <th bgcolor="#b8f441">SP</th>
-                    <th bgcolor="#b8f441">SB</th>
-                    <th bgcolor="#41f4f1">UPP</th>
-                    <th bgcolor="#41f4f1">UPB</th>
+                    <th bgcolor="#f4f442">UnitPri</th>
+                    <th bgcolor="#f4f442">PackPri</th>
+                    <th bgcolor="#f4f442">BoxPri</th>
+                    <th bgcolor="#b8f441">UnitSto</th>
+                    <th bgcolor="#b8f441">PackSto</th>
+                    <th bgcolor="#b8f441">BoxSto</th>
+                    <th bgcolor="#41f4f1">Unit/Pack</th>
+                    <th bgcolor="#41f4f1">Unit/Box</th>
                     <!-- <th>Drug?</th>
                     <th>Category</th>
                     <th>Manuf</th> -->
@@ -79,12 +79,12 @@
                         <th>PID</th> 
                         <!-- <th>Barcode</th> -->
                         <th>Name</th>
-                        <th>U.Q</th>
-                        <th>UP</th>
-                        <th>P.Q</th>
-                        <th>PP</th>
-                        <th>B.Q</th>
-                        <th>BP</th>
+                        <th>UnitQty</th>
+                        <th>UnitPri</th>
+                        <th>PackQty</th>
+                        <th>PackPri</th>
+                        <th>BoxQty</th>
+                        <th>BoxPri</th>
                         <th>Sub Total</th>
                         <th>Remove</th>
                     </tr>

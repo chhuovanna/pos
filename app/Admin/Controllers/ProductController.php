@@ -25,29 +25,33 @@ $(document).ready(function() {
     $("[name='mid']").select2({ width: '170px' });
 
     $("[placeholder='Keyword(PID,barcode,name,shortcut,description)']").focus();
+    $("[name='catid']").on('change', function(){
+        $('.btn-primary')[0].click();
+    });
 
-
-    $('th:nth-child(4)').css("background-color", "#ffff99");
-    $('th:nth-child(5)').css("background-color", "#ffff99");
-    $('th:nth-child(6)').css("background-color", "#ffff99");
-    $('td:nth-child(4)').css("background-color", "#ffff99");
-    $('td:nth-child(5)').css("background-color", "#ffff99");
-    $('td:nth-child(6)').css("background-color", "#ffff99");
+    
+    $($('table')[0]).addClass('myfirsttable');
+    $('table.myfirsttable th:nth-child(4)').css("background-color", "#ffff99");
+    $('table.myfirsttable th:nth-child(5)').css("background-color", "#ffff99");
+    $('table.myfirsttable th:nth-child(6)').css("background-color", "#ffff99");
+    $('table.myfirsttable td:nth-child(4)').css("background-color", "#ffff99");
+    $('table.myfirsttable td:nth-child(5)').css("background-color", "#ffff99");
+    $('table.myfirsttable td:nth-child(6)').css("background-color", "#ffff99");
     
 
-    $('th:nth-child(7)').css("background-color", "#eefc85");
-    $('th:nth-child(8)').css("background-color", "#eefc85");
-    $('th:nth-child(9)').css("background-color", "#eefc85");
-    $('td:nth-child(7)').css("background-color", "#eefc85");
-    $('td:nth-child(8)').css("background-color", "#eefc85");
-    $('td:nth-child(9)').css("background-color", "#eefc85");
+    $('table.myfirsttable th:nth-child(7)').css("background-color", "#eefc85");
+    $('table.myfirsttable th:nth-child(8)').css("background-color", "#eefc85");
+    $('table.myfirsttable th:nth-child(9)').css("background-color", "#eefc85");
+    $('table.myfirsttable td:nth-child(7)').css("background-color", "#eefc85");
+    $('table.myfirsttable td:nth-child(8)').css("background-color", "#eefc85");
+    $('table.myfirsttable td:nth-child(9)').css("background-color", "#eefc85");
 
-    $('th:nth-child(10)').css("background-color", "#ccffcc");
-    $('th:nth-child(11)').css("background-color", "#ccffcc");
-    $('th:nth-child(12)').css("background-color", "#ccffcc");
-    $('td:nth-child(10)').css("background-color", "#ccffcc");
-    $('td:nth-child(11)').css("background-color", "#ccffcc");
-    $('td:nth-child(12)').css("background-color", "#ccffcc");
+    $('table.myfirsttable th:nth-child(10)').css("background-color", "#ccffcc");
+    $('table.myfirsttable th:nth-child(11)').css("background-color", "#ccffcc");
+    $('table.myfirsttable th:nth-child(12)').css("background-color", "#ccffcc");
+    $('table.myfirsttable td:nth-child(10)').css("background-color", "#ccffcc");
+    $('table.myfirsttable td:nth-child(11)').css("background-color", "#ccffcc");
+    $('table.myfirsttable td:nth-child(12)').css("background-color", "#ccffcc");
 
 
     $('th:nth-child(13)').css("background-color", "#66ffcc");
@@ -162,9 +166,32 @@ SCRIPT;
      */
     protected function grid()
     {
-        
-        return Admin::grid(Product::class, function (Grid $grid) {
+        $script = $this->script_grid;   
+        return Admin::grid(Product::class, function (Grid $grid)  use ($script){
 
+
+            $grid->filter(function ($filter) {
+
+                $filter->disableIdFilter();
+
+                $filter->equal('pid');
+                $filter->where(function ($query) {
+
+                    $query->whereRaw("`pid` like '%{$this->input}%' OR `barcode` like '%{$this->input}%' OR `name` like '%{$this->input}%' OR `shortcut` like '%{$this->input}%' OR `description` like '%{$this->input}%'");
+
+                    }, 'Keyword');
+
+                
+                $categories = Category::getSelectOption();
+                $filter->equal('catid')->select($categories);
+
+                $manufacturers = Manufacturer::getSelectOption();
+                $filter->equal('mid')->select($manufacturers);
+            
+            });   
+
+            $grid->model()->with('category');
+            $grid->model()->with('manufacturer');
             $grid->model()->orderBy('pid','DESC');
             $grid->paginate(5);
             $grid->disableBatchDeletion();
@@ -174,10 +201,7 @@ SCRIPT;
             $grid->pid('ID');
             $grid->barcode('Barcode')->sortable();
             $grid->name('Name')->sortable();           
-            $sql = "select pid, name, unitinstock,packinstock,boxinstock,unitperpack, unitperbox, (unitinstock+(packinstock*unitperpack)+(boxinstock*unitperpack)) as totalunit
-, (unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox as totalbox
- from products 
-where (unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox < 5;";
+
             /*$grid->shortcut('Shortcut');
             $grid->description('Desc')->limit(20)->ucfirst();
             */
@@ -221,77 +245,42 @@ where (unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox
      */
     protected function stockReminderGrid()
     {
-        $script = $this->script_grid;
-        return Admin::grid(Product::class, function (Grid $grid) use ($script){
-
+        return Admin::grid(Product::class, function (Grid $grid) {
 
             $grid->filter(function ($filter) {
 
                 $filter->disableIdFilter();
 
-                $filter->equal('pid');
-                $filter->where(function ($query) {
-
-                    $query->whereRaw("`pid` like '%{$this->input}%' OR `barcode` like '%{$this->input}%' OR `name` like '%{$this->input}%' OR `shortcut` like '%{$this->input}%' OR `description` like '%{$this->input}%'");
-
-                    }, 'Keyword');
-
-                
-                $categories = Category::getSelectOption();
-                $filter->equal('catid')->select($categories);
-
-                $manufacturers = Manufacturer::getSelectOption();
-                $filter->equal('mid')->select($manufacturers);
-            
             });   
 
-
-            $grid->model()->with('category');
-            $grid->model()->with('manufacturer');
-            $grid->model()->orderBy('pid','DESC');
-            $grid->paginate(5);
+            $grid->model()->selectRaw('pid
+                , name
+                , unitinstock
+                , packinstock
+                , boxinstock
+                , unitperpack
+                , unitperbox
+                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox)) as totalunitinstock
+                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox as totalboxinstock')->whereRaw('(unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox < 5');
             $grid->disableBatchDeletion();
             $grid->disableRowSelector();
+            $grid->disableActions();
+            $grid->disableCreation();
+            $grid->paginate(10);
             
            
             $grid->pid('ID');
-            $grid->barcode('Barcode')->sortable();
-            $grid->name('Name')->sortable();           
-            
-            /*$grid->shortcut('Shortcut');
-            $grid->description('Desc')->limit(20)->ucfirst();
-            */
-            $grid->salepriceunit('UnitPri')->sortable();
-            $grid->salepricepack('PackPri')->sortable();
-            $grid->salepricebox('BoxPri')->sortable();
-
-            $grid->importpriceunit('ImpoUnitPri')->sortable();
-            $grid->importpricepack('ImpoPackPri')->sortable();
-            $grid->importpricebox('ImpoBoxPri')->sortable();
-            //$grid->photopath('Photo');
-            
+            $grid->name('Name');           
             $grid->unitinstock('UnitSto')->sortable();
             $grid->packinstock('PackSto')->sortable();
             $grid->boxinstock('BoxSto')->sortable();
             $grid->unitperpack('Unit/Pack');
             $grid->unitperbox('Unit/Box');
-            
-/*            $grid->isdrugs('Drug?')->display(function ($isdrugs) {
-                return $isdrugs ? 'YES' : 'NO';
-            }); */      
-            
-            $grid->category()->name('Category');
-            $grid->manufacturer()->name('Manuf');
-
-            $grid->actions(function ($actions) {
-
-                // append an action.
-                $actions->append('<a title="Add Inventory" href="inventory/create/' .$actions->getKey(). '"><i class="fa fa-plus"></i></a>');
-
-            });
-
-            Admin::script($script);
+            $grid->totalunitinstock('TotalUnitSto');
+            $grid->totalboxinstock('TotalBoxSto');
+       
         });
+
     }
    
     /**

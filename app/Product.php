@@ -20,7 +20,22 @@ class Product extends Model
         return $this->belongsTo('App\Manufacturer','mid');
     }
 
-
+    public function getStockReminder($boxNum){
+        $sql = <<<END
+select pid
+    , name
+    , unitinstock
+    , packinstock
+    , boxinstock
+    , unitperpack
+    , unitperbox
+    , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox)) as totalunitinstock
+    , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox as totalboxinstock
+from products 
+where (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox < $boNum;
+END;
+        return DB::select($sql);
+    }
 
     public static function listWithCatMan(){
 

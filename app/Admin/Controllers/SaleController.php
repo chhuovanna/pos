@@ -11,6 +11,7 @@ use App\Sale;
 use App\SaleProduct;
 use App\Inventory;
 use App\StockoutType;
+use App\Loan;
 
 use Encore\Admin\Form;
 
@@ -354,7 +355,14 @@ SCRIPT;
                 Product::updateStock( $products[$i], $stock );
                 Inventory::updateInventory( $products[$i], $stock );
             }
-            
+            //insert loan 
+            if ($sale->sotid == 2){
+                $loan = new Loan();
+                $loan->saleid = $sale->saleid;
+                $loan->amount = $sale->ftotal - ($sale->recievedd + ($sale->recievedr/$sale->exchangerate));
+                $loan->state = 0;
+                $loan->save();
+            }
 
         });
         DB::commit();

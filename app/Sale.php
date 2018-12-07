@@ -202,4 +202,7 @@ EOT;
     public function stockouttype(){
          return $this->belongsTo('App\StockoutType','sotid');
     }
+    public function loan(){
+         return $this->hasOne('App\Loan','saleid');
+    }
 }

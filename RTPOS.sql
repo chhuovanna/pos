@@ -122,3 +122,7 @@ update stockouttype set sotid = 9 where sotid = 4;
 #add fk stockouttype in sale
 alter table sales add sotid int(11);
 alter table sales add foreign key (sotid) references stockouttype (sotid);
+
+drop table loan;
+#create table loan
+create table loan (saleid bigint(20), amount decimal(8,2) , state smallint /*0: not yet clear, 1: is cleared*/, created_at timestamp default current_timestamp, updated_at timestamp default current_timestamp, primary key (saleid),  foreign key (saleid) references sales(saleid) on delete cascade) engine=innodb;
