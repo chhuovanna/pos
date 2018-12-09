@@ -193,7 +193,7 @@ SCRIPT;
 
             $script = <<<SCRIPT
 $("[name='cusid']").select2({ width: '170px' });
-$("[placeholder='Total or GTD(ex{ width: '170px' }: 1 and 100)']").attr('pattern','([-]?[0-9]+ and [-]?[0-9]+)?');
+$("[placeholder='Total or GTD(ex 1 and 100)']").attr('pattern','([-]?[0-9]+ and [-]?[0-9]+)?');
 
 
 var ths = document.getElementsByTagName("th");

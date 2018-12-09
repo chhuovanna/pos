@@ -65,44 +65,76 @@ $(document).ready(function() {
 SCRIPT;
 
     protected $script_form = <<<SCRIPT
+
+function initiateNumber(id){
+    if (!$('#'+id).val() || isNaN($('#'+id).val()) ){
+        $('#'+id).val(0);
+    }
+}
+
 $(document).off('keyup','#salepriceunit');
 $(document).off('keyup','#salepricepack');
 $(document).off('keyup','#salepricebox');
 $(document).off('keyup','#importpriceunit');
 $(document).off('keyup','#importpricepack');
 $(document).off('keyup','#importpricebox');
+$(document).off('keyup','#unitperpack');
+$(document).off('keyup','#unitperbox');
+
+$(document).on('keyup','#unitperpack', function(){ initiateNumber('unitperpack');});
+$(document).on('keyup','#unitperbox', function(){ initiateNumber('unitperbox');});
 
 
 $(document).on('keyup','#salepriceunit',function(){
+    initiateNumber('salepriceunit');
     var amount = new Decimal( $('#salepriceunit').val() );
     $('#spur').val(amount.mul( $('#exchangerate').val() ));
 });
 
 
 $(document).on('keyup','#salepricepack',function(){
+    initiateNumber('salepricepack');
     var amount = new Decimal( $('#salepricepack').val() );
     $('#sppr').val(amount.mul( $('#exchangerate').val() ));
 });
 
 
 $(document).on('keyup','#salepricebox',function(){
+    initiateNumber('salepricebox');
     var amount = new Decimal( $('#salepricebox').val() );
     $('#spbr').val(amount.mul( $('#exchangerate').val() ));
 });
 
 $(document).on('keyup','#importpriceunit',function(){
+    initiateNumber('importpriceunit');
     var amount = new Decimal( $('#importpriceunit').val() );
     $('#ipur').val(amount.mul( $('#exchangerate').val() ));
 });
 
 $(document).on('keyup','#importpricepack',function(){
+    initiateNumber('importpricepack');
     var amount = new Decimal( $('#importpricepack').val() );
     $('#ippr').val(amount.mul( $('#exchangerate').val() ));
 });
 
 $(document).on('keyup','#importpricebox',function(){
+    initiateNumber('importpricebox');
+    
     var amount = new Decimal( $('#importpricebox').val() );
     $('#ipbr').val(amount.mul( $('#exchangerate').val() ));
+    
+    if ( ($('#unitperpack').val() > 0)
+        && ($('#unitperbox').val() > 0)
+      /*  && ($('#importpriceunit').val() == 0) 
+        && ($('#importpricepack').val() == 0) */){
+
+        var importpriceunit = new Decimal( amount.div( $('#unitperbox').val() ) );
+        $('#importpriceunit').val(importpriceunit); 
+        $('#importpriceunit').keyup();
+
+        $('#importpricepack').val( importpriceunit.mul( $('#unitperpack').val() ) );
+        $('#importpricepack').keyup();
+    }
 });
 SCRIPT;
     
@@ -309,24 +341,31 @@ SCRIPT;
             $style = ["style"=>"width:115px"];
             
             $form->text('exchangerate','Exchange Rate')->readOnly()->attribute($style)->value($exchangerate->amount);
-            $form->currency('salepriceunit','Sale Pice Per Unit')->rules('required');
-            $form->text('spur','In Riel')->readOnly()->attribute($style);
-            $form->currency('salepricepack','Sale Pice Per Pack')->rules('required');
-            $form->text('sppr','In Riel')->readOnly()->attribute($style);
-            $form->currency('salepricebox','Sale Pice Per Box')->rules('required');
-            $form->text('spbr','In Riel')->readOnly()->attribute($style);
+            
+            $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute)->value(0);
+            $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute)->value(0);
 
-            $form->currency('importpriceunit','Import Pice Per Unit')->rules('required');
-            $form->text('ipur','In Riel')->readOnly()->attribute($style);
-            $form->currency('importpricepack','Import Pice Per Pack')->rules('required');
-            $form->text('ippr','In Riel')->readOnly()->attribute($style);
             $form->currency('importpricebox','Import Pice Per Box')->rules('required');
             $form->text('ipbr','In Riel')->readOnly()->attribute($style);
+            $form->currency('importpricepack','Import Pice Per Pack')->rules('required');
+            $form->text('ippr','In Riel')->readOnly()->attribute($style);
+            $form->currency('importpriceunit','Import Pice Per Unit')->rules('required');
+            $form->text('ipur','In Riel')->readOnly()->attribute($style);
+            
+
+
+            $form->currency('salepricebox','Sale Pice Per Box')->rules('required');
+            $form->text('spbr','In Riel')->readOnly()->attribute($style);
+            $form->currency('salepricepack','Sale Pice Per Pack')->rules('required');
+            $form->text('sppr','In Riel')->readOnly()->attribute($style);
+            $form->currency('salepriceunit','Sale Pice Per Unit')->rules('required');
+            $form->text('spur','In Riel')->readOnly()->attribute($style);
+            
 
 
 
-            $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute);
-            $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute);
+
+
             
             //$form->switch('isdrugs', 'Is Drug?');
 
@@ -373,23 +412,24 @@ SCRIPT;
 
 SCRIPT;
             $form->html($html_exchangerate);
-            $form->currency('salepriceunit','Sale Pice Per Unit')->rules('required');
-            $form->text('spur','In Riel')->readOnly()->attribute($style);
-            $form->currency('salepricepack','Sale Pice Per Pack')->rules('required');
-            $form->text('sppr','In Riel')->readOnly()->attribute($style);
-            $form->currency('salepricebox','Sale Pice Per Box')->rules('required');
-            $form->text('spbr','In Riel')->readOnly()->attribute($style);
+            $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute)->value(0);
+            $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute)->value(0);
 
-            $form->currency('importpriceunit','Import Pice Per Unit')->rules('required');
-            $form->text('ipur','In Riel')->readOnly()->attribute($style);
-            $form->currency('importpricepack','Import Pice Per Pack')->rules('required');
-            $form->text('ippr','In Riel')->readOnly()->attribute($style);
             $form->currency('importpricebox','Import Pice Per Box')->rules('required');
             $form->text('ipbr','In Riel')->readOnly()->attribute($style);
+            $form->currency('importpricepack','Import Pice Per Pack')->rules('required');
+            $form->text('ippr','In Riel')->readOnly()->attribute($style);
+            $form->currency('importpriceunit','Import Pice Per Unit')->rules('required');
+            $form->text('ipur','In Riel')->readOnly()->attribute($style);
+            
 
 
-            $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute);
-            $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute);
+            $form->currency('salepricebox','Sale Pice Per Box')->rules('required');
+            $form->text('spbr','In Riel')->readOnly()->attribute($style);
+            $form->currency('salepricepack','Sale Pice Per Pack')->rules('required');
+            $form->text('sppr','In Riel')->readOnly()->attribute($style);
+            $form->currency('salepriceunit','Sale Pice Per Unit')->rules('required');
+            $form->text('spur','In Riel')->readOnly()->attribute($style);
             
             //$form->switch('isdrugs', 'Is Drug?');
 

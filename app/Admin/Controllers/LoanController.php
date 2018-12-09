@@ -23,6 +23,32 @@ $(document).ready(function() {
         $('.btn-primary')[0].click();
     });
 
+    $('.clear-loan').unbind('click').click(function() {
+    
+        if(confirm("Are you sure to clear this loan ?")) {
+            $.ajax({
+                method: 'post',
+                dataType: "json",
+                url: '/admin/loan/clear/' + $(this).data('id'),
+                data: {
+                    _token:LA.token,
+                },
+                success: function (data) {
+                    //console.log(data);
+                    //console.log(data.status);
+                    $.pjax.reload('#pjax-container');
+
+                    if (data.status) {
+                        toastr.success(data.message);
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
+
+
 });
 SCRIPT;
     /**
@@ -72,6 +98,7 @@ select c.cusid as cusid
      , l.amount as amount
      , l.state as state
      , l.created_at as created_at
+     , l.updated_at as updated_at
   from customers c 
   join sales     s on c.cusid = s.cusid
   join loan      l on s.saleid= l.saleid
@@ -81,6 +108,7 @@ END;
             $grid->model()
                 ->selectRaw(' * ')
                 ->from(DB::raw($sql))
+                ->orderBy('saleid','DESC')
                 ;
             
             
@@ -105,9 +133,8 @@ END;
                 return $state ? 'Cleared' : 'NO';
             }); 
             
-            $grid->created_at();
-            
-            /*$grid->updated_at();*/
+            $grid->created_at();           
+            $grid->updated_at();
 
           
             $grid->actions(function ($actions) {
@@ -116,13 +143,45 @@ END;
                 // append an action view sale.
                 $actions->append('<a title="View sale" href="sale/list?saleid=' .$actions->getKey(). '"><i class="fa fa-search"></i></a>');
                 // append action clear loan
-                $actions->append('<a title="Clear loan" href="loan/clear?saleid=' .$actions->getKey(). '"><i class="fa fa-eraser"></i></a>');
+                $actions->append('<a title="Clear loan" href="#" class="clear-loan" data-id="' .$actions->getKey(). '">  <i class="fa fa-eraser"></i></a>');
 
             });
 
             Admin::script($script);
           
         });
+    }
+
+    public function clearLoan($saleid){
+
+        if (Admin::user()->isRole('Administrator')){
+            
+            $loan = Loan::find($saleid);
+            if ($loan && $loan->state == 0){
+                $sale = Sale::find($saleid);
+                $sale->recievedd = $sale->recievedd + $loan->amount;
+                $loan->state = 1; //state = 1 means the loan is cleared.
+                DB::transaction(function () use ($sale, $loan){
+                    $sale->save();
+                    $loan->save();
+                });
+
+
+                $result = [
+                    'status'  => true,
+                    'message' => 'The loan is cleared',
+                ];
+            }else{
+                $result = [
+                    'status'  => false,
+                    'message' => 'The loan cannot be cleared',
+                ];
+            }
+       
+            return json_encode($result);
+            
+        }
+
     }
 
     

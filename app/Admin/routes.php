@@ -60,6 +60,7 @@ Route::group([
 
     //for rtpos
     $router->get("loan","LoanController@index");
+    $router->post("loan/clear/{saleid}","LoanController@clearLoan");
 
 
 
