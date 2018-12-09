@@ -27,19 +27,19 @@ class Customer extends Model
         return $result;
     }
     
-    public static getCustomerWithLoan(){
+    public static function getCustomerWithLoan(){
         $sql= <<<END
 select c.cusid, c.name
 from customers c join sales s using(cusid)
-where stockouttype = 2;
+where sotid = 2;
 END;
-        $rows = DB::select();
+        $rows = DB::select($sql);
         $result = [null => 'Select Customer'];
         foreach ($rows as $row) {
             $id       = $row->cusid;
             $name     = $row->name;
             $result[$id] = "$id:$name";
         }
+        return $result;
     }
-    //
 }

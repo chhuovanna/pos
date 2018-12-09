@@ -58,6 +58,9 @@ Route::group([
     $router->get("searchsaleproduct","SaleProductController@searchsaleproduct");
     $router->get("searchinventory","InventoryController@searchinventory");
 
+    //for rtpos
+    $router->get("loan","LoanController@index");
+
 
 
 

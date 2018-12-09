@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Loan extends Model
 {
     protected $primaryKey = 'saleid';
-    protected $table = 'Loan';
+    protected $table = 'loan';
 
     public function sale()
     {

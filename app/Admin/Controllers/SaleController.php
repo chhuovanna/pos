@@ -243,7 +243,8 @@ SCRIPT;
             
             $customers = Customer::pluck('name','cusid');      
             $form->select('cusid','Customer')->options($customers);
-
+            $stockouttypes = StockoutType::pluck('type','sotid');      
+            $form->select('sotid','Stock out type')->options($stockouttypes);
 
             $form->currency('total', 'Total');
             $form->number('discount','Discount');
