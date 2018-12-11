@@ -479,39 +479,49 @@ SCRIPT;
 /*maynot use*/
     protected function getReport($res)
     {
-        $used    = array( 'stotal' => 0, 'sftotal' => 0 );
-        $gift    = array( 'stotal' => 0, 'sftotal' => 0 );
-        $expired = array( 'stotal' => 0, 'sftotal' => 0 );
-        $lost    = array( 'stotal' => 0, 'sftotal' => 0 );
-        $return  = array( 'stotal' => 0, 'sftotal' => 0 );
         $ordinary  = array( 'stotal' => 0, 'sftotal' => 0 );
+        $loan      = array( 'stotal' => 0, 'sftotal' => 0 , 'samount' => 0 );
+        $return    = array( 'stotal' => 0, 'sftotal' => 0 );
+        $expired   = array( 'stotal' => 0, 'sftotal' => 0 );
+        $lost      = array( 'stotal' => 0, 'sftotal' => 0 );
+        $used      = array( 'stotal' => 0, 'sftotal' => 0 );
+        $gift      = array( 'stotal' => 0, 'sftotal' => 0 );
+        
+       
         $expense = 0;
         $profit  = 0;
+        $income  = 0;
 
         if ($res){
             foreach ($res['sales'] as $row) {
-                if ( $row->cusid && $row->cusid < 0 ) {
-                    switch ($row->cusid) {
-                        case "-1":
-                            $expired['stotal']  += $row->total;
-                            $expired['sftotal'] += $row->ftotal;
+                if ( $row->sotid && $row->sotid > 1 ) {
+                    switch ($row->sotid) {
+                        case "2":
+                            $loan['stotal']  += $row->total;
+                            $loan['sftotal'] += $row->ftotal;
+                            $loan['samount']  += $row->amount;
                             break;
-                        case "-2":
-                            $lost['stotal']  += $row->total;
-                            $lost['sftotal'] += $row->ftotal;
-                            break;
-                        case "-3":
-                            $used['stotal']  += $row->total;
-                            $used['sftotal'] += $row->ftotal;
-                            break;
-                        case "-4":
-                            $gift['stotal']  += $row->total;
-                            $gift['sftotal'] += $row->ftotal;
-                            break;
-                        case "-5":
+                        case "5":
                             $return['stotal']  += $row->total;
                             $return['sftotal'] += $row->ftotal;
                             break;
+                        case "6":
+                            $expired['stotal']  += $row->total;
+                            $expired['sftotal'] += $row->ftotal;
+                            break;
+                        case "7":
+                            $lost['stotal']  += $row->total;
+                            $lost['sftotal'] += $row->ftotal;
+                            break;
+                        case "8":
+                            $used['stotal']  += $row->total;
+                            $used['sftotal'] += $row->ftotal;
+                            break;
+                        case "9":
+                            $gift['stotal']  += $row->total;
+                            $gift['sftotal'] += $row->ftotal;
+                            break;
+                        
                     }
                 }else{
                     $ordinary['stotal']  += $row->total;
@@ -528,15 +538,18 @@ SCRIPT;
                             + $value->sumbox*$res['productprices'][$key]->buypricebox;
             }
 
-            $profit = ( $ordinary['sftotal'] + $return['sftotal']) - $expense; 
+            $income = $ordinary['sftotal'] + $loan['sftotal'] + $return['sftotal'];
+            $profit = $income - $expense; 
         }
 
         return array( 'Ordinary' => $ordinary
+                    , 'Loan'     => $loan
+                    , 'Return'   => $return
                     , 'Expired'  => $expired
                     , 'Lost'     => $lost
                     , 'Used'     => $used
                     , 'Gift'     => $gift
-                    , 'Return'   => $return
+                    , 'Income'   => $income
                     , 'Expense'  => $expense
                     , 'Profit'   => $profit);
     }

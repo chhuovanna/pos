@@ -116,6 +116,8 @@ END;
                 $filter->between('created_at', 'Created at')->datetime();
                 $customerwithloan = Customer::getCustomerWithLoan();
                 $filter->equal('cusid','Customer')->select($customerwithloan);
+                $state = [1=>'Clear', 0=>'No'];
+                $filter->equal('state','State')->select($state);
                 
             });
             
