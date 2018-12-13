@@ -64,11 +64,11 @@ th, td {
     $(document).ready( function(){
      
         
-        var saleid = $("input[name=saleid]").val();
+        var saleid = $("input[placeholder=SaleID]").val();
         var created_at_start = $('#created_at_start').val();
         var i;
         var created_at_end = $('#created_at_end').val();
-        var subtotal = $("input[placeholder=SubtotalRange");
+        var subtotal = $("input[placeholder=SubtotalRange]");
         //var subtotal_end = $("input[name=subtotalend").val();
 
         var quantity = $("input[placeholder=Quantity]").val()
@@ -90,7 +90,6 @@ th, td {
             
         }
 
-       
 
         if (subtotal[0].value && subtotal[1].value){
             searchKey.push('"subtotal_start":"'+subtotal[0].value+ '"');
@@ -114,8 +113,8 @@ th, td {
 
         jsonsearchkey = JSON.parse(test);
 
-       // alert(test);
-     
+        //alert(test);
+        //console.log(jsonsearchkey);
 
         $.ajax({
             type:"GET",

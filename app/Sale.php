@@ -142,9 +142,33 @@ EOT;
             $productprices = $temp;
             unset($temp);
 
+
+
+            $sql = <<<END
+select pid
+    , sum(unitquantity) as unitprize
+    , sum(packquantity) as packprize 
+    , sum(boxquantity)  as boxprize
+from sales s join saleproducts
+    using(saleid)
+where sotid = 3
+group by pid;
+END;
+            $prizeproducts = DB::select($sql);
+            $temp = array();
+
+            foreach ($prizeproducts as $prizeproduct) {
+                $temp[$prizeproduct->pid] = $prizeproduct;
+            }
+
+            $prizeproducts = $temp;
+            unset($temp);
+
 			return array('sales' 		=> $sales 
     				, 'saleproducts' 	=> $saleproducts
-    				, 'productprices' 	=> $productprices);
+    				, 'productprices' 	=> $productprices
+                    , 'prizeproducts'   => $prizeproducts
+                );
 
 		}
 
