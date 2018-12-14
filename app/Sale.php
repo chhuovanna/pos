@@ -18,6 +18,8 @@ class Sale extends Model
 
     public static function searchsale($searchkey){
 
+        $prizeproducts = array();
+        $prize = true;
 		$where = array();
         //uncleared loan 
     	$sql = <<<EOT
@@ -35,7 +37,14 @@ From  sales s
 	
 EOT;
  
-
+        $sqlprize = <<<END
+select pid
+    , sum(unitquantity) as unitprize
+    , sum(packquantity) as packprize 
+    , sum(boxquantity)  as boxprize
+from sales s join saleproducts
+    using(saleid)
+END;
 
     	if (array_key_exists('saleid', $searchkey) ){
     		$where[] = " `s`.`saleid` = " 
@@ -63,24 +72,38 @@ EOT;
     			. $searchkey['cusid']  . " ";	
     	}
 
+        $sqlprizewhere = "";
+
         if (array_key_exists('sotid', $searchkey) ){
             $where[] = " `s`.`sotid` = " 
                 . $searchkey['sotid']  . " ";   
+            if ($searchkey['sotid'] != 3){ //not prize stockout type or not default case
+                $prize = false;
+            }
+
+        }else{
+            $sqlprizewhere = " `s`.`sotid` = 3 "; //winning product prize
         }
+        
+        $sqlwhere = "";
 
 
     	if (sizeof($where) > 0){
-    		$sql .= " where ";
 
     		for ($i = 0 ; $i < sizeof($where) ; $i++){
-    			$sql .= $where[$i];
+    			$sqlwhere .= $where[$i];
 
     			if ($i < (sizeof($where) -1)){
-    				$sql .= " AND ";
+    				$sqlwhere .= " AND ";
     			}
     		}
-    	}
 
+            $sql .= ("Where " . $sqlwhere );      
+            
+            if ($sqlprizewhere){
+                $sqlprizewhere .= " AND ";
+            }
+    	}
     	
 
     	$sales = DB::select($sql);
@@ -142,27 +165,20 @@ EOT;
             $productprices = $temp;
             unset($temp);
 
+            if ($prize){
+                //data of win product prize
 
+                $sqlprize .= ("Where " . $sqlprizewhere . $sqlwhere ." group by pid");
+                $prizeproducts = DB::select($sqlprize);
+                $temp = array();
 
-            $sql = <<<END
-select pid
-    , sum(unitquantity) as unitprize
-    , sum(packquantity) as packprize 
-    , sum(boxquantity)  as boxprize
-from sales s join saleproducts
-    using(saleid)
-where sotid = 3
-group by pid;
-END;
-            $prizeproducts = DB::select($sql);
-            $temp = array();
+                foreach ($prizeproducts as $prizeproduct) {
+                    $temp[$prizeproduct->pid] = $prizeproduct;
+                }
 
-            foreach ($prizeproducts as $prizeproduct) {
-                $temp[$prizeproduct->pid] = $prizeproduct;
+                $prizeproducts = $temp;
+                unset($temp);
             }
-
-            $prizeproducts = $temp;
-            unset($temp);
 
 			return array('sales' 		=> $sales 
     				, 'saleproducts' 	=> $saleproducts

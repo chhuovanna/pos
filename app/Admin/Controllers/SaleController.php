@@ -172,7 +172,7 @@ SCRIPT;
                 }
 
                 // append an action.
-                $actions->append('<a title="View Orderline" href="' .url('/admin/orderline?&saleid=').$actions->getKey(). '"><i class="fa fa-search"></i></a>');
+                $actions->append('<a title="View Orderline" href="' .url('/admin/orderline?saleid=').$actions->getKey(). '"><i class="fa fa-search"></i></a>');
 
             });
 
@@ -186,9 +186,9 @@ SCRIPT;
             $grid->total('Total');            
             $grid->discount('Dis%');
             $grid->ftotal('GrandTotal$');
-            $grid->exchangerate('ExRate');
             $grid->recievedd('RecUSD');
             $grid->recievedr('RecRiel');
+            $grid->exchangerate('ExRate');
 
 
             $script = <<<SCRIPT
@@ -546,9 +546,16 @@ SCRIPT;
                             + $value->boxprize*$res['productprices'][$key]->buypricebox;
             }
 
-            $prize['prizeexpense'] = 0 - $prizeexpense;
+            $prize['prizeexpense'] = $prizeexpense;
 
-            $income = $ordinary['sftotal'] + $loan['sftotal'] + $prize['sftotal'] + $return['sftotal'];
+            $income = $ordinary['sftotal'] 
+                + $loan['sftotal'] 
+                + $prize['sftotal'] 
+                + $return['sftotal']
+                + $expired['sftotal']
+                + $lost['sftotal']
+                + $used['sftotal']
+                ;
             $profit = $income - $expense; 
         }
 
@@ -561,7 +568,9 @@ SCRIPT;
                     , 'Used'     => $used
                     , 'Income'   => $income
                     , 'Expense'  => $expense
-                    , 'Profit'   => $profit);
+                    , 'Profit'   => $profit
+                    , 'prizeproducts' => $res['prizeproducts']
+                );
     }
    
 
