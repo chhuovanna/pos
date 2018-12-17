@@ -340,7 +340,7 @@
 
         $('#totald').val(totald);
         totalr = totald.mul(exchangerate);
-        $('#totalr').val(Math.round(totalr));  
+        $('#totalr').val(Math.ceil(totalr));  
         
         discountamount = new Decimal(totald.mul(discount).div(100));
         $('#discountd').val(discountamount);
@@ -349,7 +349,7 @@
 
 
         $('#ftotald').val(totald.sub(discountamount));
-        $('#ftotalr').val(Math.round(totald.sub(discountamount).mul(exchangerate)));
+        $('#ftotalr').val(Math.ceil(totald.sub(discountamount).mul(exchangerate)));
         getChange();
 
     }
@@ -381,14 +381,14 @@
             case 'discountd':
                 initiateNumber('discountd');
                 discountamount = new Decimal($('#discountd').val());
-                discount = discountamount.div(totald);
+                discount = discountamount.div(totald).mul(100);
                 discountr = discountamount.mul(exchangerate);
                 break;
             case 'discountr':
                 initiateNumber('discountr');
                 discountr = new Decimal($('#discountr').val());
                 discountamount = discountr.div(exchangerate);
-                discount = discountamount.div(totald);
+                discount = discountamount.div(totald).mul(100);
                 break;
         }
 
@@ -398,7 +398,7 @@
 
         ftotald = new Decimal(totald.sub(discountamount));
         $('#ftotald').val(ftotald);
-        $('#ftotalr').val(Math.round(ftotald.mul(exchangerate)));
+        $('#ftotalr').val(Math.ceil(ftotald.mul(exchangerate)));
 
         getChange();    
     }

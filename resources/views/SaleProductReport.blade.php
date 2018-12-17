@@ -64,15 +64,16 @@ th, td {
     $(document).ready( function(){
      
         
-        var saleid = $("input[placeholder=SaleID]").val();
+        var saleid = $("input[placeholder='Saleid']").val();
+        var saleids = $("input[placeholder='List SaleID']").val();
         var created_at_start = $('#created_at_start').val();
         var i;
         var created_at_end = $('#created_at_end').val();
-        var subtotal = $("input[placeholder=SubtotalRange]");
+        var subtotal = $("input[placeholder='SubtotalRange']");
         //var subtotal_end = $("input[name=subtotalend").val();
 
-        var quantity = $("input[placeholder=Quantity]").val()
-        var pid = $("select[name=pid]").val();
+        var quantity = $("input[placeholder='Quantity']").val()
+        var pid = $("select[name='pid']").val();
 
         var test = "";
         var searchKey = [];
@@ -81,6 +82,10 @@ th, td {
         //alert("saleid="+saleid+"created_at_start"+created_at_start+","+ created_at_end+ "subtotal="+ subtotal_start[0].value+","+ subtotal_start[1].value+"quantity="+quantity+"pid="+pid);
         if (saleid){
             searchKey.push('"saleid":"'+saleid+ '"');
+        }else{
+            if (saleids){
+                searchKey.push('"saleid":"'+saleids+ '"');    
+            }
         }
 
         if (created_at_start && created_at_end){

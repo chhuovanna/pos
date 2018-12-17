@@ -155,3 +155,31 @@ alter table sales modify total decimal(10,4)
 	, modify ftotal decimal(10,4)
     ;
 
+#create table winmoneyprize and winmoneyprizeproduct
+create table winmoneyprize (wmpid bigint auto_increment primary key
+	, cusid int
+    , created_at timestamp default current_timestamp
+    , updated_at timestamp default current_timestamp
+    , paytotalr decimal(8,0)
+    , wintotalr decimal(8,0)
+    , lefttotalr decimal(8,0)
+    
+    ) engine = InnoDb;
+alter table winmoneyprize add foreign key (cusid) references customers(cusid);
+
+
+create table winmoneyprizeproduct (wmpid bigint
+	, pid int
+    , created_at timestamp default current_timestamp
+    , updated_at timestamp default current_timestamp
+    , payamountr decimal(8,0)
+    , winamountr decimal(8,0)
+    , unit int
+    , paysubtotalr decimal(8,0)
+    , winsubtotalr decimal(8,0)
+    , leftsubtoatr decimal(8,0)
+    , primary key (wmpid, pid)
+    ) engine = InnoDB;
+    
+alter table winmoneyprizeproduct add foreign key (wmpid) references winmoneyprize(wmpid);
+
