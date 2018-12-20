@@ -123,3 +123,7 @@ alter table sales add foreign key (sotid) references stockoutType (sotid);
 
 #create table loan
 create table loan (saleid bigint(20), amount decimal(8,2) , state smallint /*0: not yet clear, 1: is cleared*/, created_at timestamp default current_timestamp, updated_at timestamp default current_timestamp, primary key (saleid),  foreign key (saleid) references sales(saleid) on delete cascade) engine=innodb;
+
+
+#modify discount.xxxx
+alter table sales modify discount decimal(7,4);
