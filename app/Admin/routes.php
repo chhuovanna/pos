@@ -62,7 +62,9 @@ Route::group([
     $router->get("loan","LoanController@index");
     $router->post("loan/clear/{saleid}","LoanController@clearLoan");
 
+    //for win money prize
 
+    $router->get('winmoneyprize/add','WinMoneyPrizeController@create');
 
 
 

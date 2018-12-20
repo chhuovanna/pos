@@ -36,8 +36,8 @@ EOT;
 
 
     	if (array_key_exists('saleid', $searchkey) ){
-    		$where[] = " `saleid` = " 
-    			. $searchkey['saleid'] . " ";	
+    		$where[] = " `saleid` in (" 
+    			. $searchkey['saleid'] . ") ";	
     	}
 
 		if (array_key_exists('created_at_start', $searchkey) ){

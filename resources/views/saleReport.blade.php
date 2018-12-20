@@ -28,6 +28,10 @@ table#salereporttable th, td {
     border-bottom: 1px solid #ddd;
 }
 
+tr.darker-border td{
+    border-top: 2px  solid black;
+}
+
 
 </style>
 <div class="box">
@@ -222,40 +226,43 @@ table#salereporttable th, td {
             url:"searchsale",
             data:jsonsearchkey,    // multiple data sent using ajax
             success: function (data) {
-                //console.log(data);
+                console.log(data);
                 
                     
                 $('#salereportbody').append("<tr><td>Ordinary Sale</td><td>" 
-                                            + data.Ordinary.stotal.toFixed(2)  + "</td><td>" 
-                                            + data.Ordinary.sftotal.toFixed(2) + "</td></tr>");
+                                            + data.Ordinary.stotal.toFixed(4)  + "</td><td>" 
+                                            + data.Ordinary.sftotal.toFixed(4) + "</td></tr>");
                 $('#salereportbody').append("<tr><td>Sale with loan</td><td>" 
-                                            + data.Loan.stotal.toFixed(2)  + "</td><td>" 
-                                            + data.Loan.sftotal.toFixed(2) + "</td></tr>");  
-                $('#salereportbody').append("<tr style='background-color:#def9fc'><td>Sum loan amount</td><td>" 
-                                            + data.Loan.samount.toFixed(2) + "</td><td></td></tr>");                
-                $('#salereportbody').append("<tr><td>Return</td><td>" 
-                                            + data.Return.stotal.toFixed(2)  + "</td><td>" 
-                                            + data.Return.sftotal.toFixed(2) + "</td></tr>");
-                $('#salereportbody').append("<tr><td>Expired</td><td>" 
-                                            + data.Expired.stotal.toFixed(2)  + "</td><td>" 
-                                            + data.Expired.sftotal.toFixed(2) + "</td></tr>");
-                $('#salereportbody').append("<tr><td>Lost</td><td>" 
-                                            + data.Lost.stotal.toFixed(2)  + "</td><td>" 
-                                            + data.Lost.sftotal.toFixed(2) + "</td></tr>");
-                $('#salereportbody').append("<tr><td>Used</td><td>" 
-                                            + data.Used.stotal.toFixed(2)  + "</td><td>" 
-                                            + data.Used.sftotal.toFixed(2) + "</td></tr>");
-                $('#salereportbody').append("<tr><td>Gift</td><td>" 
-                                            + data.Gift.stotal.toFixed(2)  + "</td><td>" 
-                                            + data.Gift.sftotal.toFixed(2) + "</td></tr>");
-                
+                                            + data.Loan.stotal.toFixed(4)  + "</td><td>" 
+                                            + data.Loan.sftotal.toFixed(4) + "</td></tr>");  
+                $('#salereportbody').append("<tr><td>Winning product prize</td><td>" 
+                                            + data.Prize.stotal.toFixed(4)  + "</td><td>" 
+                                            + data.Prize.sftotal.toFixed(4) + "</td></tr>");
 
-                $('#salereportbody').append("<tr><td></td><td>Income plus loan</td><td>" 
-                                            + data.Income.toFixed(2)  + "</td></tr>");
+                $('#salereportbody').append("<tr><td>Return</td><td>" 
+                                            + data.Return.stotal.toFixed(4)  + "</td><td>" 
+                                            + data.Return.sftotal.toFixed(4) + "</td></tr>");
+                $('#salereportbody').append("<tr><td>Expired</td><td>" 
+                                            + data.Expired.stotal.toFixed(4)  + "</td><td>" 
+                                            + data.Expired.sftotal.toFixed(4) + "</td></tr>");
+                $('#salereportbody').append("<tr><td>Lost</td><td>" 
+                                            + data.Lost.stotal.toFixed(4)  + "</td><td>" 
+                                            + data.Lost.sftotal.toFixed(4) + "</td></tr>");
+                $('#salereportbody').append("<tr><td>Used</td><td>" 
+                                            + data.Used.stotal.toFixed(4)  + "</td><td>" 
+                                            + data.Used.sftotal.toFixed(4) + "</td></tr>");                
+
+                $('#salereportbody').append("<tr class='darker-border'><td></td><td>Income plus loan</td><td>" 
+                                            + data.Income.toFixed(4)  + "</td></tr>");
                 $('#salereportbody').append("<tr><td></td><td>Estimated Imported Cost</td><td>" 
-                                            + data.Expense.toFixed(2)  + "</td></tr>");
+                                            + data.Expense.toFixed(4)  + "</td></tr>");
                 $('#salereportbody').append("<tr><td></td><td>Estimated Profit</td><td>" 
-                                            + data.Profit.toFixed(2)  + "</td></tr>");
+                                            + data.Profit.toFixed(4)  + "</td></tr>");
+                $('#salereportbody').append("<tr class='darker-border'><td></td><td>Sum loan amount</td><td>" 
+                                            + data.Loan.samount.toFixed(4) + "</td></tr>");                
+
+                $('#salereportbody').append("<tr'><td></td><td>Estimated expense for winning product prize</td><td>" 
+                                            + data.Prize.prizeexpense.toFixed(4) + "</td></tr>");       
                 
             },
             error: function(xhr, status, error){

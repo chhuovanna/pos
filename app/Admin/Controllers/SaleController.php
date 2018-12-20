@@ -172,7 +172,7 @@ SCRIPT;
                 }
 
                 // append an action.
-                $actions->append('<a title="View Orderline" href="' .url('/admin/orderline?&saleid=').$actions->getKey(). '"><i class="fa fa-search"></i></a>');
+                $actions->append('<a title="View Orderline" href="' .url('/admin/orderline?saleid=').$actions->getKey(). '"><i class="fa fa-search"></i></a>');
 
             });
 
@@ -186,9 +186,9 @@ SCRIPT;
             $grid->total('Total');            
             $grid->discount('Dis%');
             $grid->ftotal('GrandTotal$');
-            $grid->exchangerate('ExRate');
             $grid->recievedd('RecUSD');
             $grid->recievedr('RecRiel');
+            $grid->exchangerate('ExRate');
 
 
             $script = <<<SCRIPT
@@ -481,16 +481,17 @@ SCRIPT;
     {
         $ordinary  = array( 'stotal' => 0, 'sftotal' => 0 );
         $loan      = array( 'stotal' => 0, 'sftotal' => 0 , 'samount' => 0 );
+        $prize     = array( 'stotal' => 0, 'sftotal' => 0 , 'prizeexpense' => 0);
         $return    = array( 'stotal' => 0, 'sftotal' => 0 );
         $expired   = array( 'stotal' => 0, 'sftotal' => 0 );
         $lost      = array( 'stotal' => 0, 'sftotal' => 0 );
         $used      = array( 'stotal' => 0, 'sftotal' => 0 );
-        $gift      = array( 'stotal' => 0, 'sftotal' => 0 );
         
        
         $expense = 0;
         $profit  = 0;
         $income  = 0;
+        $prizeexpense = 0;
 
         if ($res){
             foreach ($res['sales'] as $row) {
@@ -500,6 +501,10 @@ SCRIPT;
                             $loan['stotal']  += $row->total;
                             $loan['sftotal'] += $row->ftotal;
                             $loan['samount']  += $row->amount;
+                            break;
+                        case "3":
+                            $prize['stotal']  += $row->total;
+                            $prize['sftotal'] += $row->ftotal;
                             break;
                         case "5":
                             $return['stotal']  += $row->total;
@@ -516,10 +521,6 @@ SCRIPT;
                         case "8":
                             $used['stotal']  += $row->total;
                             $used['sftotal'] += $row->ftotal;
-                            break;
-                        case "9":
-                            $gift['stotal']  += $row->total;
-                            $gift['sftotal'] += $row->ftotal;
                             break;
                         
                     }
@@ -538,20 +539,38 @@ SCRIPT;
                             + $value->sumbox*$res['productprices'][$key]->buypricebox;
             }
 
-            $income = $ordinary['sftotal'] + $loan['sftotal'] + $return['sftotal'];
+            //prize win product import total cost
+            foreach ($res['prizeproducts'] as $key => $value) {
+                $prizeexpense += $value->unitprize*$res['productprices'][$key]->buypriceunit
+                            + $value->packprize*$res['productprices'][$key]->buypricepack
+                            + $value->boxprize*$res['productprices'][$key]->buypricebox;
+            }
+
+            $prize['prizeexpense'] = $prizeexpense;
+
+            $income = $ordinary['sftotal'] 
+                + $loan['sftotal'] 
+                + $prize['sftotal'] 
+                + $return['sftotal']
+                + $expired['sftotal']
+                + $lost['sftotal']
+                + $used['sftotal']
+                ;
             $profit = $income - $expense; 
         }
 
         return array( 'Ordinary' => $ordinary
                     , 'Loan'     => $loan
+                    , 'Prize'    => $prize
                     , 'Return'   => $return
                     , 'Expired'  => $expired
                     , 'Lost'     => $lost
                     , 'Used'     => $used
-                    , 'Gift'     => $gift
                     , 'Income'   => $income
                     , 'Expense'  => $expense
-                    , 'Profit'   => $profit);
+                    , 'Profit'   => $profit
+                    , 'prizeproducts' => $res['prizeproducts']
+                );
     }
    
 

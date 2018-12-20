@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\SaleProduct;
 use App\Product;
+use App\Sale;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -99,7 +100,14 @@ class SaleProductController extends Controller
                 $filter->disableIdFilter();
                 $products = Product::getSelectOption();
 
-                $filter->equal('saleid', 'SaleID');
+                $filter->equal('saleid');
+                $filter->where(function ($query) {
+
+                        $saleids = explode(',', $this->input );
+                        $query->whereRaw(" saleid in ({$this->input}) ");
+
+                    }, 'List SaleID');
+
 
                 $filter->between('created_at','Sale Period')->datetime();
 
@@ -199,5 +207,21 @@ SCRIPT;
 
         return SaleProduct::searchsaleproduct($searchKey);
     }
+
+/*    public function show($id){
+
+        return Admin::content(function (Content $content) {
+
+            $content->header('Order Line');
+            $content->description('List');
+
+            
+            $content->body($this->grid());
+            $content->body(view('SaleProductReport'));
+
+        });
+
+
+    }*/
 
 }
