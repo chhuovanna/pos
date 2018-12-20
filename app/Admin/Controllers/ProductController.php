@@ -278,12 +278,12 @@ SCRIPT;
     protected function stockReminderGrid()
     {
         return Admin::grid(Product::class, function (Grid $grid) {
-
+/*
             $grid->filter(function ($filter) {
 
                 $filter->disableIdFilter();
 
-            });   
+            });   */
 
             $grid->model()->selectRaw('pid
                 , name
@@ -298,8 +298,8 @@ SCRIPT;
             $grid->disableRowSelector();
             $grid->disableActions();
             $grid->disableCreation();
-            $grid->paginate(10);
-            
+            $grid->disableFilter();
+            $grid->disablePagination();
            
             $grid->pid('ID');
             $grid->name('Name');           

@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Customer;
+use App\Product;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -58,10 +59,11 @@ class WinMoneyPrizeController extends Controller
         return Admin::content(function (Content $content) {
 
             $customers = Customer::orderBy('cusid')->get();
+            $products  = Product::getSelectOption();
 
             $content->header('Win Money Prize');
             $content->description('Add win money prize');
-            $content->body(view('winMoneyPrizeAdd', ['customers' => $customers] ));
+            $content->body(view('winMoneyPrizeAdd', ['customers' => $customers, 'products' => $products] ));
         });
     }
 
