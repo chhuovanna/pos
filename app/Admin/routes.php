@@ -65,6 +65,7 @@ Route::group([
     //for win money prize
 
     $router->get('winmoneyprize/add','WinMoneyPrizeController@create');
+    $router->post('winmoneyprize/submit', 'WinMoneyPrizeController@save');
 
 
 
