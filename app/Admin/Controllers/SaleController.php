@@ -593,7 +593,15 @@ SCRIPT;
 
     protected function printReceipt(Request $request){
 
-        echo $request['saleid'];
+        $sale = Sale::getSaleForReceipt($request['saleid']);
+        $orderlines = SaleProduct::getOrderlineForReceipt($requst['saleid']);
+
+        return view('printReceipt'
+                , [
+                    'sale'         => $sale
+                    ,'orderlines'   => $orderlines
+                    ,'user'         => Admin::user()->name
+                ]);
 
     }
 

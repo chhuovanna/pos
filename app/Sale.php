@@ -384,4 +384,48 @@ EOT;
     public function loan(){
          return $this->hasOne('App\Loan','saleid');
     }
+
+
+    public static function getSaleForReceipt($saleid){
+        $sql = <<<EOT
+select name
+    , changed
+    , changer
+    , s.saleid
+    , exchangerate
+    , total 
+    , total * exchangerate as totalr
+    , discount * total/100 as discountd
+    , (discount * total/100)*exchangerate as discountr
+    , ftotal
+    , ftotal * exchangerate as ftotalr
+    , recievedd
+    , recievedr
+    , l.amount as loand
+    , l.amount * exchangerate as loanr
+    , 0 as changed 
+    , 0 as changer 
+from ( sales s join customers c 
+        on  s.cusid = c.cusid) 
+        left join loan l
+        on s.saleid = l.saleid
+where saleid = $saleid;
+EOT;
+        $sale = DB::select($sql);
+
+        $sale = $sale->first()        
+
+        if(!$sale->loand){
+            $sale->loand = 0;
+            $sale->loanr = 0;
+        }
+
+        $recieved = $sale->recievedd + ($sale->recievedr/$sale->exchangerate);
+        if ($recieved > $sale->ftotal){
+            $sale->changed = inval($recieved - $sale->ftotal);
+            $sale->changer = ($recieved - $sale->changed)*$sale->exchangerate;
+        } 
+        return $sale;
+
+    }
 }

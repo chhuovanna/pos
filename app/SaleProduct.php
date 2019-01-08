@@ -83,4 +83,26 @@ EOT;
 
     }
 
+    public static function getOrderlineForReceipt($saleid){
+        $sql = <<<EOT
+
+select saleid 
+    , p.name
+    , unitperpack
+    , unitperbox
+    , sp.salepriceunit as salepriceunit
+    , sp.salepricebox as salepricebox
+    , sp.salepricepack as salepricepack
+    , unitquantity
+    , packquantity
+    , boxquantity
+    , subtotal
+from saleproducts sp join products p
+    on sp.pid = p.pid
+where saleid = $saleid;
+EOT;
+        return DB::select($sql);
+
+    }
+
 }
