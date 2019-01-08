@@ -70,7 +70,7 @@
 		}
 
 		.td-name{
-			width: 51%;
+			width: 40%;
 		}
 
 		.td-qty{
@@ -78,7 +78,7 @@
 		}
 
 		.td-price{
-			width: 11%;
+			width: 22%;
 		}
 		.td-subtotal{
 			width: 17%;
@@ -184,17 +184,17 @@
 		</tr>
 
 		<tr>
-			<td class="td-4 td-invoicenum">
+			<td class="td-invoicenum">
 				<p>លេខៈ {{ $sale->saleid }}</p>
 			</td>
-			<td class="td-4">
+			<td >
 				<p>អ្នកលក់ៈ {{ $user }}</p>
 			</td>
 
-			<td class="td-4">
+			<td >
 				<p>អ្នកទិញៈ {{ $sale->name }}</p>
 			</td>
-			<td class="td-4 td-date">
+			<td class="td-date">
 				<p>ពេលៈ {{ $sale->created_at }}</p>
 			</td>
 		</tr>
@@ -212,13 +212,14 @@
 		@php
 			$i = 0;
 		@endphp
-		@foreach($ordelines as $orderline)
+		@foreach($orderlines as $orderline)
 			
 			@php
 				$quantity = "";
 				$price = "";
+				$i ++;
 
-				if ($orderline->unitquanity > 0){
+				if ($orderline->unitquantity > 0){
 					$quantity .= $orderline->unitquantity . " ";
 					$price .= $orderline->salepriceunit . " ";
 				}
@@ -234,25 +235,25 @@
 					$price .= $orderline->salepricebox . " ";
 				}
 
-				i++
+				
 
-			@end php
+			@endphp
 
 			
 		<tr >
 			<td >
-				<p>$i</p>
+				<p>{{$i}}</p>
 			</td>
-			<td ><p>$orderline->name</p>
+			<td ><p>{{$orderline->name}}</p>
 			</td>
 			<td>
-				<p >$quantity</p>
+				<p>{{$quantity}}</p>
 			</td>
 			<td >
-				<p>$price</p>
+				<p>{{$price}}</p>
 			</td>
 			<td >
-				<p >$orderline->subtotal</p>
+				<p >{{$orderline->subtotal}} </p>
 			</td>
 		</tr>
 
@@ -598,7 +599,7 @@
 				<p>{{ $sale->total }}</p>
 			</td>
 			<td class="td-currencyr">
-				<p>{{ $sale->totalr }}</p>
+				<p>{{ intval($sale->totalr) }}</p>
 			</td>
 		</tr>
 
@@ -611,7 +612,7 @@
 				<p> {{ $sale->discountd }} </p>
 			</td>
 			<td class="td-currencyr">
-				<p>{{ $sale->discountr }}</p>
+				<p>{{ intval($sale->discountr) }}</p>
 			</td>
 		</tr>
 
@@ -623,7 +624,7 @@
 				<p> {{ $sale->ftotal }}</p>
 			</td>
 			<td class="td-currencyr td-grandtotal">
-				<p>{{ $sale->ftotalr}}</p>
+				<p>{{ intval($sale->ftotalr)}}</p>
 			</td>
 		</tr>
 
@@ -648,7 +649,7 @@
 				<p>{{ $sale->loand }}</p>
 			</td>
 			<td class="td-currencyr">
-				<p>{{ $sale->loanr }}</p>
+				<p>{{ intval($sale->loanr) }}</p>
 			</td>
 		</tr>		
 
@@ -661,7 +662,7 @@
 				<p> {{ $sale->changed }} </p>
 			</td>
 			<td class="td-currencyr">
-				<p> {{ $sale->changer }} </p>
+				<p> {{ intval($sale->changer) }} </p>
 			</td>
 		</tr>		
 

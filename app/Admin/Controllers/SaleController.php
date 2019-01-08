@@ -594,7 +594,7 @@ SCRIPT;
     protected function printReceipt(Request $request){
 
         $sale = Sale::getSaleForReceipt($request['saleid']);
-        $orderlines = SaleProduct::getOrderlineForReceipt($requst['saleid']);
+        $orderlines = SaleProduct::getOrderlineForReceipt($request['saleid']);
 
         return view('printReceipt'
                 , [

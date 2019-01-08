@@ -389,8 +389,6 @@ EOT;
     public static function getSaleForReceipt($saleid){
         $sql = <<<EOT
 select name
-    , changed
-    , changer
     , s.saleid
     , exchangerate
     , total 
@@ -405,15 +403,16 @@ select name
     , l.amount * exchangerate as loanr
     , 0 as changed 
     , 0 as changer 
+    , s.created_at
 from ( sales s join customers c 
         on  s.cusid = c.cusid) 
         left join loan l
         on s.saleid = l.saleid
-where saleid = $saleid;
+where s.saleid = $saleid;
 EOT;
         $sale = DB::select($sql);
 
-        $sale = $sale->first()        
+        $sale = $sale[0];      
 
         if(!$sale->loand){
             $sale->loand = 0;
@@ -422,7 +421,7 @@ EOT;
 
         $recieved = $sale->recievedd + ($sale->recievedr/$sale->exchangerate);
         if ($recieved > $sale->ftotal){
-            $sale->changed = inval($recieved - $sale->ftotal);
+            $sale->changed = intval($recieved - $sale->ftotal);
             $sale->changer = ($recieved - $sale->changed)*$sale->exchangerate;
         } 
         return $sale;
