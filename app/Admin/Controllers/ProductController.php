@@ -330,7 +330,8 @@ SCRIPT;
             $form->display('pid', 'Product ID');
             
             
-            $form->text('barcode','Barcode Number')->rules('unique:products,barcode')->attribute('pattern','[0-9]+');
+            //$form->text('barcode','Barcode Number')->rules('unique:products,barcode')->attribute('pattern','[0-9]+');
+            $form->text('barcode','Barcode Number')->attribute('pattern','[0-9]+');
             
             
             $form->text('name','Product Name')->rules( 'required|unique:products,name');

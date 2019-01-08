@@ -50,6 +50,8 @@ Route::group([
 
     //$router->post('sale/checkout','SaleController@checkout');
     $router->post('sale/checkout', 'SaleController@checkout');
+
+
     /*$router->get('sale/list','SaleController@listSale');
     $router->get('sale/list/{sale}/edit','SaleController@edit');
     $router->put('sale/list/{sale}','SaleController@update');*/
@@ -61,6 +63,7 @@ Route::group([
     //for rtpos
     $router->get("loan","LoanController@index");
     $router->post("loan/clear/{saleid}","LoanController@clearLoan");
+    $router->get('sale/printreceipt', 'SaleController@printReceipt');
 
     //for win money prize
 

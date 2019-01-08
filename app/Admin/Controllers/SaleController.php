@@ -29,6 +29,8 @@ class SaleController extends Controller
 {
     use ModelForm;
 
+    protected $saleid = 0;
+
     /**
      * Index interface.
      *
@@ -65,11 +67,22 @@ class SaleController extends Controller
                 
                 
                 if (array_key_exists('checkoutstate', $input) && $input['checkoutstate'] === 'success'){
+
+                    
                 $script = <<<SCRIPT
 $(document).ready(function(){
     toastr.success('Checkout Success');
 });
+
+
 SCRIPT;
+                    if (array_key_exists('saleid', $input)  && $input['saleid'] > 0 ){
+                        $url = url('/admin/sale/printreceipt?saleid='. $input['saleid']);
+                        $script .= <<<SCRIPT
+window.open('{$url}' ,'_blank', "height=700,width=700");
+
+SCRIPT;
+                    }
                     Admin::script($script);
                 }
                 
@@ -307,6 +320,8 @@ SCRIPT;
     }
 
     public function checkout(Request $request){
+
+        
         
 
         DB::transaction(function () use ($request){
@@ -365,9 +380,11 @@ SCRIPT;
                 $loan->save();
             }
 
+            $this->saleid = $sale->saleid;
+
         });
         DB::commit();
-        $url = strtok(url()->previous(), '?')."?checkoutstate=success";
+        $url = strtok(url()->previous(), '?')."?checkoutstate=success&saleid=". $this->saleid;
 
         return redirect($url);        
 
@@ -573,6 +590,12 @@ SCRIPT;
                 );
     }
    
+
+    protected function printReceipt(Request $request){
+
+        echo $request['saleid'];
+
+    }
 
 
 }
