@@ -11,7 +11,7 @@
 		td p { margin-bottom: 0in }
 		
 		body {
-			font-family:  "Times New Roman", serif; 
+			font-family: "Khmer OS" , serif ,"Times New Roman"; 
 			color: black; 
 		}
 
@@ -23,22 +23,23 @@
 
 		th{
 			border: solid 1px black;
+			font-weight: normal;
 		}
 
 		.shop-name { 
 			font-size: 14px;
 			text-align: center;
-			font-weight: bold;
+			/*font-weight: bold;*/
 		}
 		.shop-des { 
 			font-size: 12px;
 			text-align: center;
-			font-weight: bold;
+			/*font-weight: bold;*/
 		}
 		.receipt{
 			font-size: 12px;
 			text-align: center;
-			font-weight: bold;
+			/*font-weight: bold;*/
 		}
 		.table-contact{
 			font-size: 11px;
@@ -119,7 +120,7 @@
 			text-align: right;
 			padding-right: 3px;
 			border-right: solid 1px black;
-			width: 72;
+			width: 62;
 		}
 		.td-exchangerate{
 			text-align: right;
@@ -139,7 +140,7 @@
 			text-align: right;
 			padding-right: 3px;
 			border: solid 1px black;
-			width: 11%;
+			width: 15%;
 		}
 
 		.table-sign{
@@ -258,328 +259,7 @@
 		</tr>
 
 		@endforeach
-<!-- 		<tr >
-			<td >
-				<p>2</p>
-			</td>
-			<td ><p>Mama Instance Noodel(1X24)</p>
-			</td>
-			<td>
-				<p >1</p>
-			</td>
-			<td >
-				<p>8.5000</p>
-			</td>
-			<td >
-				<p >8.5000</p>
-			</td>
-		</tr>
 
-		<tr >
-			<td >
-				<p>3</p>
-			</td>
-			<td ><p>Darlie Twin Strong Mint 225g+225g</p>
-			</td>
-			<td>
-				<p >1</p>
-			</td>
-			<td >
-				<p>10.0000</p>
-			</td>
-			<td >
-				<p >10.0000</p>
-			</td>
-		</tr>
-
-		<tr >
-			<td >
-				<p>4</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>5</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>6</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>7</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>8</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>9</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>10</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>11</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>12</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>13</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>14</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>15</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>16</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-		<tr >
-			<td >
-				<p>17</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-				<tr >
-			<td >
-				<p>17</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-				<tr >
-			<td >
-				<p>17</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-				<tr >
-			<td >
-				<p>17</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr>
-				<tr >
-			<td >
-				<p>17</p>
-			</td>
-			<td ><p>លក់​ដំុ និង​រាយភេសជ្ជៈគ្រប់ប្រភេទ</p>
-			</td>
-			<td>
-				<p >2</p>
-			</td>
-			<td >
-				<p>1.6500</p>
-			</td>
-			<td >
-				<p >3.3000</p>
-			</td>
-		</tr> -->
 	</table>
 	<table class='table-payment' >
 		<tr >
@@ -588,7 +268,7 @@
 			</td>
 
 			<td class="td-currencyr" >
-				<p>{{ $sale->exchangerate }}</p>
+				<p>{{ $sale->exchangerate }}៛</p>
 			</td>
 		</tr>		
 		<tr >
@@ -596,35 +276,37 @@
 				<p>សរុប:</p>
 			</td>
 			<td class="td-currencyd">
-				<p>{{ $sale->total }}</p>
+				<p>{{ $sale->total }}$</p>
 			</td>
 			<td class="td-currencyr">
-				<p>{{ intval($sale->totalr) }}</p>
+				<p>{{ intval($sale->totalr) }}៛</p>
 			</td>
 		</tr>
 
 		</tr>
+		@if ($sale->discountd>0)
 		<tr >
 			<td class="td-labelpayment">
 				<p>បញ្ចុះតំលៃៈ</p>
 			</td>
 			<td class="td-currencyd">
-				<p> {{ $sale->discountd }} </p>
+				<p> {{ $sale->discountd }}$ </p>
 			</td>
 			<td class="td-currencyr">
-				<p>{{ intval($sale->discountr) }}</p>
+				<p>{{ intval($sale->discountr) }}៛</p>
 			</td>
 		</tr>
+		@endif
 
 		<tr >
 			<td class="td-labelpayment td-grandtotal">
 				<p>សរុបចុងក្រោយៈ</p>
 			</td>
-			<td class="td-currencyd td-grandtotal">
-				<p> {{ $sale->ftotal }}</p>
+			<td class="td-currencyd">
+				<p> {{ $sale->ftotal }}$</p>
 			</td>
-			<td class="td-currencyr td-grandtotal">
-				<p>{{ intval($sale->ftotalr)}}</p>
+			<td class="td-currencyr">
+				<p>{{ intval($sale->ftotalr)}}៛</p>
 			</td>
 		</tr>
 
@@ -633,38 +315,54 @@
 				<p>បង់រួចៈ</p>
 			</td>
 			<td class="td-currencyd">
-				<p> {{ $sale->recievedd }} </p>
+				<p> {{ $sale->recievedd }}$ </p>
 			</td>
 			<td class="td-currencyr">
-				<p> {{ $sale->recievedr }}</p>
+				<p> {{ $sale->recievedr }}៛</p>
 			</td>
 		</tr>		
 
-
+		@if($sale->loand>0)
 		<tr >
 			<td class="td-labelpayment">
 				<p>នៅសល់ៈ</p>
 			</td>
 			<td class="td-currencyd">
-				<p>{{ $sale->loand }}</p>
+				<p>{{ $sale->loand }}$</p>
 			</td>
 			<td class="td-currencyr">
-				<p>{{ intval($sale->loanr) }}</p>
+				<p>{{ intval($sale->loanr) }}៛</p>
 			</td>
 		</tr>		
+		@endif
 
-
+		@if($sale->changed > 0)
 		<tr >
 			<td class="td-labelpayment">
 				<p>អាប់ៈ</p>
 			</td>
 			<td class="td-currencyd">
-				<p> {{ $sale->changed }} </p>
+				<p> {{ $sale->changed }}$ </p>
 			</td>
 			<td class="td-currencyr">
-				<p> {{ intval($sale->changer) }} </p>
+				<p> {{ intval($sale->changer) }}៛ </p>
 			</td>
-		</tr>		
+		</tr>
+		@endif
+
+		@if($sale->changertotal>0)
+		<tr >
+			<td class="td-labelpayment">
+				<p>អាប់ៈ</p>
+			</td>
+			<td class="td-currencyd">
+				<p> </p>
+			</td>
+			<td class="td-currencyr">
+				<p> {{ intval($sale->changertotal) }}៛ </p>
+			</td>
+		</tr>	
+		@endif	
 
 	</table>
 

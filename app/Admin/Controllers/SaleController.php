@@ -72,17 +72,21 @@ class SaleController extends Controller
                 $script = <<<SCRIPT
 $(document).ready(function(){
     toastr.success('Checkout Success');
-});
+
 
 
 SCRIPT;
                     if (array_key_exists('saleid', $input)  && $input['saleid'] > 0 ){
                         $url = url('/admin/sale/printreceipt?saleid='. $input['saleid']);
                         $script .= <<<SCRIPT
-window.open('{$url}' ,'_blank', "height=700,width=700");
+var printWindow = window.open('{$url}' ,'_blank', "height=700,width=700");
+printWindow.print();
+//printWindow.close();
 
 SCRIPT;
                     }
+
+                $script .= "});";
                     Admin::script($script);
                 }
                 

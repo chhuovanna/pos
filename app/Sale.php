@@ -392,17 +392,18 @@ select name
     , s.saleid
     , exchangerate
     , total 
-    , total * exchangerate as totalr
-    , discount * total/100 as discountd
-    , (discount * total/100)*exchangerate as discountr
+    , cast(total * exchangerate as Decimal(10))as totalr
+    , cast(discount * total/100 as Decimal(10,4))  as discountd
+    , cast( (discount * total/100)*exchangerate  as Decimal(10))  as discountr
     , ftotal
-    , ftotal * exchangerate as ftotalr
+    , cast(ftotal * exchangerate as Decimal(10)) as ftotalr
     , recievedd
     , recievedr
     , l.amount as loand
-    , l.amount * exchangerate as loanr
+    , cast( l.amount * exchangerate as Decimal(10))as loanr
     , 0 as changed 
-    , 0 as changer 
+    , 0 as changer
+    , 0 as changertotal 
     , s.created_at
 from ( sales s join customers c 
         on  s.cusid = c.cusid) 
@@ -422,7 +423,8 @@ EOT;
         $recieved = $sale->recievedd + ($sale->recievedr/$sale->exchangerate);
         if ($recieved > $sale->ftotal){
             $sale->changed = intval($recieved - $sale->ftotal);
-            $sale->changer = ($recieved - $sale->changed)*$sale->exchangerate;
+            $sale->changer = ($recieved - $sale->ftotal - $sale->changed)*$sale->exchangerate;
+            $sale->changertotal = ($recieved - $sale->ftotal)*$sale->exchangerate;
         } 
         return $sale;
 
