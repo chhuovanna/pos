@@ -4,20 +4,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Print Receipt</title>
+	<title>View Receipt</title>
 </head>
 <body>
 @endsection
 
-@section('script')
-<script>  
-		window.print(); 
-		window.close(); 
-</script>
-@endsection
 
 
 @section('htmlend')
 </body>
 </html>
 @endsection
+
+

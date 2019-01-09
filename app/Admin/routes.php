@@ -64,6 +64,7 @@ Route::group([
     $router->get("loan","LoanController@index");
     $router->post("loan/clear/{saleid}","LoanController@clearLoan");
     $router->get('sale/printreceipt', 'SaleController@printReceipt');
+    $router->get('sale/viewreceipt', 'SaleController@viewReceipt');
 
     //for win money prize
 

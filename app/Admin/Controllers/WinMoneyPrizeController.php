@@ -49,7 +49,21 @@ class WinMoneyPrizeController extends Controller
 
         $input = $request->all();
 
-        print_r($input);
+        DB::transaction(function () use ($request){
+            $size = sizeof($input['unit']);
+            $winmoneyprize = new Winmoneyprize();
+            $winmoneyprize->cusid = $input['customer'];
+            $winmoneyprize->paytotal = $input['paytotal'];
+            $winmoneyprize->wintotal = $input['wintotal'];
+            $winmoneyprize->lefttotal = $input['lefttotal'];
+            $winmoneyprize->save();
+
+            for(i = 1 ; i < $size ; i++){
+                
+            }
+
+
+        });
         /*DB::transaction(function () use ($request){
 
             $input = $request->all();

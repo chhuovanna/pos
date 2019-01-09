@@ -301,7 +301,7 @@ SCRIPT;
             $grid->shelf('Shelf');
             
             $script = <<<SCRIPT
-$("[name='pid']").select2();
+$("[name='pid']").select2({ width: '200px' });
 $("[name='impid']").select2({ width: '170px' });
 
 

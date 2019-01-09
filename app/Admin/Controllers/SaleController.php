@@ -78,11 +78,10 @@ $(document).ready(function(){
 SCRIPT;
                     if (array_key_exists('saleid', $input)  && $input['saleid'] > 0 ){
                         $url = url('/admin/sale/printreceipt?saleid='. $input['saleid']);
+
+
                         $script .= <<<SCRIPT
 var printWindow = window.open('{$url}' ,'_blank', "height=700,width=700");
-printWindow.print();
-//printWindow.close();
-
 SCRIPT;
                     }
 
@@ -190,6 +189,10 @@ SCRIPT;
 
                 // append an action.
                 $actions->append('<a title="View Orderline" href="' .url('/admin/orderline?saleid=').$actions->getKey(). '"><i class="fa fa-search"></i></a>');
+
+                //append view receipt
+                //$actions->append('<a title="View Receipt" target="_blank" href="' .url('/admin/sale/viewreceipt?saleid=').$actions->getKey(). '"><i class="fa fa-eye"></i></a>');
+                $actions->append('<a title="View Receipt" onclick="window.open(\'' .url('/admin/sale/viewreceipt?saleid=').$actions->getKey(). '\' ,\'_blank\', \'height=700,width=700\'); "><i class="fa fa-eye"></i></a>');
 
             });
 
@@ -425,8 +428,19 @@ SCRIPT;
 				$script = <<<SCRIPT
 $(document).ready(function(){
 	 toastr.success('Checkout Success');
-});
+
 SCRIPT;
+
+                    if (array_key_exists('saleid', $input)  && $input['saleid'] > 0 ){
+                        $url = url('/admin/sale/printreceipt?saleid='. $input['saleid']);
+
+
+                        $script .= <<<SCRIPT
+var printWindow = window.open('{$url}' ,'_blank', "height=700,width=700");
+SCRIPT;
+                    }
+
+                $script .= "});";
 					Admin::script($script);
 				}
 				
@@ -463,8 +477,19 @@ SCRIPT;
                 $script = <<<SCRIPT
 $(document).ready(function(){
      toastr.success('Checkout Success');
-});
 SCRIPT;
+
+                    if (array_key_exists('saleid', $input)  && $input['saleid'] > 0 ){
+                        $url = url('/admin/sale/printreceipt?saleid='. $input['saleid']);
+
+
+                        $script .= <<<SCRIPT
+var printWindow = window.open('{$url}' ,'_blank', "height=700,width=700");
+SCRIPT;
+                    }
+
+                $script .= "});";
+
                     Admin::script($script);
                 }
                 
@@ -597,17 +622,40 @@ SCRIPT;
 
     protected function printReceipt(Request $request){
 
-        $sale = Sale::getSaleForReceipt($request['saleid']);
-        $orderlines = SaleProduct::getOrderlineForReceipt($request['saleid']);
+        //if (array_key_exists('saleid', $request)){
+            //print_r($request['saleid']);
+            $sale = Sale::getSaleForReceipt($request['saleid']);
+            $orderlines = SaleProduct::getOrderlineForReceipt($request['saleid']);
 
-        return view('printReceipt'
-                , [
+            return view('printReceipt'
+                    , [
+                        'sale'         => $sale
+                        ,'orderlines'   => $orderlines
+                        ,'user'         => Admin::user()->name
+                    ]);
+        //}
+
+    }
+
+
+    protected function viewReceipt(Request $request){
+
+        //if (array_key_exists('saleid', $request)){
+
+            $sale = Sale::getSaleForReceipt($request['saleid']);
+            $orderlines = SaleProduct::getOrderlineForReceipt($request['saleid']);
+
+            return view('viewReceipt'
+                    , [
                     'sale'         => $sale
                     ,'orderlines'   => $orderlines
                     ,'user'         => Admin::user()->name
                 ]);
 
+        //}
+
     }
+
 
 
 }

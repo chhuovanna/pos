@@ -183,6 +183,18 @@ create table winmoneyprizeproduct (wmpid bigint
     
 alter table winmoneyprizeproduct add foreign key (wmpid) references winmoneyprize(wmpid);
 
+#alter table win money in dollar
+
+alter table winmoneyprize change paytotalr paytotal decimal(10,4);
+alter table winmoneyprize change wintotalr wintotal decimal(10,4);
+alter table winmoneyprize change lefttotalr lefttotal decimal(10,4);
+
+alter table winmoneyprizeproduct change payamountr payamount decimal(10,4);
+alter table winmoneyprizeproduct change winamountr winamount decimal(10,4);
+alter table winmoneyprizeproduct change paysubtotalr paysubtotal decimal(10,4);
+alter table winmoneyprizeproduct change winsubtotalr winsubtotal decimal(10,4);
+alter table winmoneyprizeproduct change leftsubtoatr leftsubtotal decimal(10,4);
+
 #temporary
 
 alter table products modify barcode bigint;
