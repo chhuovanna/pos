@@ -14,13 +14,19 @@
 
 </style>
 
-<div class="box">     
+<div class="box">
+    
+ 
+        <div class="btn-group pull-right" style="margin-right: 10px" width='100%'>
+            <a href=" {{url('/admin/winmoneyprize/list') }}" class="btn btn-sm btn-default"><i class="fa fa-list"></i>&nbsp;List</a>
+        </div>
+        <BR>
     <form method="post" action="{{ url('/admin/winmoneyprize/submit') }}" accept-charset="UTF-8" class="form-horizontal" id="winmoneyprizeform" name="winmoneyprizeform">
 
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 
-        <div class="box-header">Win Money Prize</div>
+    
         <div class="box-body table-responsive no-padding">
             <table class="table table-hover" id="winmoneyprizetable">
                 <thead>
@@ -261,6 +267,7 @@
 
         var selectlist = $('#winmoneyprizebody').find('select');
         var i;
+        var j;
         var selectid;
         var id
         var ignore;
@@ -289,6 +296,21 @@
                 $('#unit_' + id).attr('disabled', 'disabled');
                 $('#paysubtotal_' + id).attr('disabled', 'disabled');
                 $('#winsubtotal_' + id).attr('disabled', 'disabled');
+            }else{
+                //remove the same product
+                for (j = 0 ; j< selectlist.length ;j++){
+                    if ( i != j &&  (  $(selectlist[i]).val() == $(selectlist[j]).val() ) 
+                        && ($(selectlist[j]).attr('disabled') != 'disabled') 
+                        ){
+                        $('#product_' + id).attr('disabled', 'disabled');
+                        $('#payamount_' + id).attr('disabled', 'disabled');
+                        $('#winamount_' + id).attr('disabled', 'disabled');
+                        $('#unit_' + id).attr('disabled', 'disabled');
+                        $('#paysubtotal_' + id).attr('disabled', 'disabled');
+                        $('#winsubtotal_' + id).attr('disabled', 'disabled');
+                        break;
+                    } 
+                }
             }
         }
     
@@ -351,6 +373,9 @@
 
 
     });
+
+
+
 </script>
 
 

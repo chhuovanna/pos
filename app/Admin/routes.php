@@ -65,11 +65,17 @@ Route::group([
     $router->post("loan/clear/{saleid}","LoanController@clearLoan");
     $router->get('sale/printreceipt', 'SaleController@printReceipt');
     $router->get('sale/viewreceipt', 'SaleController@viewReceipt');
+    $router->get('product/stockreminder', 'ProductController@stockreminder');
 
     //for win money prize
 
-    $router->get('winmoneyprize/add','WinMoneyPrizeController@create');
+    $router->get('winmoneyprize/list','WinMoneyPrizeController@index');
+    $router->get('winmoneyprize/list/create','WinMoneyPrizeController@create');
     $router->post('winmoneyprize/submit', 'WinMoneyPrizeController@save');
+    $router->delete('winmoneyprize/list/{wmpid}','WinMoneyPrizeController@destroy');
+    $router->get('winmoneyprize/viewdetail', 'WinMoneyPrizeController@viewdetail');
+
+
 
 
 

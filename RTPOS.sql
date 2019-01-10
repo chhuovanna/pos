@@ -195,6 +195,15 @@ alter table winmoneyprizeproduct change paysubtotalr paysubtotal decimal(10,4);
 alter table winmoneyprizeproduct change winsubtotalr winsubtotal decimal(10,4);
 alter table winmoneyprizeproduct change leftsubtoatr leftsubtotal decimal(10,4);
 
+#alter table winmoneyprizeproduct delete cascade
+
+alter table winmoneyprizeproduct drop foreign key winmoneyprizeproduct_ibfk_1;
+alter table winmoneyprizeproduct add foreign key winmoneyprizeproduct_ibfk_1 (wmpid) references
+winmoneyprize(wmpid) on delete cascade;
+
+#add exchange rate to win moneyprize
+alter table winmoneyprize add exchangerate decimal(10);
+
 #temporary
 
 alter table products modify barcode bigint;

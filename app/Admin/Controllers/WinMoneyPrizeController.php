@@ -5,6 +5,8 @@ namespace App\Admin\Controllers;
 use App\Customer;
 use App\Product;
 use App\Exchangerate;
+use App\Winmoneyprize;
+use App\winmoneyprizeProduct;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -20,17 +22,80 @@ use Illuminate\Support\Facades\DB;
 
 class WinMoneyPrizeController extends Controller
 {
-//    use ModelForm;
+    use ModelForm;
 
+
+    public function index()
+    {
+        return Admin::content(function (Content $content) {
+
+            $content->header('Win money prize');
+            $content->description('List');
+            $content->body($this->grid());
+        });
+    }
+
+
+    protected function grid()
+    {
+           
+        return Admin::grid(Winmoneyprize::class, function (Grid $grid){
+
+
+            $grid->filter(function ($filter) {
+
+                $filter->disableIdFilter();
+
+                $filter->equal('wmpid');
+                
+                $customers = Customer::getSelectOption();
+                $filter->equal('cusid')->select($customers);
+            
+            });   
+
+            $grid->model()->with('customer');
+            $grid->model()->orderBy('wmpid','DESC');
+            $grid->paginate(20);
+            $grid->disableBatchDeletion();
+            $grid->disableRowSelector();
+            
+           
+            $grid->wmpid('ID');
+            $grid->customer()->name('Customer');
+            $grid->exchangerate();
+            $grid->paytotal('Pay amount')->sortable();
+            $grid->wintotal('Win amount')->sortable();
+            $grid->lefttotal('Left amount')->sortable();
+
+
+            $grid->actions(function ($actions) {
+
+
+                $actions->disableEdit();
+                
+                // append an action.
+                $actions->append('<a title="View detail" onclick="window.open(\'' .url('/admin/winmoneyprize/viewdetail?wmpid=').$actions->getKey(). '\' ,\'_blank\', \'height=700,width=700\'); "><i class="fa fa-eye"></i></a>');
+
+            });
+
+            $script = <<<SCRIPT
+$("[name='cusid']").select2({ width: '170px' });
+$("[name='pid']").select2({ width: '170px' });
+
+SCRIPT;
+
+            Admin::script($script);
+        });
+    }
 
     /**
      * Create interface.
      *
      * @return Content
      */
-    public function create()
+    public function create(Request $request)
     {
-        return Admin::content(function (Content $content) {
+        return Admin::content(function (Content $content) use ($request){
 
             $customers = Customer::orderBy('cusid')->get();
             $products  = Product::getSelectOption();
@@ -41,6 +106,27 @@ class WinMoneyPrizeController extends Controller
             $content->body(view('winMoneyPrizeAdd', ['customers' => $customers
                                                 , 'products'     => $products
                                                 , 'exchangerate' => $exchangerate->amount ] ));
+
+
+            if ($request){
+                $input = $request->all();
+                
+                
+                if (array_key_exists('savestate', $input) && $input['savestate'] === 'success'){
+
+                    
+                    $script = <<<SCRIPT
+$(document).ready(function(){
+    toastr.success('Save Success');
+});
+
+
+SCRIPT;
+                Admin::script($script);
+                }
+
+            }
+
         });
     }
 
@@ -48,178 +134,68 @@ class WinMoneyPrizeController extends Controller
     public function save(Request $request){
 
         $input = $request->all();
+        print_r($input);
 
-        DB::transaction(function () use ($request){
+        DB::transaction(function () use ($input){
             $size = sizeof($input['unit']);
             $winmoneyprize = new Winmoneyprize();
             $winmoneyprize->cusid = $input['customer'];
             $winmoneyprize->paytotal = $input['paytotal'];
             $winmoneyprize->wintotal = $input['wintotal'];
             $winmoneyprize->lefttotal = $input['lefttotal'];
+            $winmoneyprize->exchangerate = $input['exchangerate'];
             $winmoneyprize->save();
 
-            for(i = 1 ; i < $size ; i++){
-                
+            for($i = 0 ; $i < $size ; $i++){
+                $winmoneyprizeproduct = new WinmoneyprizeProduct();
+                $winmoneyprizeproduct->wmpid = $winmoneyprize->wmpid;
+                $winmoneyprizeproduct->pid = $input['product'][$i];
+                $winmoneyprizeproduct->payamount = $input['payamount'][$i];
+                $winmoneyprizeproduct->winamount = $input['winamount'][$i];
+                $winmoneyprizeproduct->unit = $input['unit'][$i];
+                $winmoneyprizeproduct->paysubtotal = $input['paysubtotal'][$i];
+                $winmoneyprizeproduct->winsubtotal = $input['winsubtotal'][$i];
+                $winmoneyprizeproduct->leftsubtotal = $input['winsubtotal'][$i] - $input['paysubtotal'][$i];
+                $winmoneyprizeproduct->save();
             }
 
 
         });
-        /*DB::transaction(function () use ($request){
 
-            $input = $request->all();
-            $products = explode(',', $input['products']);
-            $size = sizeof($products);
-        
-            //print_r($input);
-
-
-            $sale = new Sale;
-            if ($input['customer'] != 0){
-                $sale->cusid = $input['customer'];
-            }
-            $sale->total        = $input['totald'];
-            $sale->discount     = $input['discount'];
-            $sale->ftotal       = $input['ftotald'];
-            $sale->recievedd    = $input['recievedd'];
-            $sale->recievedr    = $input['recievedr'];
-            $sale->exchangerate = $input['exchangerate'];
-            $sale->sotid        = $input['stockouttype'];
-
-            $sale->save();
-
-            
-            
-            for ($i = 1; $i < $size ; $i++ ){
-                $saleproduct = new SaleProduct;
-                $saleproduct->saleid        = $sale->saleid;
-                $saleproduct->pid           = $products[$i];
-                $saleproduct->unitquantity  = $input[ $products[$i]. "qu"   ];
-                $saleproduct->packquantity  = $input[ $products[$i]. "qp"   ];
-                $saleproduct->boxquantity   = $input[ $products[$i]. "qb"   ];
-                $saleproduct->salepriceunit = $input[ $products[$i]. "up"   ];
-                $saleproduct->salepricepack = $input[ $products[$i]. "pp"   ];
-                $saleproduct->salepricebox  = $input[ $products[$i]. "bp"   ];
-                $saleproduct->subtotal      = $input[ $products[$i]. "stt"  ];
-                $saleproduct->stock         = $input[ $products[$i]."tstock"];
-                $saleproduct->save();
-
-                $temp  = explode( ',', $input[   $products[$i]. "tstock"  ] );
-                $stock = array( 'unitinstock'   => $temp[0]
-                                ,'packinstock'  => $temp[1]
-                                ,'boxinstock'   => $temp[2] );
-
-                Product::updateStock( $products[$i], $stock );
-                Inventory::updateInventory( $products[$i], $stock );
-            }
-            //insert loan 
-            if ($sale->sotid == 2){
-                $loan = new Loan();
-                $loan->saleid = $sale->saleid;
-                $loan->amount = $sale->ftotal - ($sale->recievedd + ($sale->recievedr/$sale->exchangerate));
-                $loan->state = 0;
-                $loan->save();
-            }
-
-        });
         DB::commit();
-        $url = strtok(url()->previous(), '?');
+        $url = strtok(url()->previous(), '?')."?savestate=success";
 
-        return redirect($url);    */
+        return redirect($url);    
+
+        
     }
 
 
-    /**
-     * Index interface.
-     *
-     * @return Content
-     */
-    public function index()
+    public function destroy($id)
     {
-        return Admin::content(function (Content $content) {
 
-            $content->header('Customer');
-            $content->description('List Customers');
-
-            $content->body($this->grid());
-        });
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param $id
-     * @return Content
-     */
-    public function edit($id)
-    {
-        return Admin::content(function (Content $content) use ($id) {
-
-            $content->header('Customer');
-            $content->description('Edit Customer');
-
-            $content->body($this->form()->edit($id));
-        });
-    }
-
-
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
-    protected function grid()
-    {
-        return Admin::grid(Customer::class, function (Grid $grid) {
-
-            if (!Admin::user()->isRole('Administrator')){
-                $grid->disableBatchDeletion();
-                $grid->disableRowSelector();
-                $grid->disableActions();
+        if (Admin::user()->isRole('Administrator')){
+            $winmoneyprize = Winmoneyprize::where('wmpid',$id)->first();
+            if ($winmoneyprize) {
+                $winmoneyprize->delete();
+                return response()->json([
+                    'status'  => true,
+                    'message' => trans('admin::lang.delete_succeeded'),
+                ]);
             }
-
-
-            $grid->filter(function ($filter) {
-
-                $filter->where(function ($query) {
-
-                        $query->whereRaw("`name` like '%{$this->input}%' OR `tel` like '%{$this->input}%' or `email` like '%{$this->input}%'");
-
-                    }, 'Name or tel or mail');
-
-            });
-
-
-            $grid->cusid('ID')->sortable();
-            $grid->name('Name')->sortable();
-            $grid->address('Address');
-            $grid->email('Email');
-            $grid->tel('Tel');
-            $grid->tel1('Tel1');
-            $grid->tel2('Tel2');
-
-            $grid->created_at();
-            /*$grid->updated_at();*/
-        });
+        }
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
-    {
-        return Admin::form(Customer::class, function (Form $form) {
+    public function viewdetail(Request $request){
+        $input = $request->all();
 
-            $form->display('cusid', 'ID');
-            $form->text('name', 'Customer Name')->rules('required');
-            $form->textarea('address', 'Address');
-            $form->mobile('tel', 'Phone Number');
-            $form->mobile('tel1', 'Phone Number');
-            $form->mobile('tel2', 'Phone Number');
-            $form->email('email','Email')->rules('nullable');
-            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
-        });
+        $winmoneyprize = Winmoneyprize::getWinMoneyPrizeWithCustomer($input['wmpid']);
+        $winmoneyprizeproducts = WinmoneyprizeProduct::getWinMoneyPrizeWithProduct($input['wmpid']);
+        return view('winMoneyPrizeProduct',
+                [ 'winmoneyprize' => $winmoneyprize
+                , 'winmoneyprizeproducts' => $winmoneyprizeproducts
+                ]);
     }
+
+
 }

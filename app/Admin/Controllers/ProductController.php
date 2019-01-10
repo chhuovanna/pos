@@ -157,6 +157,17 @@ SCRIPT;
         });
     }
 
+    public function stockreminder()
+    {
+        return Admin::content(function (Content $content) {
+
+            $content->header('Product');
+            $content->description('Stock reminder');
+            $content->body($this->stockReminderGrid());
+        });
+    }
+
+
     /**
      * Edit interface.
      *
@@ -278,13 +289,13 @@ SCRIPT;
     protected function stockReminderGrid()
     {
         return Admin::grid(Product::class, function (Grid $grid) {
-/*
-            $grid->filter(function ($filter) {
+
+/*            $grid->filter(function ($filter) {
 
                 $filter->disableIdFilter();
 
-            });   */
-
+            });   
+*/
             $grid->model()->selectRaw('pid
                 , name
                 , unitinstock
@@ -298,8 +309,8 @@ SCRIPT;
             $grid->disableRowSelector();
             $grid->disableActions();
             $grid->disableCreation();
-            $grid->disableFilter();
-            $grid->disablePagination();
+            //$grid->disableFilter();
+            //$grid->disablePagination();
            
             $grid->pid('ID');
             $grid->name('Name');           
