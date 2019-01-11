@@ -153,7 +153,7 @@ SCRIPT;
             $content->header('Product');
             $content->description('List');
             $content->body($this->grid());
-            $content->body($this->stockReminderGrid());
+            //$content->body($this->stockReminderGrid());
         });
     }
 
@@ -290,12 +290,32 @@ SCRIPT;
     {
         return Admin::grid(Product::class, function (Grid $grid) {
 
-/*            $grid->filter(function ($filter) {
+            $grid->filter(function ($filter) {
 
-                $filter->disableIdFilter();
+                $filter->where(function ($query) {
+
+                    $query->whereRaw("`pid` like '%{$this->input}%' OR `barcode` like '%{$this->input}%' OR `name` like '%{$this->input}%' OR `shortcut` like '%{$this->input}%' OR `description` like '%{$this->input}%'");
+
+                    }, 'Keyword');
+                $filter->where(function ($query) {
+
+                    $query->whereRaw("(unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox <= {$this->input}");
+
+                    }, 'Minimum box in stock');
 
             });   
+
+            /*$grid->model()->selectRaw('pid
+                , name
+                , unitinstock
+                , packinstock
+                , boxinstock
+                , unitperpack
+                , unitperbox
+                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox)) as totalunitinstock
+                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox as totalboxinstock')->whereRaw('(unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox < 5')->orderByRaw('totalboxinstock');
 */
+
             $grid->model()->selectRaw('pid
                 , name
                 , unitinstock
@@ -304,13 +324,12 @@ SCRIPT;
                 , unitperpack
                 , unitperbox
                 , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox)) as totalunitinstock
-                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox as totalboxinstock')->whereRaw('(unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox < 5');
+                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox as totalboxinstock')->orderByRaw('totalboxinstock');
             $grid->disableBatchDeletion();
             $grid->disableRowSelector();
             $grid->disableActions();
             $grid->disableCreation();
-            //$grid->disableFilter();
-            //$grid->disablePagination();
+
            
             $grid->pid('ID');
             $grid->name('Name');           
@@ -321,6 +340,17 @@ SCRIPT;
             $grid->unitperbox('Unit/Box');
             $grid->totalunitinstock('TotalUnitSto');
             $grid->totalboxinstock('TotalBoxSto');
+
+            $script = <<<script
+$("[placeholder='Minimum box in stock']").keyup(function(){
+    if (!$(this).val() || isNaN($(this).val()) ){
+            $(this).val(0);
+        } 
+    });
+
+script;
+            Admin::script($script);
+
        
         });
 
@@ -351,44 +381,38 @@ SCRIPT;
 
             $attribute = array('pattern'=>'[0-9]+', "autocomplete"=>"off", "style"=>"width: 200px");            
             $style = ["style"=>"width:115px"];
+            $style1 = ["style"=>"width:115px; background-color:#def9fc"];
+            $style2 = ["style"=>"width:115px; background-color:#b6d0f9"];
             
             $form->text('exchangerate','Exchange Rate')->readOnly()->attribute($style)->value($exchangerate->amount);
             
             $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute)->value(0);
             $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute)->value(0);
 
-            $form->currency('importpricebox','Import Pice Per Box')->rules('required');
+            $form->text('importpricebox','Import Pice Per Box')->rules('required')->attribute($style1)->value(0);
             $form->text('ipbr','In Riel')->readOnly()->attribute($style);
-            $form->currency('importpricepack','Import Pice Per Pack')->rules('required');
+            $form->text('importpricepack','Import Pice Per Pack')->rules('required')->attribute($style1)->value(0);
             $form->text('ippr','In Riel')->readOnly()->attribute($style);
-            $form->currency('importpriceunit','Import Pice Per Unit')->rules('required');
+            $form->text('importpriceunit','Import Pice Per Unit')->rules('required')->attribute($style1)->value(0);
             $form->text('ipur','In Riel')->readOnly()->attribute($style);
             
 
 
-            $form->currency('salepricebox','Sale Pice Per Box')->rules('required');
+            $form->text('salepricebox','Sale Pice Per Box')->rules('required')->attribute($style2)->value(0);
             $form->text('spbr','In Riel')->readOnly()->attribute($style);
-            $form->currency('salepricepack','Sale Pice Per Pack')->rules('required');
+            $form->text('salepricepack','Sale Pice Per Pack')->rules('required')->attribute($style2)->value(0);
             $form->text('sppr','In Riel')->readOnly()->attribute($style);
-            $form->currency('salepriceunit','Sale Pice Per Unit')->rules('required');
+            $form->text('salepriceunit','Sale Pice Per Unit')->rules('required')->attribute($style2)->value(0);
             $form->text('spur','In Riel')->readOnly()->attribute($style);
             
 
-
-
-
-
-            
-            //$form->switch('isdrugs', 'Is Drug?');
 
             $categories = Category::pluck('name','catid');
             $form->select('catid', 'Product Category')->options($categories)->value(-1);
             $manufacturers = Manufacturer::pluck('name','mid');
             $form->select('mid', 'Product Manufacturer')->options($manufacturers)->value(-1);
 
-/*            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
-*/
+
             Admin::script($script);
 
         });
@@ -413,6 +437,9 @@ SCRIPT;
 
             $attribute = array('pattern'=>'[0-9]+', "autocomplete"=>"off", "style"=>"width: 200px");
             $style = ["style"=>"width:115px"];
+            $style1 = ["style"=>"width:115px; background-color:#def9fc"];
+            $style2 = ["style"=>"width:115px; background-color:#b6d0f9"];
+
  
             $html_exchangerate = <<<SCRIPT
 <label for="exchangerate" class="col-sm-4 control-label">Exchange rate :</label>
@@ -427,23 +454,22 @@ SCRIPT;
             $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute)->value(0);
             $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute)->value(0);
 
-            $form->currency('importpricebox','Import Pice Per Box')->rules('required');
+            $form->text('importpricebox','Import Pice Per Box')->rules('required')->attribute($style1);
             $form->text('ipbr','In Riel')->readOnly()->attribute($style);
-            $form->currency('importpricepack','Import Pice Per Pack')->rules('required');
+            $form->text('importpricepack','Import Pice Per Pack')->rules('required')->attribute($style1);
             $form->text('ippr','In Riel')->readOnly()->attribute($style);
-            $form->currency('importpriceunit','Import Pice Per Unit')->rules('required');
+            $form->text('importpriceunit','Import Pice Per Unit')->rules('required')->attribute($style1);
             $form->text('ipur','In Riel')->readOnly()->attribute($style);
             
 
 
-            $form->currency('salepricebox','Sale Pice Per Box')->rules('required');
+            $form->text('salepricebox','Sale Pice Per Box')->rules('required')->attribute($style2);
             $form->text('spbr','In Riel')->readOnly()->attribute($style);
-            $form->currency('salepricepack','Sale Pice Per Pack')->rules('required');
+            $form->text('salepricepack','Sale Pice Per Pack')->rules('required')->attribute($style2);
             $form->text('sppr','In Riel')->readOnly()->attribute($style);
-            $form->currency('salepriceunit','Sale Pice Per Unit')->rules('required');
+            $form->text('salepriceunit','Sale Pice Per Unit')->rules('required')->attribute($style2);
             $form->text('spur','In Riel')->readOnly()->attribute($style);
             
-            //$form->switch('isdrugs', 'Is Drug?');
 
             $categories = Category::pluck('name','catid');
             $form->select('catid', 'Product Category')->options($categories)->value(-1);

@@ -80,6 +80,7 @@ SCRIPT;
         return Admin::grid(Loan::class, function (Grid $grid) use($script){
             $grid->disableBatchDeletion();
             $grid->disableRowSelector();
+            $grid->disableCreation();
 
 
             if (!Admin::user()->isRole('Administrator')){
@@ -103,6 +104,8 @@ select c.cusid as cusid
   join sales     s on c.cusid = s.cusid
   join loan      l on s.saleid= l.saleid
  where s.sotid = 2
+
+
 ) X
 END;
             $grid->model()

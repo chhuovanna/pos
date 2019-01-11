@@ -37,14 +37,22 @@ class HomeController extends Controller
                 $nbproducts = Product::getNumberofProducts()[0]->nb;
                 $row->column(4, new InfoBox('Products', 'product-hunt', 'aqua', '/admin/product',$nbproducts));
 
+                
+
                 $nbsales = Sale::getNumberofSales()[0]->nb;
                 $row->column(4, new InfoBox('Sale', 'shopping-cart', 'green', '/admin/sale/list', $nbsales));
 
 
+
+
                 $exchangerate = Exchangerate::where('currentrate',1)->first();
                 $row->column(4, new InfoBox('Exchange Rate', 'usd', 'yellow', '/admin/exchangerate', $exchangerate->amount));
+
+                $row->column(4, new InfoBox('Stock Reminder', 'inventory', 'red', '/admin/product/stockreminder', ""));
+                //$row->column(4, new InfoBox('Inventory', 'inventory', 'Pink', '/admin/product/stockreminder', ""));
                 
             });
+
 
             $content->row(function (Row $row) {
 

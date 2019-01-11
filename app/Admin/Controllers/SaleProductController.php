@@ -155,7 +155,7 @@ class SaleProductController extends Controller
 
 
              $script = <<<SCRIPT
-$("[name='pid']").select2();
+$("[name='pid']").select2({ width: '300px' });
 var ths = document.getElementsByTagName("th");
 ths[3].style.backgroundColor = "#f4f442";
 ths[4].style.backgroundColor = "#f4f442";

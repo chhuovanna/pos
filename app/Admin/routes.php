@@ -18,7 +18,9 @@ Route::group([
     //$router->get('product/createwithimp', 'ProductController@createwithimp');
     
 
-    $router->resource('product', ProductController::class);
+    
+    
+
     
     
 
@@ -66,6 +68,10 @@ Route::group([
     $router->get('sale/printreceipt', 'SaleController@printReceipt');
     $router->get('sale/viewreceipt', 'SaleController@viewReceipt');
     $router->get('product/stockreminder', 'ProductController@stockreminder');
+    ////
+
+    $router->resource('product', ProductController::class);
+    
 
     //for win money prize
 
@@ -74,7 +80,7 @@ Route::group([
     $router->post('winmoneyprize/submit', 'WinMoneyPrizeController@save');
     $router->delete('winmoneyprize/list/{wmpid}','WinMoneyPrizeController@destroy');
     $router->get('winmoneyprize/viewdetail', 'WinMoneyPrizeController@viewdetail');
-
+    ///
 
 
 

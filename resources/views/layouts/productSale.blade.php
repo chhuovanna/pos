@@ -25,10 +25,18 @@
     }
 </style>
 <div class="box" >
-    <div class="box-header"> @yield('header')</div>
+           
+    <div class="box-header"> @yield('header')
+<div class="btn-group pull-right" style="margin-right: 10px" width='100%'>
+            <a href=" {{url('/admin/sale/list') }}" class="btn btn-sm btn-default"><i class="fa fa-list"></i>&nbsp;List</a>
+        </div>
+    </div>
     @section('search')
             
         @show
+
+ 
+
 </div>
 <div class="box">
 

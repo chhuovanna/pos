@@ -192,7 +192,7 @@ SCRIPT;
 
                 //append view receipt
                 //$actions->append('<a title="View Receipt" target="_blank" href="' .url('/admin/sale/viewreceipt?saleid=').$actions->getKey(). '"><i class="fa fa-eye"></i></a>');
-                $actions->append('<a title="View Receipt" onclick="window.open(\'' .url('/admin/sale/viewreceipt?saleid=').$actions->getKey(). '\' ,\'_blank\', \'height=700,width=700\'); "><i class="fa fa-eye"></i></a>');
+                $actions->append('<a title="View Receipt" onclick="window.open(\'' .url('/admin/sale/viewreceipt?saleid=').$actions->getKey(). '\' ,\'_blank\', \'height=700,width=700\'); "><i class="fa fa-print"></i></a>');
 
             });
 

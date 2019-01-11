@@ -208,3 +208,8 @@ alter table winmoneyprize add exchangerate decimal(10);
 
 alter table products modify barcode bigint;
 
+##add menu
+#stock reminder http://rtpos/admin/product/stockreminder
+#win money http://rtpos/admin/winmoneyprize/list
+#loan http://rtpos/admin/loan
+

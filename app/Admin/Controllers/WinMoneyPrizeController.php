@@ -66,6 +66,8 @@ class WinMoneyPrizeController extends Controller
             $grid->paytotal('Pay amount')->sortable();
             $grid->wintotal('Win amount')->sortable();
             $grid->lefttotal('Left amount')->sortable();
+            $grid->created_at('Creat at');
+            $grid->updated_at('Update at');
 
 
             $grid->actions(function ($actions) {
@@ -74,7 +76,7 @@ class WinMoneyPrizeController extends Controller
                 $actions->disableEdit();
                 
                 // append an action.
-                $actions->append('<a title="View detail" onclick="window.open(\'' .url('/admin/winmoneyprize/viewdetail?wmpid=').$actions->getKey(). '\' ,\'_blank\', \'height=700,width=700\'); "><i class="fa fa-eye"></i></a>');
+                $actions->append('<a title="View detail" onclick="window.open(\'' .url('/admin/winmoneyprize/viewdetail?wmpid=').$actions->getKey(). '\' ,\'_blank\', \'height=700,width=700\'); "><i class="fa fa-search"></i></a>');
 
             });
 
