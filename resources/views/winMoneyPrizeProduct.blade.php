@@ -136,7 +136,7 @@
 <body>
 
 	
-	<p class="receipt">Win Money Prize : {{ $winmoneyprize->wmpid }}  &nbsp;&nbsp; Date : {{$winmoneyprize->created_at}}</p>
+	<p class="receipt">Win Money Prize Num : {{ $winmoneyprize->wmpid }}  &nbsp;&nbsp; Date : {{$winmoneyprize->created_at}} &nbsp;&nbsp; Customer : {{$winmoneyprize->name}}</p>
 	<table class="table-orderline">
 		<tr>
 			<th class="td-num">#</th>

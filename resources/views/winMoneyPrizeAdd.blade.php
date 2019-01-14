@@ -290,6 +290,8 @@
 
 
             if (ignore){
+                $('#unit_' + id).val(0);
+                $('#unit_' + id).keyup();
                 $('#product_' + id).attr('disabled', 'disabled');
                 $('#payamount_' + id).attr('disabled', 'disabled');
                 $('#winamount_' + id).attr('disabled', 'disabled');
@@ -302,6 +304,8 @@
                     if ( i != j &&  (  $(selectlist[i]).val() == $(selectlist[j]).val() ) 
                         && ($(selectlist[j]).attr('disabled') != 'disabled') 
                         ){
+                        $('#unit_' + id).val(0);
+                        $('#unit_' + id).keyup();
                         $('#product_' + id).attr('disabled', 'disabled');
                         $('#payamount_' + id).attr('disabled', 'disabled');
                         $('#winamount_' + id).attr('disabled', 'disabled');

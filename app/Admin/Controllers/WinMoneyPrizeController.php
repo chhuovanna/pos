@@ -6,7 +6,7 @@ use App\Customer;
 use App\Product;
 use App\Exchangerate;
 use App\Winmoneyprize;
-use App\winmoneyprizeProduct;
+use App\WinmoneyprizeProduct;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -47,6 +47,8 @@ class WinMoneyPrizeController extends Controller
                 $filter->disableIdFilter();
 
                 $filter->equal('wmpid');
+
+                $filter->between('created_at', 'Created at')->datetime();
                 
                 $customers = Customer::getSelectOption();
                 $filter->equal('cusid')->select($customers);

@@ -180,7 +180,7 @@ create table winmoneyprizeproduct (wmpid bigint
     , leftsubtoatr decimal(8,0)
     , primary key (wmpid, pid)
     ) engine = InnoDB;
-    
+   
 alter table winmoneyprizeproduct add foreign key (wmpid) references winmoneyprize(wmpid);
 
 #alter table win money in dollar
@@ -208,8 +208,14 @@ alter table winmoneyprize add exchangerate decimal(10);
 
 alter table products modify barcode bigint;
 
+
 ##add menu
 #stock reminder http://rtpos/admin/product/stockreminder
 #win money http://rtpos/admin/winmoneyprize/list
 #loan http://rtpos/admin/loan
+
+
+#change table name to all lower case
+rename table stockoutType	to stockouttype
+
 
