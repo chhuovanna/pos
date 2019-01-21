@@ -219,18 +219,18 @@
 				$price = "";
 				$i ++;
 
-				if ($orderline->unitquantity > 0){
+				if ($orderline->unitquantity != 0){
 					$quantity .= $orderline->unitquantity . " ";
 					$price .= $orderline->salepriceunit . " ";
 				}
 
-				if ($orderline->packquantity > 0){
+				if ($orderline->packquantity != 0){
 					$quantity .= $orderline->packquantity . "x" . $orderline->unitperpack . " ";
 					$price .= $orderline->salepricepack . " ";
 				}
 
 
-				if ($orderline->boxquantity > 0){
+				if ($orderline->boxquantity != 0){
 					$quantity .= $orderline->boxquantity . "x" . $orderline->unitperbox . " ";
 					$price .= $orderline->salepricebox . " ";
 				}

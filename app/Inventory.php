@@ -81,13 +81,30 @@ END;
 
                 $inventories = Inventory::whereRaw('pid = ? and finish = 1', array($pid))->orderBy('invid','DESC')->first();
                 
-                $inventories->finish  = 0;
+                if (count($inventories) > 0){
+                    $inventories->finish  = 0;
 
-                $inventories->unitinstock = $stock['unitinstock'];
-                $inventories->packinstock = $stock['packinstock'];
-                $inventories->boxinstock  = $stock['boxinstock'];
-                $inventories->save();
+                    $inventories->unitinstock = $stock['unitinstock'];
+                    $inventories->packinstock = $stock['packinstock'];
+                    $inventories->boxinstock  = $stock['boxinstock'];
+                    $inventories->save();
+                }else{
 
+                /*    $inventories = new Inventory();
+
+
+                    $inventories->finish  = 0;
+
+                    $inventories->unitinstock = $stock['unitinstock'];
+                    $inventories->packinstock = $stock['packinstock'];
+                    $inventories->boxinstock  = $stock['boxinstock'];
+                    $inventories->unitinstock = $stock['unitinstock'];
+                    $inventories->packinstock = $stock['packinstock'];
+                    $inventories->boxinstock  = $stock['boxinstock'];
+
+                    $inventories->save();
+*/
+                }
             }
             
         }

@@ -464,12 +464,20 @@
         var i;
         var resStock = true;
         var res;
+        var resAllowOrder;
         
         
 
         
         for( i = 1; i < size ; i++){
-            resStock = resStock && allowOrder(products[i]);
+            resAllowOrder = allowOrder(products[i]);
+            if(!resAllowOrder){
+                $('#tr' + products[i]).attr('bgcolor','#f9b3b3');
+
+            }else{
+                $('#tr' + products[i]).attr('bgcolor','white');                
+            }
+            resStock = resStock && resAllowOrder;
         }
 
         
@@ -536,10 +544,10 @@
                             $('#'+data[i].pid+'su').val(data[i].su);
                             $('#'+data[i].pid+'sp').val(data[i].sp);
                             $('#'+data[i].pid+'sb').val(data[i].sb);
-                            //temp += "  " + data[i].pid +  "su=" + $('#'+data[i].pid+'su').val() +"  "+ data[i].pid + "sp=" + $('#'+data[i].pid+'sp').val() +"  "+ data[i].pid + "sb=" + $('#'+data[i].pid+'sb').val()+"  " ;
+                            //temp += "  " + data[i].pid +  "su=" + $('#'+data[i].pid+'su').val() +"  "+ data[i].pid + "sp=" + $('#'+data[i].pid+'sp').val() +"  "+ data[i].pid + "sb=" + $('#'+data[i].pid+'sb').val()+"  /n" ;
                         }
 
-                        //alert(temp);
+                        //console.log(temp);
 
                         
                         
@@ -649,12 +657,15 @@
 
             $('#'+pid+'tstock').val( stocku + "," + stockp + "," + stockb);
 
+            //console.log( $('#'+pid+'tstock').val());
+
            
 
             // only  return  case can have negative quantity
 
             if ( ( $('#'+pid+'stt').val() < 0   &&   $('#stockouttype').val() != 5 )  
                 || ( $('#stockouttype').val() == 5  &&  $('#'+pid+'stt').val() >= 0 ) ){
+                //alert('iam here');
                
                 return false;
                 
@@ -666,6 +677,7 @@
         }else{
             return false;
         }
+
 
     }
 

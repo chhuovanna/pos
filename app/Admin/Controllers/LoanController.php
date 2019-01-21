@@ -130,7 +130,7 @@ END;
             $grid->name('Name');
             $grid->ftotal('GrandTotal');
             $grid->recieved('Recieved');
-            $grid->amount('Left');
+            $grid->amount('Loan amount');
             $grid->recievedd('Recieved$');
             $grid->recievedr('Recieved៛');
   
