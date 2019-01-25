@@ -54,10 +54,10 @@
 		.td-4{
 			width: 25%;
 		}
-		.td-invoicenum{
+		.td-align-left{
 			text-align: left;
 		}
-		.td-date{
+		.td-align-right{
 			text-align: right;
 		}
 
@@ -120,14 +120,16 @@
 			text-align: right;
 			padding-right: 3px;
 			border-right: solid 1px black;
-			width: 61;
+			width: 69;
 		}
-		.td-exchangerate{
+
+
+		.td-labeltotal{
 			text-align: right;
 			padding-right: 3px;
 			border-right: solid 1px black;
 			border-top: solid 1px black;
-			width: 84%;
+			width: 69%;
 
 		}
 		.td-currencyr{
@@ -171,30 +173,39 @@
 		<tr>
 			<td colspan="4">
 				<p>
-					ផ្ទះលេខ 11A​​ ផ្លូវលេខ 369 សង្កាត់ព្រែកប្រា ខ័ណ្ឌ​ច្បារអំពៅ
+					ផ្ទះលេខ 11A​​ ផ្លូវលេខ 369 សង្កាត់ព្រែកប្រា ខ័ណ្ឌ​ច្បារអំពៅ Tel: 095 555 687 / 015 626 568
 				</p>
 			</td>
 		</tr>
-		<tr>
+		<!-- <tr>
 			<td colspan='4'>
 				<p>
-					Tel: 095 555 687 / 015 626 568
+					
 				</p>
 			</td>
-		</tr>
+		</tr> -->
 
 		<tr>
-			<td class="td-invoicenum">
+			<td class="td-align-left">
 				<p>លេខៈ {{ $sale->saleid }}</p>
 			</td>
 			<td >
 				<p>អ្នកលក់ៈ {{ $user }}</p>
 			</td>
 
-			<td >
+			<td class="td-align-right">
 				<p>អ្នកទិញៈ {{ $sale->name }}</p>
 			</td>
-			<td class="td-date">
+			
+		</tr>
+		<tr>
+			<td class="td-align-left">
+				<p>អត្រាៈ {{ $sale->exchangerate }}៛</p>
+			</td>
+			<td >
+				<p></p>
+			</td>
+			<td class="td-align-right">
 				<p>ពេលៈ {{ $sale->created_at }}</p>
 			</td>
 		</tr>
@@ -266,17 +277,9 @@
 
 	</table>
 	<table class='table-payment' >
+				
 		<tr >
-			<td class="td-exchangerate" colspan='2'>
-				<p>អត្រាៈ</p>
-			</td>
-
-			<td class="td-currencyr" >
-				<p>{{ $sale->exchangerate }}៛</p>
-			</td>
-		</tr>		
-		<tr >
-			<td class="td-labelpayment">
+			<td class="td-labeltotal">
 				<p>សរុប:</p>
 			</td>
 			<td class="td-currencyd">

@@ -195,6 +195,7 @@ alter table winmoneyprizeproduct change paysubtotalr paysubtotal decimal(10,4);
 alter table winmoneyprizeproduct change winsubtotalr winsubtotal decimal(10,4);
 alter table winmoneyprizeproduct change leftsubtoatr leftsubtotal decimal(10,4);
 
+use rtpos;
 #alter table winmoneyprizeproduct delete cascade
 
 alter table winmoneyprizeproduct drop foreign key winmoneyprizeproduct_ibfk_1;
@@ -216,6 +217,14 @@ alter table products modify barcode bigint;
 
 
 #change table name to all lower case
-rename table stockoutType	to stockouttype
+rename table stockoutType	to stockouttype;
+
+#remove .xxx for riel
+alter table sales modify recievedr decimal(8,0);
+alter table sales modify recievedd decimal(10,4);
+alter table sales modify exchangerate decimal(4,0);
+
+alter table winmoneyprize modify exchangerate decimal(4,0);
+
 
 
