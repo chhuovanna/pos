@@ -236,7 +236,7 @@ SCRIPT;
             $grid->model()->with('category');
             $grid->model()->with('manufacturer');
             $grid->model()->orderBy('pid','DESC');
-            $grid->paginate(5);
+            //$grid->paginate(5);
             $grid->disableBatchDeletion();
             $grid->disableRowSelector();
             

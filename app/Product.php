@@ -158,6 +158,57 @@ END;
 
        return DB::select($sql);
     }
+
+    public static function searchProductID($searchKey){
+
+
+$sql = <<<END
+select pid
+     , barcode
+     , name
+     , shortcut
+     , salepriceunit as up
+     , salepricepack as pp
+     , salepricebox  as bp
+     , unitinstock as su
+     , packinstock as sp
+     , boxinstock as sb
+     , unitperpack as upp
+     , unitperbox  as upb
+
+from products 
+where pid  = $searchKey
+END;
+
+       return DB::select($sql);
+    }
+
+
+    public static function searchProductCategory($searchKey){
+
+
+$sql = <<<END
+select pid
+     , barcode
+     , name
+     , shortcut
+     , salepriceunit as up
+     , salepricepack as pp
+     , salepricebox  as bp
+     , unitinstock as su
+     , packinstock as sp
+     , boxinstock as sb
+     , unitperpack as upp
+     , unitperbox  as upb
+
+from products 
+where products.catid  = $searchKey
+END;
+
+       return DB::select($sql);
+    }
+
+
 /*
     public function importer()
     {

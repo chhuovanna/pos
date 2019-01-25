@@ -16,10 +16,14 @@
 
 <div class="box">
     
+        <div class="btn-group pull-right" style="margin-right: 10px" width='100%'>
+            <a href=" {{url('/admin/sale/addsale') }}" class="btn btn-sm btn-default"><i class="fa fa-plus-circle"></i>&nbsp;Add Sale</a>
+        </div>
  
         <div class="btn-group pull-right" style="margin-right: 10px" width='100%'>
             <a href=" {{url('/admin/winmoneyprize/list') }}" class="btn btn-sm btn-default"><i class="fa fa-list"></i>&nbsp;List</a>
         </div>
+        
         <BR>
     <form method="post" action="{{ url('/admin/winmoneyprize/submit') }}" accept-charset="UTF-8" class="form-horizontal" id="winmoneyprizeform" name="winmoneyprizeform">
 

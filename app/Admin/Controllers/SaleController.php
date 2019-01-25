@@ -280,15 +280,19 @@ SCRIPT;
     protected function formAddSale()
     {
         $exchangerate = Exchangerate::where('currentrate',1)->first();
-        $products = Product::listWithCatMan();
+        /*$products = Product::listWithCatMan();*/
         $customers = Customer::orderBy('cusid')->get();
         $stockouttypes = StockoutType::orderBy('sotid')->get();
+        $selectProducts = Product::getSelectOption();
+        $selectCategories = Category::getSelectOption();
 
         return view('productSaleListSearch',[
-            'exchangerate' => $exchangerate->amount,
-            'products'     => $products,
-            'customers'    => $customers,
-            'stockouttypes'=> $stockouttypes
+            'exchangerate'      => $exchangerate->amount,
+            /*'products'        => $products,*/
+            'customers'         => $customers,
+            'stockouttypes'     => $stockouttypes,
+            'selectProducts'   => $selectProducts,
+            'selectCategories'  => $selectCategories
         ] );
         /*$productOption = Product::getSelectOption();
         return view('productSale',[
@@ -315,6 +319,28 @@ SCRIPT;
 
         if(isset($searchKey)){
             return Product::searchProductBarcode($searchKey);
+        }else{
+            return null;
+        }
+    }
+
+    public function searchProductID(Request $request){
+
+        $searchKey = $request->input('id');
+
+        if(isset($searchKey)){
+            return Product::searchProductID($searchKey);
+        }else{
+            return null;
+        }
+    }
+
+    public function searchProductCategory(Request $request){
+
+        $searchKey = $request->input('category');
+
+        if(isset($searchKey)){
+            return Product::searchProductCategory($searchKey);
         }else{
             return null;
         }

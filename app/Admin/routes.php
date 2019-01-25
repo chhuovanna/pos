@@ -47,7 +47,10 @@ Route::group([
     $router->get('sale/refreshsearchproduct','SaleController@refreshSearchProduct');
     $router->get('sale/getStock','SaleController@getStock');
     $router->get('sale/searchsale','SaleController@searchsale');
-    
+    // for rtpos 
+    $router->get('sale/searchproductid','SaleController@searchProductID');
+    $router->get('sale/searchproductcategory','SaleController@searchProductCategory');
+    //
 
 
     //$router->post('sale/checkout','SaleController@checkout');

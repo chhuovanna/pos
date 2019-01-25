@@ -97,8 +97,9 @@ select saleid
     , packquantity
     , boxquantity
     , subtotal
-from saleproducts sp join products p
-    on sp.pid = p.pid
+    , c.name as category
+from saleproducts sp join products p join categories c
+    on sp.pid = p.pid and p.catid = c.catid
 where saleid = $saleid;
 EOT;
         return DB::select($sql);

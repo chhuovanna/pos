@@ -27,8 +27,10 @@
 <div class="box" >
            
     <div class="box-header"> @yield('header')
-<div class="btn-group pull-right" style="margin-right: 10px" width='100%'>
+        <div class="btn-group pull-right" style="margin-right: 10px" width='100%'>
             <a href=" {{url('/admin/sale/list') }}" class="btn btn-sm btn-default"><i class="fa fa-list"></i>&nbsp;List</a>
+
+            <a href=" {{url('/admin/winmoneyprize/list/create') }}" class="btn btn-sm btn-default"><i class="fa fa-plus-circle"></i>&nbsp;Add Win Money</a>
         </div>
     </div>
     @section('search')

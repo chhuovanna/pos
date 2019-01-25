@@ -24,7 +24,7 @@
                     <span class="input-group-addon">
                         <strong>Select Products</strong>
                     </span>
-                    <select class="selectProducts" name="selectProducts" id="selectProducts" >
+                    <select class="form-control select-products" name="select-products" id="select-products" style="width:200px">
                         @foreach($selectProducts as $key=>$value)
                             <option value="{{  $key }}">{{ $value }}</option>
                         @endforeach
@@ -36,7 +36,7 @@
                     <span class="input-group-addon">
                         <strong>Select Category</strong>
                     </span>
-                    <select class="selectCategories" name="selectCategories" id="selectCategories">
+                    <select class="form-control select-categories" name="select-categories" id="select-categories" style="width:200px">
                         @foreach($selectCategories as $key => $value)
                             <option value="{{  $key }}">{{ $value }}</option>
                         @endforeach
@@ -62,6 +62,57 @@
     
 @endsection
 
+<!-- 
+/*@section('productbody')
+    @foreach($products as $product)
+        <tr>
+            <td>
+                {{ $product->pid }}
+            </td>
+            <td>
+                {{ $product->barcode }}
+            </td>
+            <td>
+                {{ $product->name }}
+            </td>
+            <td>
+                {{ $product->shortcut }}
+            </td>
+            <td>
+                {{ $product->up }}
+            </td>
+            <td>
+                {{ $product->pp }}
+            </td>
+            <td>
+                {{ $product->bp }}
+            </td>
+            <td>
+                {{ $product->su }}
+            </td>
+            <td>
+                {{ $product->sp }}
+            </td>
+            <td>
+                {{ $product->sb }}
+            </td>
+            <td>
+                {{ $product->upp }}
+            </td>
+            <td>
+                {{ $product->upb }}
+            </td>
+ 
+            <td>
+                <a href="javascript:void(0);" data-pid="{{  $product->pid   }}"  data-barcode="{{   $product->barcode   }}" data-name="{{   $product->name  }}" data-up="{{ $product->up    }}" data-pp="{{ $product->pp    }}" data-bp="{{ $product->bp    }}" data-su="{{ $product->su    }}" data-sp="{{ $product->sp    }}" data-sb="   {{  $product->sb    }}" data-upp="{{    $product->upp   }}" data-upb="{{    $product->upb   }}" class="grid-row-add-sale"><i class="fa fa-cart-plus" ></i>
+                </a>
+            </td>
+        </tr>
+    @endforeach
+
+@endsection
+ */-->
+
 
 @section('customers')
     @foreach($customers as $customer)
@@ -85,7 +136,8 @@
 
 <script type="text/javascript">
 
-    
+    $('select-products').select2();
+    $('select-categories').select2();
 
 
     $(document).off('keyup','#searchKey');
@@ -156,173 +208,8 @@
                     console.log(data);
                 }
             });        
-        }else if ($('#selectProducts').val() ){
-
-            $.ajax({
-                type:"GET",
-                url:"searchproductid",
-                data:{id:$('#selectProducts').val()},    // multiple data sent using ajax
-                success: function (data) {
-                    //console.log(data);
-                    if (data.length == 1){
-                        var pid = data[0].pid;
-                        var row = "<tr id='tr"+pid+"' name='tr"+pid+"' >";
-                        var products;
-                        var html = "";
-       
-                        if (!$('#tr'+pid).length){ 
-
-                            products = $('#products').val() + "," + pid ;
-                            $('#products').val(products);
-
-
-                        
-    row = row + "<td><input id='" + pid + "pid' name='"
-        + pid + "pid' type='text' value='" + data[0].pid 
-        + "' style='width: 60px' readonly= 'readonly'>";
-    row = row + "<input id='" + pid + "barcode' name='"
-        + pid + "barcode' type='hidden' class='barcode' value='" + data[0].barcode + "'></td>";
-
-    row = row + "<td><input id='" + pid +"name' name='"
-        + pid + "name' type='text' value='" + data[0].name 
-        + "' readonly= 'readonly'></td>";
-    //first scan unit quantity = 1
-    row = row + "<input id='" +pid+ "su' name='" +pid+ "su' type='hidden' value='" + data[0].su + "'>" 
-        + "<td><input id='" +pid+ "qu' name='" +pid+ "qu' class='quantity' value='1' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' ></td>" 
-        + "<td><input id='" +pid+ "up' name='" +pid+ "up' class='price' value='" + data[0].up + "' style='width: 60px' ></td>";
-    
-    row = row + "<input id='" +pid+ "sp' name='" +pid+ "sp' type='hidden' value='" + data[0].sp + "'>"
-        + "<input id='" +pid+ "upp' type='hidden' value='" +data[0].upp + "'>"
-        + "<td><input id='" +pid+ "qp' name='" +pid+ "qp' class='quantity' value='0' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' ></td>"
-        + "<td><input id='" +pid+ "pp' name='" +pid+ "pp' class='price' value='" +data[0].pp + "' style='width: 60px' ></td>"
-        ;
-
-
-    row = row + "<input id='" +pid+ "sb' name='" +pid+  "sb' type='hidden' value='" + data[0].sb + "'>"
-        + "<input id='" +pid+ "upb' type='hidden' value='" +data[0].upb + "'>"
-        + "<td><input id='" +pid+ "qb' name='" +pid+ "qb' class='quantity' value='0' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' ></td>"
-        + "<td><input id='" +pid+ "bp' name='" +pid+ "bp' class='price' value='" +data[0].bp + "' style='width: 60px' ></td>"
-        ;
-    
-    row = row + "<td><input id = '" +pid+   "stt' name='" + pid 
-        + "stt' type='number' class='stt' value='0' style='width: 100px' readonly= 'readonly'>"
-        + "<input type='hidden' id='" +pid+   "tstock' name='" +pid+   "tstock' value=''></td>";
-
-
-    row = row + '<td><a title="Remove Orderline" href="javascript:void(0);" class="removeorderline" data-idtr="' + pid +'"><i class="fa fa-minus-circle"></i></a></td></tr>';
-
-    /*row = row + "<input type='hidden' id='" +pid+   "tstock' name='" 
-        + pid + "tstock' value=''>";
-    */                        
-                            $("#orderlinebody").append(row);
-
-                            html = html + "<tr>"  
-                            + "<td>" + data[0].pid         + "</td>"
-                            + "<td>" + data[0].barcode     + "</td>"
-                            + "<td>" + data[0].name        + "</td>"
-                            + "<td>" + data[0].shortcut    + "</td>"
-                            + "<td>" + data[0].up          + "</td>"
-                            + "<td>" + data[0].pp          + "</td>"
-                            + "<td>" + data[0].bp          + "</td>"
-                            + "<td>" + data[0].su          + "</td>"
-                            + "<td>" + data[0].sp          + "</td>"
-                            + "<td>" + data[0].sb          + "</td>"
-                            + "<td>" + data[0].upp         + "</td>"
-                            + "<td>" + data[0].upb         + "</td>";
-
-                            /*if (data[0].isdrugs){
-                                html = html + "<td>YES</td>";
-                            }else{
-                                html = html + "<td>NO</td>";
-                            }*/
-
-                            html = html 
-                            /*+ "<td>" + data[0].catname          + "</td>"
-                            + "<td>" + data[0].mname            + "</td>"*/
-                            + "</tr>";
-                
-                            $("#productbody").html(html);
-
-                            $('#barcode').val("");
-                            $('#barcode').focus();
-
-                            $('#'+ pid+ 'qu').keyup();
-                            
-                        }else{
-                            //alert(e.target.id);
-                            toastr.error('Product has already been in the list. Please Change the quantity instead');
-                        }
-                    }else if( data.length > 1) {
-                        alert("More than one product returned.");
-                    }else {
-                        alert("No product match");
-                    }
-
-                },
-                error: function(data){
-                    console.log(data);
-                }
-            });        
-        }else if ($('#selectCategories').val() ){
-
-            $.ajax({
-                type:"GET",
-                url:"searchproductcategory",
-                data:{category:$('#selectCategories').val()},    // multiple data sent using ajax
-                success: function (data) {
-                    //console.log(data);
-                    var html="";
-                    data.forEach(function (product){
-                        html = html + "<tr>"  
-                        + "<td>" + product.pid         + "</td>"
-                        + "<td>" + product.barcode     + "</td>"
-                        + "<td>" + product.name        + "</td>"
-                        + "<td>" + product.shortcut    + "</td>"
-                        + "<td>" + product.up          + "</td>"
-                        + "<td>" + product.pp          + "</td>"
-                        + "<td>" + product.bp          + "</td>"
-                        + "<td>" + product.su          + "</td>"
-                        + "<td>" + product.sp          + "</td>"
-                        + "<td>" + product.sb          + "</td>"
-                        + "<td>" + product.upp         + "</td>"
-                        + "<td>" + product.upb         + "</td>";
-
-                      /*  if (product.isdrugs){
-                            html = html + "<td>YES</td>";
-                        }else{
-                            html = html + "<td>NO</td>";
-                        }*/
-
-                        html = html 
-                        /*+ "<td>" + product.catname          + "</td>"
-                        + "<td>" + product.mname            + "</td>"*/
-                        + "<td><a href='javascript:void(0);' "
-                            + "  data-pid='"    + product.pid
-                            + "' data-barcode='"+ product.barcode
-                            + "' data-name='"   + product.name
-                            + "' data-up='"     + product.up
-                            + "' data-pp='"     + product.pp
-                            + "' data-bp='"     + product.bp
-                            + "' data-su='"     + product.su
-                            + "' data-sp='"     + product.sp
-                            + "' data-sb='"     + product.sb
-                            + "' data-upp='"    + product.upp
-                            + "' data-upb='"    + product.upb
-                            + "' class='grid-row-add-sale'>"
-                            + "<i class='fa fa-cart-plus' ></i></a></td>"
-                        + "</tr>";
-                    });
-                    $("#productbody").html(html);
-
-                },
-                error: function(data){
-                    console.log(data);
-                }
-            });        
-        }else{
-            var html = "";
-            $("#productbody").html(html);
         }
+
         
         
     });
@@ -459,33 +346,7 @@
 
     });
 
-
-
-
-    $(document).ready(function() {
-        $('#selectProducts').select2({ width: '300px' });
-        $('#selectCategories').select2({ width: '250px' });
-
-        $("#selectProducts").off('change');
-        $("#selectProducts").on('change', function(){
-           //alert('here');
-            $('#searchKey').val('');
-            $('#selectCategories').val(0);
-            $('#searchproduct').click();
-        });
-
-        $("#selectCategories").on('change');
-        $("#selectCategories").on('change', function(){
-            //alert('here2');
-            $('#searchKey').val('');
-            $('#selectProducts').val(0);
-            $('#searchproduct').click();
-        });
-
-    })
-
-
-    
+   
    
 </script>
 

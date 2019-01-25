@@ -231,7 +231,12 @@
 
 
 				if ($orderline->boxquantity != 0){
-					$quantity .= $orderline->boxquantity . "x" . $orderline->unitperbox . " ";
+					if (stristr($orderline->category,'cigaret')){
+						$quantity .= $orderline->boxquantity . "សុង" ;
+					}else{
+						$quantity .= $orderline->boxquantity . "កេះ" ;
+					}
+					//$quantity .= $orderline->boxquantity . "x" . $orderline->unitperbox . " ";
 					$price .= $orderline->salepricebox . " ";
 				}
 
