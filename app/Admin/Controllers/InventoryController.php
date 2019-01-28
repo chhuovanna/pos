@@ -60,24 +60,24 @@ function getTotal(){
     if ( !$('#importbox').val() || isNaN( $('#importbox').val() )){
         $('#importbox').val(0);
     }
+
+    if ( !$('#buypricebox').val() || isNaN( $('#buypricebox').val() ) ){
+        $('#buypricebox').val(0);
+    }
+    impbp   = new Decimal($('#buypricebox').val());
+
+
+    if ( !$('#buypriceunit').val() || isNaN( $('#buypriceunit').val() ) ){
+        $('#buypriceunit').val(0);
+    }
+    impup   = new Decimal($('#buypriceunit').val());
+
+    if ( !$('#buypricepack').val() || isNaN( $('#buypricepack').val() ) ){
+        $('#buypricepack').val(0);
+    }
+    imppp   = new Decimal($('#buypricepack').val());
+
    
-    if ($('#buypriceunit').val()){
-        impup   = new Decimal($('#buypriceunit').val());
-    }else{
-        impup   = new Decimal(0);
-    }
-
-    if ($('#buypricepack').val()){
-        imppp   = new Decimal($('#buypricepack').val());
-    }else{
-        imppp   = new Decimal(0);
-    }
-
-    if ($('#buypricebox').val()){
-        impbp   = new Decimal($('#buypricebox').val());
-    }else{
-        impbp   = new Decimal(0);
-    }
 
     total       = total.add(    impup.mul(  $('#importunit').val()  )   );
     total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
@@ -89,10 +89,116 @@ function getTotal(){
 }
 
 function alertUnmatched(event){
-    var source = event.target || event.srcElement;
+    var source = event.target;
+    if ( !$(source).val() || isNaN( $(source).val() ) ){
+        $(source).val(0);
+    }
     
 
-    switch ($(source).attr('id')){
+    switch (source.id){
+        case 'unitinstock':
+            if ( $(source).val() != $('#importunit').val() ){
+                alert("The imported unit instock and imported unit in this purcash are unmatched");
+            }
+            break;
+        case 'packinstock':
+            if ( $(source).val() != $('#importpack').val() ){
+                alert("The imported pack instock and imported pack in this purcash are unmatched");
+            }
+            break;
+        case 'boxinstock':
+            if ( $(source).val() != $('#importbox').val() ){
+                alert("The imported box instock and imported box in this purcash are unmatched");
+            }
+            break;
+    }
+    
+}
+
+SCRIPT;
+    public $script_form_create_sp = <<<SCRIPT
+
+$(document).off('keyup','#importunit'   );
+$(document).off('keyup','#importpack'   );
+$(document).off('keyup','#importbox'    );
+$(document).off('keyup','#buypriceunit' );
+$(document).off('keyup','#buypricepack' );
+$(document).off('keyup','#buypricebox'  );
+$(document).off('keyup','#unitinstock'  );
+$(document).off('keyup','#packinstock'  );
+$(document).off('keyup','#boxinstock'   );
+
+$(document).on('keyup','#importunit'    ,getTotal);
+$(document).on('keyup','#importpack'    ,getTotal);
+$(document).on('keyup','#importbox'     ,getTotal);
+$(document).on('keyup','#buypriceunit'  ,getTotal);
+$(document).on('keyup','#buypricepack'  ,getTotal);
+$(document).on('keyup','#buypricebox'   ,getTotal);
+$(document).on('keyup','#unitinstock'  ,alertUnmatched);
+$(document).on('keyup','#packinstock'  ,alertUnmatched);
+$(document).on('keyup','#boxinstock'   ,alertUnmatched);
+
+
+function getTotal(){
+    var total   = new Decimal(0);
+    var impup   ;
+    var imppp   ;
+    var impbp   ;
+
+
+    if ( !$('#importunit').val() || isNaN( $('#importunit').val() )){
+        $('#importunit').val(0);
+    }
+
+    if ( !$('#importpack').val() || isNaN( $('#importpack').val() )){
+        $('#importpack').val(0);
+    }
+
+    if ( !$('#importbox').val() || isNaN( $('#importbox').val() )){
+        $('#importbox').val(0);
+    }
+
+   
+
+    if ( !$('#buypricebox').val() || isNaN( $('#buypricebox').val() ) ){
+        $('#buypricebox').val(0);
+        impbp   = new Decimal($('#buypricebox').val());
+    }else{
+        impbp   = new Decimal($('#buypricebox').val());
+        $('#buypriceunit').val(impbp.div($('#unitperbox').val()));
+        var temp = new Decimal($('#buypriceunit').val());
+        $('#buypricepack').val(temp.mul($('#unitperpack').val()));
+    }
+
+   
+    if ( !$('#buypriceunit').val() || isNaN( $('#buypriceunit').val() ) ){
+        $('#buypriceunit').val(0);
+    }
+    impup   = new Decimal($('#buypriceunit').val());
+
+    if ( !$('#buypricepack').val() || isNaN( $('#buypricepack').val() ) ){
+        $('#buypricepack').val(0);
+    }
+    imppp   = new Decimal($('#buypricepack').val());
+
+
+    total       = total.add(    impup.mul(  $('#importunit').val()  )   );
+    total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
+    total       = total.add(    impbp.mul(  $('#importbox').val()  )   );
+    $('#amount').val(total);
+    $('#unitinstock').val(  $('#importunit').val()  );
+    $('#packinstock').val(  $('#importpack').val()  );
+    $('#boxinstock').val(   $('#importbox').val()   );
+}
+
+function alertUnmatched(event){
+    var source = event.target;
+    if ( !$(source).val() || isNaN( $(source).val() ) ){
+        $(source).val(0);
+    }
+    
+
+    switch (source.id){
         case 'unitinstock':
             if ( $(source).val() != $('#importunit').val() ){
                 alert("The imported unit instock and imported unit in this purcash are unmatched");
@@ -122,6 +228,10 @@ $(document).off('keyup','#importbox'    );
 $(document).off('keyup','#buypriceunit' );
 $(document).off('keyup','#buypricepack' );
 $(document).off('keyup','#buypricebox'  );
+$(document).off('keyup','#unitinstock'  );
+$(document).off('keyup','#packinstock'  );
+$(document).off('keyup','#boxinstock'   );
+
 
 
 $(document).on('keyup','#importunit'    ,getTotal);
@@ -130,6 +240,10 @@ $(document).on('keyup','#importbox'     ,getTotal);
 $(document).on('keyup','#buypriceunit'  ,getTotal);
 $(document).on('keyup','#buypricepack'  ,getTotal);
 $(document).on('keyup','#buypricebox'   ,getTotal);
+$(document).on('keyup','#unitinstock'  ,alertUnmatched);
+$(document).on('keyup','#packinstock'  ,alertUnmatched);
+$(document).on('keyup','#boxinstock'   ,alertUnmatched);
+
 
 
 function getTotal(){
@@ -151,29 +265,62 @@ function getTotal(){
         $('#importbox').val(0);
     }
    
-    if ($('#buypriceunit').val()){
-        impup   = new Decimal($('#buypriceunit').val());
-    }else{
-        impup   = new Decimal(0);
+    
+    if ( !$('#buypricebox').val() || isNaN( $('#buypricebox').val() ) ){
+        $('#buypricebox').val(0);
     }
+    impbp   = new Decimal($('#buypricebox').val());
 
-    if ($('#buypricepack').val()){
-        imppp   = new Decimal($('#buypricepack').val());
-    }else{
-        imppp   = new Decimal(0);
-    }
 
-    if ($('#buypricebox').val()){
-        impbp   = new Decimal($('#buypricebox').val());
-    }else{
-        impbp   = new Decimal(0);
+    if ( !$('#buypriceunit').val() || isNaN( $('#buypriceunit').val() ) ){
+        $('#buypriceunit').val(0);
     }
+    impup   = new Decimal($('#buypriceunit').val());
+
+    if ( !$('#buypricepack').val() || isNaN( $('#buypricepack').val() ) ){
+        $('#buypricepack').val(0);
+    }
+    imppp   = new Decimal($('#buypricepack').val());
 
     total       = total.add(    impup.mul(  $('#importunit').val()  )   );
     total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
     total       = total.add(    impbp.mul(  $('#importbox').val()  )   );
     $('#amount').val(total);
-    alert('Please change the imported storck accordingly');
+    
+}
+
+function alertUnmatched(event){
+    var source = event.target;
+    if ( !$(source).val() || isNaN( $(source).val() ) ){
+        $(source).val(0);
+    }
+
+    
+
+    switch (source.id){
+        case 'unitinstock':
+            if ( $(source).val() != $('#importunit').val() ){
+                $('#unitinstock').css("background-color", "#f9b3b3");
+            }else{
+                $('#unitinstock').css("background-color", "white");
+            }
+            break;
+        case 'packinstock':
+            if ( $(source).val() != $('#importpack').val() ){
+                $('#packinstock').css("background-color", "#f9b3b3");
+            }else{
+                $('#packinstock').css("background-color", "white");
+            }
+            break;
+        case 'boxinstock':
+            if ( parseInt($(source).val()) != $('#importbox').val() ){
+                $('#boxinstock').css("background-color", "#f9b3b3");
+            }else{
+                $('#boxinstock').css("background-color", "white");
+            }
+            break;
+    }
+    
 }
 
 
@@ -344,18 +491,25 @@ SCRIPT;
 
 
             $attribute = array("pattern"=>"^\d+$","style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
-            $form->text('importunit','Number of Imported Unit')->attribute($attribute)->value(0);
-            $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);
+            $style = ["style"=>"width:115px; background-color:#def9fc", "autocomplete"=>"off"];
             $form->text('importbox','Number of Imported Box')->attribute($attribute)->value(0);
-            $form->currency('buypriceunit','Imported Unit Price')->rules('required');
-            $form->currency('buypricepack','Imported Pack Price')->rules('required');
-            $form->currency('buypricebox','Imported Box Price')->rules('required');
-            $form->currency('amount', 'Total');
+            $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);
+            $form->text('importunit','Number of Imported Unit')->attribute($attribute)->value(0);
+            
+            
+            $form->text('buypricebox','Imported Box Price')->rules('required')->attribute($style);
+            $form->text('buypricepack','Imported Pack Price')->rules('required')->attribute($style);
+            $form->text('buypriceunit','Imported Unit Price')->rules('required')->attribute($style);
+            
+            
+            $form->text('amount', 'Total')->attribute($style);
             //$form->currency('amount', 'Total')->rules('required');
 
-            $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
-            $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);
             $form->text('boxinstock','Number of Box in Stock')->attribute($attribute)->value(0);
+            $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);
+            $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
+            
+            
             $form->switch('finish', 'Finished?')->value(0);
             
             
@@ -394,18 +548,24 @@ SCRIPT;
 
 
             $attribute = array("pattern"=>"^\d+$","style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
-            $form->text('importunit','Number of Imported Unit')->attribute($attribute)->value(0);
-            $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);
+            $style = ["style"=>"width:115px; background-color:#def9fc", "autocomplete"=>"off"];
             $form->text('importbox','Number of Imported Box')->attribute($attribute)->value(0);
-            $form->currency('buypriceunit','Imported Unit Price')->rules('required');
-            $form->currency('buypricepack','Imported Pack Price')->rules('required');
-            $form->currency('buypricebox','Imported Box Price')->rules('required');
-            $form->currency('amount', 'Total')->value(0);
+            $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);
+            $form->text('importunit','Number of Imported Unit')->attribute($attribute)->value(0);
+            
+            $form->text('buypricebox','Imported Box Price')->rules('required')->attribute($style);
+            $form->text('buypricepack','Imported Pack Price')->rules('required')->attribute($style);
+            $form->text('buypriceunit','Imported Unit Price')->rules('required')->attribute($style);
+            
+            
+            $form->text('amount', 'Total')->value(0)->attribute($style);
             //$form->currency('amount', 'Total')->rules('required')->value(0);
 
-            $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
-            $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);
             $form->text('boxinstock','Number of Box in Stock')->attribute($attribute)->value(0);
+            $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);
+            $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
+            
+            
             $form->switch('finish', 'Finished?');
             
             
@@ -431,7 +591,7 @@ SCRIPT;
 
     protected function productInventoryForm($product)
     {
-        $script_form_create = $this->script_form_create;
+        $script_form_create = $this->script_form_create_sp;
         return Admin::form(Inventory::class, function (Form $form) use ($product,$script_form_create) {
 
             $form->display('invid', 'ID');
@@ -455,30 +615,38 @@ SCRIPT;
 
 
             $attribute = array("pattern"=>"^\d+$","style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
-            $form->text('importunit','Number of Imported Unit')->attribute($attribute)->value(0);
-            $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);
+            $style = ["style"=>"width:115px; background-color:#def9fc", "autocomplete"=>"off"];
             $form->text('importbox','Number of Imported Box')->attribute($attribute)->value(0);
+            $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);
+            $form->text('importunit','Number of Imported Unit')->attribute($attribute)->value(0);
+            
+            
             
 
             
             if ($importedprices){
-                $form->currency('buypriceunit','Imported Unit Price')->value($importedprices->buypriceunit)->rules('required');
-                $form->currency('buypricepack','Imported Pack Price')->value($importedprices->buypricepack)->rules('required');
-                $form->currency('buypricebox','Imported Box Price')->value($importedprices->buypricebox)->rules('required');
+                $form->text('buypricebox','Imported Box Price')->value($importedprices->buypricebox)->rules('required')->attribute($style);
+                $form->text('buypricepack','Imported Pack Price')->value($importedprices->buypricepack)->rules('required')->attribute($style);
+                $form->text('buypriceunit','Imported Unit Price')->value($importedprices->buypriceunit)->rules('required')->attribute($style);
+                
+                
             }else{
-                $form->currency('buypriceunit','Imported Unit Price')->rules('required')->value($sp->importpriceunit);
-                $form->currency('buypricepack','Imported Pack Price')->rules('required')->value($sp->importpricepack);
-                $form->currency('buypricebox','Imported Box Price')->rules('required')->value($sp->importpricebox);
+                $form->text('buypricebox','Imported Box Price')->rules('required')->value($sp->importpricebox)->attribute($style);
+                $form->text('buypricepack','Imported Pack Price')->rules('required')->value($sp->importpricepack)->attribute($style);
+                $form->text('buypriceunit','Imported Unit Price')->rules('required')->value($sp->importpriceunit)->attribute($style);
+                
+                
             }
 
 
 
-            $form->currency('amount', 'Total')->value(0);
+            $form->text('amount', 'Total')->value(0)->attribute($style);
             //$form->currency('amount', 'Total')->rules('required')->value(0);
-
-            $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
-            $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);
             $form->text('boxinstock','Number of Box in Stock')->attribute($attribute)->value(0);
+            $form->text('packinstock','Number of Pack in Stock')->attribute($attribute)->value(0);
+            $form->text('unitinstock','Number of Unit in Stock')->attribute($attribute)->value(0);
+            
+            
             $form->switch('finish', 'Finished?')->value(0);
             
             
@@ -490,6 +658,9 @@ SCRIPT;
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
+            $form->html('<input type="hidden" name="unitperpack" id="unitperpack" value="'. $sp->unitperpack.'" disabled="disabled">');
+            $form->html('<input type="hidden" name="unitperbox" id="unitperbox" value="'. $sp->unitperbox.'" disabled="disabled">');
+
 
             Admin::script($script_form_create);
 

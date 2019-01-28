@@ -235,9 +235,16 @@
 
         <div class="box-footer">
             <div class="col-sm-8">
-                <div class="btn-group pull-right">
-                    <input type="button" class="btn btn-info pull-right" id="checkoutsubmit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Submit" value="Checkout">
+                <input type="hidden" name="print" id='print' value='0'>
+                <div class="btn-group pull-left">
+                    <input type="button" class="btn btn-info pull-right checkoutsubmit"  id='checkoutprint' data-loading-text="<i class='fa fa-spinner fa-spin'></i> Submit" value="CheckoutWithReceipt">
+
                 </div>
+                <div class="btn-group pull-right">
+
+                    <input type="button" class="btn btn-info pull-right checkoutsubmit" id='checkoutnoprint' data-loading-text="<i class='fa fa-spinner fa-spin'></i> Submit" value="Checkout">
+                </div>
+
             </div>
 
         </div>
@@ -507,19 +514,26 @@
         return res;
     }
 
-    $(document).off('click', '#checkoutsubmit');
-    $(document).on('click', '#checkoutsubmit', function(e){
+    $(document).off('click', '.checkoutsubmit');
+    $(document).on('click', '.checkoutsubmit', function(e){
 
-        document.getElementById("checkoutsubmit").disabled = true;
+        
+
+        $(".checkoutsubmit").prop('disabled', true);
+        if (e.target.id == 'checkoutprint'){
+            $('#print').val(1);
+        }
         
         
         $.when( getStock() ).done( function(){
             var res = validateForm();
 
             if ( res ){
+
                 $('#checkoutform').submit();
             }else{
-                document.getElementById("checkoutsubmit").disabled = false;
+                $(".checkoutsubmit").prop('disabled', false);
+                $('#print').val(0);
             }
         });
 

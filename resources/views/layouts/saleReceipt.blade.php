@@ -78,10 +78,10 @@
 		}
 
 		.td-price{
-			width: 20%;
+			width: 21%;
 		}
 		.td-subtotal{
-			width: 16%;
+			width: 15%;
 		}
 
 		.table-orderline td{
@@ -129,14 +129,14 @@
 			padding-right: 3px;
 			border-right: solid 1px black;
 			border-top: solid 1px black;
-			width: 69%;
+			width: 70%;
 
 		}
 		.td-currencyr{
 			text-align: right;
 			padding-right: 3px;
 			border: solid 1px black;
-			width: 16%;
+			width: 15%;
 		}
 		.td-currencyd{
 			text-align: right;
@@ -245,7 +245,7 @@
 					if (stristr($orderline->category,'cigaret')){
 						$quantity .= $orderline->boxquantity . "សុង" ;
 					}else{
-						$quantity .= $orderline->boxquantity . "កេះ" ;
+						$quantity .= $orderline->boxquantity . "កេស" ;
 					}
 					//$quantity .= $orderline->boxquantity . "x" . $orderline->unitperbox . " ";
 					$price .= $orderline->salepricebox . " ";
@@ -282,12 +282,13 @@
 			<td class="td-labeltotal">
 				<p>សរុប:</p>
 			</td>
-			<td class="td-currencyd">
-				<p>{{ $sale->total }}$</p>
-			</td>
 			<td class="td-currencyr">
 				<p>{{ intval($sale->totalr) }}៛</p>
 			</td>
+			<td class="td-currencyd">
+				<p>{{ $sale->total }}$</p>
+			</td>
+			
 		</tr>
 
 		</tr>
@@ -296,11 +297,12 @@
 			<td class="td-labelpayment">
 				<p>បញ្ចុះតំលៃៈ</p>
 			</td>
-			<td class="td-currencyd">
-				<p> {{ $sale->discountd }}$ </p>
-			</td>
+			
 			<td class="td-currencyr">
 				<p>{{ intval($sale->discountr) }}៛</p>
+			</td>
+			<td class="td-currencyd">
+				<p> {{ $sale->discountd }}$ </p>
 			</td>
 		</tr>
 		@endif
@@ -309,11 +311,12 @@
 			<td class="td-labelpayment td-grandtotal">
 				<p>សរុបចុងក្រោយៈ</p>
 			</td>
-			<td class="td-currencyd">
-				<p> {{ $sale->ftotal }}$</p>
-			</td>
+			
 			<td class="td-currencyr">
 				<p>{{ intval($sale->ftotalr)}}៛</p>
+			</td>
+			<td class="td-currencyd">
+				<p> {{ $sale->ftotal }}$</p>
 			</td>
 		</tr>
 
@@ -321,12 +324,13 @@
 			<td class="td-labelpayment">
 				<p>បង់រួចៈ</p>
 			</td>
-			<td class="td-currencyd">
-				<p> {{ $sale->recievedd }}$ </p>
-			</td>
 			<td class="td-currencyr">
 				<p> {{ $sale->recievedr }}៛</p>
 			</td>
+			<td class="td-currencyd">
+				<p> {{ $sale->recievedd }}$ </p>
+			</td>
+			
 		</tr>		
 
 		@if($sale->loand>0)
@@ -334,12 +338,13 @@
 			<td class="td-labelpayment">
 				<p>នៅសល់ៈ</p>
 			</td>
-			<td class="td-currencyd">
-				<p>{{ $sale->loand }}$</p>
-			</td>
 			<td class="td-currencyr">
 				<p>{{ intval($sale->loanr) }}៛</p>
 			</td>
+			<td class="td-currencyd">
+				<p>{{ $sale->loand }}$</p>
+			</td>
+			
 		</tr>		
 		@endif
 
@@ -348,12 +353,13 @@
 			<td class="td-labelpayment">
 				<p>អាប់ៈ</p>
 			</td>
-			<td class="td-currencyd">
-				<p> {{ $sale->changed }}$ </p>
-			</td>
 			<td class="td-currencyr">
 				<p> {{ intval($sale->changer) }}៛ </p>
 			</td>
+			<td class="td-currencyd">
+				<p> {{ $sale->changed }}$ </p>
+			</td>
+			
 		</tr>
 		@endif
 
@@ -362,12 +368,13 @@
 			<td class="td-labelpayment">
 				<p>អាប់ៈ</p>
 			</td>
-			<td class="td-currencyd">
-				<p> </p>
-			</td>
 			<td class="td-currencyr">
 				<p> {{ intval($sale->changertotal) }}៛ </p>
 			</td>
+			<td class="td-currencyd">
+				<p> </p>
+			</td>
+			
 		</tr>	
 		@endif	
 

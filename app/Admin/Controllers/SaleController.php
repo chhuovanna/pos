@@ -417,7 +417,12 @@ SCRIPT;
 
         });
         DB::commit();
-        $url = strtok(url()->previous(), '?')."?checkoutstate=success&saleid=". $this->saleid;
+
+        if ($request->input('print') == 1){
+            $url = strtok(url()->previous(), '?')."?checkoutstate=success&saleid=". $this->saleid;
+        }else{
+            $url = strtok(url()->previous(), '?')."?checkoutstate=success";
+        }
 
         return redirect($url);        
 
