@@ -350,7 +350,8 @@ $("[placeholder='Minimum box in stock']").keyup(function(){
         } 
     });
 $(document).ready(function(){
-    $('.form-inline').parent().append('<div class="btn-group pull-right" style="margin-right: 10px"><a href="javascript:void(0);" class="btn btn-sm btn-twitter" id="print"><i class="fa fa-print"></i>&nbsp;&nbsp;Print</a></div>');
+    
+    $('.form-inline').parent().append('<a  href="javascript:void(0);" id="print" class="btn btn-sm btn-twitter" ><i class="fa fa-print"></i>&nbsp;&nbsp;Print</a>');
     $('#print').click(function(){
         var pid = $('[name="pid"]').val();
         var keyword = $('[placeholder="Keyword"]').val();
@@ -359,12 +360,16 @@ $(document).ready(function(){
 
         var printwindow = window.open(  url,'_blank', 'height=700,width=700');
         
-});
+    
+    });
 
 });
 
 script;
             Admin::script($script);
+
+            /*var ele = '<div class="btn-group pull-right" style="margin-right: 10px"><a href="javascript:void(0);" class="btn btn-sm btn-twitter" id="print"><i class="fa fa-print"></i>&nbsp;&nbsp;Print';
+    ele = ele + '</a></div>';*/
 
        
         });
