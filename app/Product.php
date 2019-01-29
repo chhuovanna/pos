@@ -273,4 +273,45 @@ END;
 
     }
 
+    public static function getStockReminderPrint($input){
+
+        $sql = <<<END
+select p.pid
+    , p.name
+    , (p.unitinstock + (p.packinstock*p.unitperpack) + (p.boxinstock*p.unitperbox))/p.unitperbox as totalboxinstock
+    , im.name as importer
+    , inv.buypricebox buypricebox
+from (select max(invid) latestinvid
+    from inventories inv 
+    group by pid)
+    as temp 
+        join inventories inv
+        join products p 
+        join importers im
+            on temp.latestinvid = inv.invid
+                and inv.pid = p.pid and inv.impid = im.impid 
+
+END;
+        $where = "";
+        if (array_key_exists('pid', $input)){
+            if ($input['pid'])
+                $where .= " (pid = " . $input['pid'] . ") AND";
+        }
+        if (array_key_exists('keyword', $input)){
+            if ($input['keyword'])
+                $where .= " (p.name like = '%". $input['keyword']. "%' OR p.description like '%". $input['keyword']. "%' OR p.shortcut like '%". $input['keyword']. "%' OR barcode like '%". $input['keyword']. "%') AND" ;
+        }
+
+        if (array_key_exists('minimum', $input)){
+            if ($input['minimum'])
+                $where .= " ((unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox < ". $input['minimum']." ) AND";
+        }
+
+        $where = substr($where, 0 , -4);
+        if (strlen($where) > 0 )
+            $where =  " where " . $where ;
+        return $sql . $where . ";";
+
+    }
+
 }

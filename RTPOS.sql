@@ -196,9 +196,10 @@ alter table winmoneyprizeproduct change winsubtotalr winsubtotal decimal(10,4);
 alter table winmoneyprizeproduct change leftsubtoatr leftsubtotal decimal(10,4);
 
 use rtpos;
+use mnpos1;
 #alter table winmoneyprizeproduct delete cascade
 
-alter table winmoneyprizeproduct drop foreign key winmoneyprizeproduct_ibfk_1;
+alter table winmoneyprizeproduct drop foreign key winmoneyprizeproduct_ibfk_2;
 alter table winmoneyprizeproduct add foreign key winmoneyprizeproduct_ibfk_1 (wmpid) references
 winmoneyprize(wmpid) on delete cascade;
 
@@ -225,6 +226,18 @@ alter table sales modify recievedd decimal(10,4);
 alter table sales modify exchangerate decimal(4,0);
 
 alter table winmoneyprize modify exchangerate decimal(4,0);
+
+
+#use to check stock in p and iv
+select p.pid, p.unitinstock, p.packinstock, p.boxinstock, i.invid
+from products p left join  inventories i
+	using(pid)
+where not isnull(p.unitinstock);
+
+select *
+from products p left join  inventories i
+	using(pid)
+where pid = 3;
 
 
 

@@ -71,6 +71,7 @@ Route::group([
     $router->get('sale/printreceipt', 'SaleController@printReceipt');
     $router->get('sale/viewreceipt', 'SaleController@viewReceipt');
     $router->get('product/stockreminder', 'ProductController@stockreminder');
+    $router->get('product/stockreminder/print', 'ProductController@printStockReminder');
     ////
 
     $router->resource('product', ProductController::class);

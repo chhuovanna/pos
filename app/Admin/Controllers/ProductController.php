@@ -13,6 +13,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
+use Illuminate\Http\Request;
 
 
 class ProductController extends Controller
@@ -329,6 +330,7 @@ SCRIPT;
             $grid->disableRowSelector();
             $grid->disableActions();
             $grid->disableCreation();
+            $grid->disableExport();
 
            
             $grid->pid('ID');
@@ -347,6 +349,19 @@ $("[placeholder='Minimum box in stock']").keyup(function(){
             $(this).val(0);
         } 
     });
+$(document).ready(function(){
+    $('.form-inline').parent().append('<div class="btn-group pull-right" style="margin-right: 10px"><a href="javascript:void(0);" class="btn btn-sm btn-twitter" id="print"><i class="fa fa-print"></i>&nbsp;&nbsp;Print</a></div>');
+    $('#print').click(function(){
+        var pid = $('[name="pid"]').val();
+        var keyword = $('[placeholder="Keyword"]').val();
+        var minimum = $('[placeholder="Minimum box in stock"]').val();
+        var url = '/admin/product/stockreminder/print?pid=' + pid + '&keyword=' + keyword + '&minimum=' + minimum;
+
+        var printwindow = window.open(  url,'_blank', 'height=700,width=700');
+        
+});
+
+});
 
 script;
             Admin::script($script);
@@ -488,6 +503,14 @@ public function update($id)
     {
         return $this->formEdit()->update($id);
     }
+
+public function printStockReminder(Request $request){
+    $input = $request->all();
+
+    $result = Product::getStockReminderPrint($input);
+    echo $result;
+
+}
 
 /*
         public function createwithimp()

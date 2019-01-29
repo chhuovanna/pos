@@ -630,12 +630,14 @@ SCRIPT;
                 $form->text('buypriceunit','Imported Unit Price')->value($importedprices->buypriceunit)->rules('required')->attribute($style);
                 
                 
-            }else{
+            }elseif (!is_null($sp->importpricebox)){
                 $form->text('buypricebox','Imported Box Price')->rules('required')->value($sp->importpricebox)->attribute($style);
                 $form->text('buypricepack','Imported Pack Price')->rules('required')->value($sp->importpricepack)->attribute($style);
                 $form->text('buypriceunit','Imported Unit Price')->rules('required')->value($sp->importpriceunit)->attribute($style);
-                
-                
+            }else{
+                $form->text('buypricebox','Imported Box Price')->rules('required')->attribute($style);
+            $form->text('buypricepack','Imported Pack Price')->rules('required')->attribute($style);
+            $form->text('buypriceunit','Imported Unit Price')->rules('required')->attribute($style);
             }
 
 
