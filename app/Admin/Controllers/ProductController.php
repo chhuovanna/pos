@@ -513,7 +513,11 @@ public function printStockReminder(Request $request){
     $input = $request->all();
 
     $result = Product::getStockReminderPrint($input);
-    echo $result;
+    date_default_timezone_set("Asia/Bangkok");
+    return view('printStockReminder', ['products'=> $result
+        , 'date'=> date('d-m-Y H:m:s')
+
+    ]);
 
 }
 

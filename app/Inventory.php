@@ -120,9 +120,9 @@ Select i.pid as PID
     , sum(importunit) as sumunit
     , sum(importpack) as sumpack
     , sum(importbox) as sumbox
-    , avg(buypriceunit) as avgup
-    , avg(buypricepack) as avgpp
-    , avg(buypricebox) as avgbp
+    , round(avg(buypriceunit),4 ) as avgup
+    , round(avg(buypricepack),4) as avgpp
+    , round(avg(buypricebox),4) as avgbp
     , sum(i.amount) as sumstt 
     , sum(i.unitinstock) as sumsu
     , sum(i.packinstock) as sumsp

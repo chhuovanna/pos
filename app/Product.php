@@ -296,7 +296,7 @@ END;
         }
         if (array_key_exists('keyword', $input)){
             if ($input['keyword'])
-                $where .= " (p.name like = '%". $input['keyword']. "%' OR p.description like '%". $input['keyword']. "%' OR p.shortcut like '%". $input['keyword']. "%' OR barcode like '%". $input['keyword']. "%') AND" ;
+                $where .= " (p.name like  '%". $input['keyword']. "%' OR p.description like '%". $input['keyword']. "%' OR p.shortcut like '%". $input['keyword']. "%' OR barcode like '%". $input['keyword']. "%') AND" ;
         }
 
         if (array_key_exists('minimum', $input)){
@@ -307,7 +307,8 @@ END;
         $where = substr($where, 0 , -4);
         if (strlen($where) > 0 )
             $where =  " where " . $where ;
-        return $sql . $where . " importer, totalboxinstock ;";
+        $sql .= $where . " order by importer, totalboxinstock ;";
+        return DB::select($sql);
 
     }
 
