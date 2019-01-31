@@ -74,8 +74,12 @@ $(document).ready(function() {
                 url:"inventory/quickadd",
                 data:{box: numbox, pid:$(this).data('id')},    
                 success: function (data) {
-                    $.pjax.reload('#pjax-container');
-                    toastr.success('Added');
+                    if(data == 1){
+                        $.pjax.reload('#pjax-container');
+                        toastr.success('Added');
+                    }else{
+                        toastr.error('Fail');
+                    }
                     console.log(data);
                 },
                 error: function(data){
