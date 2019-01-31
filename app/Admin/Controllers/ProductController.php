@@ -60,6 +60,31 @@ $(document).ready(function() {
     $('td:nth-child(13)').css("background-color", "#66ffcc");
     $('td:nth-child(14)').css("background-color", "#66ffcc");
 
+    $('.quickadd').off('click');
+    $('.quickadd').on('click', function(){
+        var numbox = prompt("Please enter number of imported box:", "5");
+        if (numbox == null || numbox == "" || isNaN(numbox) || numbox <= 0) {
+            toastr.error('Fail');
+        } else {
+
+            $.ajax({
+                type:"GET",
+                url:"inventory/quickadd",
+                data:{box: numbox, pid:$(this).data('id')},    
+                success: function (data) {
+                    $.pjax.reload('#pjax-container');
+                    toastr.success('Added');
+                    console.log(data);
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            }); 
+
+            
+        }
+    });
+
     
     
 });
@@ -275,6 +300,8 @@ SCRIPT;
 
                 // append an action.
                 $actions->append('<a title="Add Inventory" href="inventory/create/' .$actions->getKey(). '"><i class="fa fa-plus"></i></a>');
+                $actions->append('<a title="Inventory Quick Add" data-id="'.$actions->getKey().'" class="quickadd"><i class="fa fa-plus-circle"></i></a>');
+
 
             });
 

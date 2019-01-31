@@ -33,10 +33,15 @@ Route::group([
     
 
     //$router->get('inventory/search','InventoryController@searchInventory');
+    $router->get('inventory/create/{product}', 'InventoryController@productInventory');
+    /////
+
+    $router->get('inventory/quickadd',"InventoryController@quickAdd");
+    /////
 
     $router->resource('inventory', InventoryController::class);
 
-    $router->get('inventory/create/{product}', 'InventoryController@productInventory');
+    
 
     $router->get('sale/addsale','SaleController@addSale');
     $router->get('sale/addsalebarcode','SaleController@addSaleBarcode');

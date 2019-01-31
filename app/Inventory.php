@@ -179,5 +179,68 @@ EOT;
         //return $sql;
     }
 
+    public static function quickAdd($input){
+        
+        $importedprices = Inventory::where('pid', '=' , $input['pid'])->orderBy('invid')->first();
+
+        if ($importedprices){
+            $myInventory = new Inventory();
+            $myInventory->pid = $input['pid'];
+            $myInventory->impid = $importedprices->impid;
+            $myInventory->importunit = 0;
+            $myInventory->importpack = 0;
+            $myInventory->importbox = $input['box'];
+            $myInventory->buypricebox = $importedprices->buypricebox;
+            $myInventory->buypriceunit = $importedprices->buypriceunit;
+            $myInventory->buypricepack = $importedprices->buypricepack;
+            $myInventory->unitinstock = 0;
+            $myInventory->packinstock = 0;
+            $myInventory->boxinstock = $input['box'];
+
+
+            $myInventory->finish = 0;
+            $myInventory->amount = $myInventory->importbox * $myInventory->buypricebox;
+            if ($myInventory->save()){
+                Inventory::updatestock($input['pid']);
+                return true;
+            }else{
+                return false;
+            }
+                
+                
+        }else{
+            $product = Product::find($input['pid']);
+            if (!is_null($product->importpricebox)){
+                $myInventory = new Inventory();
+                $myInventory->pid = $input['pid'];
+                $myInventory->importunit = 0;
+                $myInventory->importpack = 0;
+                $myInventory->importbox = $input['box'];
+                $myInventory->buypricebox = $product->importpricebox;
+                $myInventory->buypriceunit = $product->importpriceunit;
+                $myInventory->buypricepack = $product->importpricepack;
+                $myInventory->unitinstock = 0;
+                $myInventory->packinstock = 0;
+                $myInventory->boxinstock = $input['box'];
+
+
+                $myInventory->finish = 0;
+                $myInventory->amount = $myInventory->importbox * $myInventory->buypricebox;
+                if ($myInventory->save()){
+                    Inventory::updatestock($input['pid']);
+                    return true;
+                }else{
+                    return false;
+                }
+
+
+            }else{
+                return false;
+            }
+        }
+
+            
+    }
+
 }
 

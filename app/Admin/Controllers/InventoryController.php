@@ -727,4 +727,13 @@ use for inventory report
         return Inventory::searchinventory($searchKey);
     }
 
+    public function quickAdd(Request $request){
+        $input = $request->all();
+        $res = "0";
+        if (Inventory::quickAdd($input)){
+            $res = "1";
+        }
+        return $res;
+    }
+
 }
