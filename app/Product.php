@@ -304,6 +304,18 @@ END;
                 $where .= " ((p.unitinstock + (p.packinstock*p.unitperpack) + (p.boxinstock*p.unitperbox))/p.unitperbox <= ". $input['minimum']." ) AND";
         }
 
+        if (array_key_exists('catid', $input)){
+            if ($input['catid'])
+                $where .= " ( p.catid = " . $input['catid'] . ") AND";
+        }
+
+
+        if (array_key_exists('impid', $input)){
+            if ($input['impid'])
+                $where .= " ( im.impid = " . $input['impid'] . ") AND";
+        }
+
+
         $where = substr($where, 0 , -4);
         if (strlen($where) > 0 )
             $where =  " where " . $where ;

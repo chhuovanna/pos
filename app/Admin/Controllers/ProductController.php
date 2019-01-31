@@ -6,6 +6,8 @@ use App\Product;
 use App\Category;
 use App\Manufacturer;
 use App\Exchangerate;
+use App\StockReminder;
+use App\Importer;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -316,9 +318,15 @@ SCRIPT;
      */
     protected function stockReminderGrid()
     {
-        return Admin::grid(Product::class, function (Grid $grid) {
+        return Admin::grid(StockReminder::class, function (Grid $grid) {
 
             $grid->filter(function ($filter) {
+
+
+                $importers = Importer::getSelectOption();
+                $filter->equal('impid')->select($importers);
+                $categories = Category::getSelectOption();
+                $filter->equal('catid')->select($categories);
 
                 $filter->where(function ($query) {
 
@@ -331,28 +339,10 @@ SCRIPT;
 
                     }, 'Minimum box in stock');
 
+
             });   
 
-            /*$grid->model()->selectRaw('pid
-                , name
-                , unitinstock
-                , packinstock
-                , boxinstock
-                , unitperpack
-                , unitperbox
-                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox)) as totalunitinstock
-                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox as totalboxinstock')->whereRaw('(unitinstock+(packinstock*unitperpack)+(boxinstock*unitperbox))/unitperbox < 5')->orderByRaw('totalboxinstock');
-*/
-
-            $grid->model()->selectRaw('pid
-                , name
-                , unitinstock
-                , packinstock
-                , boxinstock
-                , unitperpack
-                , unitperbox
-                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox)) as totalunitinstock
-                , (unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox))/unitperbox as totalboxinstock')->orderByRaw('totalboxinstock');
+          
             $grid->disableBatchDeletion();
             $grid->disableRowSelector();
             $grid->disableActions();
@@ -377,13 +367,18 @@ $("[placeholder='Minimum box in stock']").keyup(function(){
         } 
     });
 $(document).ready(function(){
+
+    $("[name='catid']").select2({ width: '170px' });
+    $("[name='impid']").select2({ width: '170px' });
     
     $('.form-inline').parent().append('<a  href="javascript:void(0);" id="print" class="btn btn-sm btn-twitter" ><i class="fa fa-print"></i>&nbsp;&nbsp;Print</a>');
     $('#print').click(function(){
         var pid = $('[name="pid"]').val();
         var keyword = $('[placeholder="Keyword"]').val();
         var minimum = $('[placeholder="Minimum box in stock"]').val();
-        var url = '/admin/product/stockreminder/print?pid=' + pid + '&keyword=' + keyword + '&minimum=' + minimum;
+        var catid = $('[name="catid"]').val();
+        var impid = $('[name="impid"]').val();
+        var url = '/admin/product/stockreminder/print?pid=' + pid + '&keyword=' + keyword + '&minimum=' + minimum  + '&catid=' + catid + '&impid=' + impid;
 
         var printwindow = window.open(  url,'_blank', 'height=700,width=700');
         

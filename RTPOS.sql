@@ -241,3 +241,34 @@ where pid = 3;
 
 
 
+#create view for stockreminder grid
+create view stockreminder as 
+
+select p.pid
+	, p.name
+	, p.unitinstock
+	, p.packinstock
+	, p.boxinstock
+	, p.unitperpack
+	, p.unitperbox
+	, (p.unitinstock + (p.packinstock*p.unitperpack) + (p.boxinstock*p.unitperbox)) as totalunitinstock
+    
+    , (p.unitinstock + (p.packinstock*p.unitperpack) + (p.boxinstock*p.unitperbox))/p.unitperbox as totalboxinstock
+    , im.impid as impid
+    , im.name as importer
+    , inv.buypricebox buypricebox
+    , p.catid
+    , p.barcode
+    , p.description
+    , p.shortcut
+from products p 
+    left join (inventories inv 
+                join (select max(invid) latestinvid from inventories inv group by pid) as temp 
+                join importers im 
+                on temp.latestinvid = inv.invid and inv.impid = im.impid )
+    on  inv.pid = p.pid 
+order by importer, totalboxinstock;
+select * from stockreminder;
+
+
+

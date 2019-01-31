@@ -45,7 +45,7 @@
         }
 
         .td-name{
-            width: 62%;
+            width: 60%;
         }
 
         .td-qty{
@@ -56,7 +56,7 @@
             width: 5%;
         }
         .td-importer{
-            width: 15%;
+            width: 27%;
         }
 
         .table-orderline td{
