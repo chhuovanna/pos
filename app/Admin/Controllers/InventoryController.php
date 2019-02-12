@@ -419,10 +419,11 @@ SCRIPT;
 
             $grid->model()->with('product');
             $grid->model()->with('importer');
-            $grid->model()->orderby('invid','desc');
+            //$grid->model()->orderby('invid','desc');
 
-            $grid->invid('Inv.ID');
-            $grid->product()->pid('Prod.ID');
+            $grid->invid('Inv.ID')->sortable();
+            //$grid->product()->pid('Prod.ID');
+            $grid->pid('Prod.ID')->sortable();
             $grid->product()->name('Prod.Name');
             //$grid->importer()->impid('Impo.ID');
             $grid->importer()->name('Impo.Name');
@@ -490,7 +491,7 @@ SCRIPT;
             $form->select('impid', 'Importer')->options($importers)->rules('required')->value(-1);
 
 
-            $attribute = array("pattern"=>"^\d+$","style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
+            $attribute = array("style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
             $style = ["style"=>"width:115px; background-color:#def9fc", "autocomplete"=>"off"];
             $form->text('importbox','Number of Imported Box')->attribute($attribute)->value(0);
             $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);
@@ -547,7 +548,7 @@ SCRIPT;
             $form->select('impid', 'Importer')->options($importers)->rules('required');
 
 
-            $attribute = array("pattern"=>"^\d+$","style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
+            $attribute = array("style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
             $style = ["style"=>"width:115px; background-color:#def9fc", "autocomplete"=>"off"];
             $form->text('importbox','Number of Imported Box')->attribute($attribute)->value(0);
             $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);
@@ -584,6 +585,7 @@ SCRIPT;
 
             $form->saved(function (Form $form) {
                 Inventory::updatestock($form->model()->pid);
+                Inventory::updateavgbuypricebox($form->model()->pid);
             });
         });
         
@@ -614,7 +616,7 @@ SCRIPT;
             }
 
 
-            $attribute = array("pattern"=>"^\d+$","style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
+            $attribute = array("style"=>"width: 100px; color: #0762f2", "autocomplete"=>"off");
             $style = ["style"=>"width:115px; background-color:#def9fc", "autocomplete"=>"off"];
             $form->text('importbox','Number of Imported Box')->attribute($attribute)->value(0);
             $form->text('importpack','Number of Imported Pack')->attribute($attribute)->value(0);

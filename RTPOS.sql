@@ -270,5 +270,38 @@ from products p
 order by importer, totalboxinstock;
 select * from stockreminder;
 
+##change quantity with .x
+use mnpos1;
+alter table inventories modify importpack decimal(5,1)
+, modify importbox decimal(5,1)
+, modify packinstock decimal(5,1)
+, modify boxinstock decimal(5,1)
+;
+
+
+alter table saleproducts modify packquantity decimal(5,1)
+, modify boxquantity decimal(5,1)
+;
+
+
+#add avgbuyprice box for expense calculation
+alter table saleproducts add avgbuypriceunit decimal(10,4);
+alter table inventories add avgbuypriceunit decimal(10,4);
+
+
+/*
+select sum()/
+
+from products p 
+	join inventories inv
+    on p.pid = inv.pid
+where finish = 0;
+
+
+select unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox)
+from product 
+where pid = 1;
+*/
+
 
 

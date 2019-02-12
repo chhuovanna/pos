@@ -188,7 +188,7 @@
         + "' readonly= 'readonly'></td>";
     //first scan unit quantity = 1
     row = row + "<input id='" +pid+ "su' name='" +pid+ "su' type='hidden' value='" + data[0].su + "'>" 
-        + "<td><input id='" +pid+ "qu' name='" +pid+ "qu' class='quantity' value='1' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' ></td>" 
+        + "<td><input id='" +pid+ "qu' name='" +pid+ "qu' class='quantity' value='0' style='width: 60px; background-color:#def9fc' pattern='[-]?[0-9]+' autocomplete='off' ></td>" 
         + "<td><input id='" +pid+ "up' name='" +pid+ "up' class='price' value='" + data[0].up + "' style='width: 60px' ></td>";
     
     row = row + "<input id='" +pid+ "sp' name='" +pid+ "sp' type='hidden' value='" + data[0].sp + "'>"

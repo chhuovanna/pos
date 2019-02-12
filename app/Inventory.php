@@ -242,5 +242,9 @@ EOT;
             
     }
 
+    public static function updateavgbuypricebox($pid){
+
+    }
+
 }
 
