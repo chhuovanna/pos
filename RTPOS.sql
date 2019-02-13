@@ -289,19 +289,169 @@ alter table saleproducts add avgbuypriceunit decimal(10,4);
 alter table inventories add avgbuypriceunit decimal(10,4);
 
 
-/*
-select sum()/
-
-from products p 
-	join inventories inv
-    on p.pid = inv.pid
-where finish = 0;
 
 
-select unitinstock + (packinstock*unitperpack) + (boxinstock*unitperbox)
-from product 
-where pid = 1;
-*/
+#get avgpriceunit of finish inve
+
+
+    select importunit, importpack, importbox
+		, buypriceunit, buypricepack
+        , buypricebox
+        , unitperpack
+        , unitperbox
+        , importunit 
+		+ (importpack*unitperpack) 
+		+ (importbox*unitperbox) as totalunit
+        , (importunit*buypriceunit) 
+		+ (importpack*buypricepack) 
+		+ (importbox*buypricebox) as totalcost
+    from products p
+		join inventories inv 
+        on p.pid = inv.pid
+	where p.pid = 42 and finish = 1;
+    
+    select sum((importunit*buypriceunit) 
+		+ (importpack*buypricepack) 
+		+ (importbox*buypricebox) )/sum( importunit 
+		+ (importpack*unitperpack) 
+		+ (importbox*unitperbox) )  as avgprice
+        
+    from products p
+		join inventories inv 
+        on p.pid = inv.pid
+	where p.pid = 86 and finish = 1
+    
+    
+    
+    
+# update avg price unit for the past
+
+
+Delimiter //
+
+create procedure set_avg_buy_price_unit_finished_inv()
+begin
+DECLARE finished_var INTEGER DEFAULT 0;
+declare pid_var int;
+declare avg_buy_price_unit_var decimal(10,4);
+declare pids_cursor cursor for
+	select distinct pid 
+    from inventories 
+    where finish = 1;    
+#to assure when cursor reach the end of result
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished_var = 1;
+
+open pids_cursor;
+get_pids: loop
+	fetch pids_cursor into pid_var;
+    
+    if finished_var = 1 then 
+		leave get_pids;
+	end if;
+    
+    
+     select 
+	(select  sum( (inv.importunit*inv.buypriceunit) 
+		+ (inv.importpack*inv.buypricepack) 
+		+ (inv.importbox*inv.buypricebox)) as totalcost
+		
+	from inventories inv
+	where finish = 1 and pid = pid_var) / 
+	(select sum( inv.importunit 
+		+ (inv.importpack*unitperpack) 
+		+ (inv.importbox*unitperbox) ) as totalunit
+	from products p
+		join inventories inv 
+        on p.pid = inv.pid
+	where p.pid = pid_var and finish = 1) into avg_buy_price_unit_var;
+    
+    update inventories set avgbuypriceunit = avg_buy_price_unit_var where pid = pid_var and finish = 1;
+    
+    update saleproducts set avgbuypriceunit = avg_buy_price_unit_var where pid = pid_var;
+    
+end loop;
+close pids_cursor;
+end//
+
+Delimiter ;
+call set_avg_buy_price_unit_finished_inv();
+
+#procedure of not finish invent
+
+
+
+Delimiter //
+
+create procedure set_avg_buy_price_unit_not_finished_inv()
+begin
+DECLARE finished_var INTEGER DEFAULT 0;
+declare pid_var int;
+declare avg_buy_price_unit_var decimal(10,4);
+declare pids_cursor cursor for
+	select distinct pid 
+    from inventories 
+    where finish = 0;    
+#to assure when cursor reach the end of result
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished_var = 1;
+
+open pids_cursor;
+get_pids: loop
+	fetch pids_cursor into pid_var;
+    
+    if finished_var = 1 then 
+		leave get_pids;
+	end if;
+    
+    
+     select 
+    (select  sum( (inv.unitinstock*inv.buypriceunit) 
+        + (inv.packinstock*inv.buypricepack) 
+        + (inv.boxinstock*inv.buypricebox)) as totalcost
+        
+    from inventories inv
+    where finish = 0 and pid = pid_var) / 
+    (select unitinstock 
+        + (packinstock*unitperpack) 
+        + (boxinstock*unitperbox) as totalunit
+    from products 
+    where pid = pid_var) into avg_buy_price_unit_var;
+    
+    update inventories set avgbuypriceunit = avg_buy_price_unit_var where pid = pid_var and finish = 0;
+    
+    update saleproducts set avgbuypriceunit = avg_buy_price_unit_var where pid = pid_var;
+    
+end loop;
+close pids_cursor;
+end//
+
+Delimiter ;
+
+call  set_avg_buy_price_unit_not_finished_inv();
+
+
+
+
+#get average price 
+select 
+	(select  sum( (inv.unitinstock*inv.buypriceunit) 
+		+ (inv.packinstock*inv.buypricepack) 
+		+ (inv.boxinstock*inv.buypricebox)) as totalcost
+		
+	from products p 
+		join inventories inv
+		on p.pid = inv.pid
+	where finish = 0 and p.pid = 179) / 
+	(select unitinstock 
+		+ (packinstock*unitperpack) 
+		+ (boxinstock*unitperbox) as totalunit
+	from products 
+	where pid = 179) as avgbuypriceunit
+;
+
+#update avg price
+update inventories set avgbuypriceunit = 0.125
+where pid = 179 and finish = 0
+;
 
 
 

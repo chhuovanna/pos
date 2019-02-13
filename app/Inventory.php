@@ -202,6 +202,7 @@ EOT;
             $myInventory->amount = $myInventory->importbox * $myInventory->buypricebox;
             if ($myInventory->save()){
                 Inventory::updatestock($input['pid']);
+                //Inventory::updateavgbuypricebox($input['pid']);
                 return true;
             }else{
                 return false;
@@ -228,6 +229,7 @@ EOT;
                 $myInventory->amount = $myInventory->importbox * $myInventory->buypricebox;
                 if ($myInventory->save()){
                     Inventory::updatestock($input['pid']);
+                    //Inventory::updateavgbuypricebox($input['pid']);
                     return true;
                 }else{
                     return false;
@@ -243,6 +245,33 @@ EOT;
     }
 
     public static function updateavgbuypricebox($pid){
+       /* $sql = <<<EOT
+
+select 
+    (select  sum( (inv.unitinstock*inv.buypriceunit) 
+        + (inv.packinstock*inv.buypricepack) 
+        + (inv.boxinstock*inv.buypricebox)) as totalcost
+        
+    from products p 
+        join inventories inv
+        on p.pid = inv.pid
+    where finish = 0 and p.pid = $pid) / 
+    (select unitinstock 
+        + (packinstock*unitperpack) 
+        + (boxinstock*unitperbox) as totalunit
+    from products 
+    where pid = $pid) as avgbuypriceunit
+
+EOT;
+    $avgbuypriceunit = DB::select($sql);
+    $avgbuypriceunit = $avgbuypriceunit->avgbuypriceunit;
+    
+    $sql = <<<EOT
+
+update inventories set avgbuypriceunit = $avgbuypriceunit
+where pid = $pid and finish = 0
+EOT;
+    DB::statement($sql);*/
 
     }
 

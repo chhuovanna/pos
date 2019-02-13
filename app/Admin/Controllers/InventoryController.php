@@ -528,6 +528,7 @@ SCRIPT;
 
             $form->saved(function (Form $form) {
                 Inventory::updatestock($form->model()->pid);
+                Inventory::updateavgbuypricebox($form->model()->pid);
             });
         });
     }
@@ -604,8 +605,8 @@ SCRIPT;
 
             $form->select('pid', 'Product')->options([$sp->pid=>$sp->name])->value($product);
 
-            //$importedprices = Inventory::where('pid', '=' , $product)->orderBy('invid','desc')->first();
-            $importedprices = Inventory::where('pid', '=' , $product)->orderBy('invid')->first();
+            $importedprices = Inventory::where('pid', '=' , $product)->orderBy('invid','desc')->first();
+            //$importedprices = Inventory::where('pid', '=' , $product)->orderBy('invid')->first();
 
             $importers = Importer::pluck('name','impid');
 
@@ -671,6 +672,7 @@ SCRIPT;
 
             $form->saved(function (Form $form) {
                 Inventory::updatestock($form->model()->pid);
+                Inventory::updateavgbuypricebox($form->model()->pid);
             });
         });
     }
