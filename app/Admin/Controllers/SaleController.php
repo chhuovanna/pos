@@ -394,7 +394,7 @@ SCRIPT;
                 $saleproduct->salepricebox  = $input[ $products[$i]. "bp"   ];
                 $saleproduct->subtotal      = $input[ $products[$i]. "stt"  ];
                 $saleproduct->stock         = $input[ $products[$i]."tstock"];
-                $saleproduct->save();
+                
 
                 $temp  = explode( ',', $input[   $products[$i]. "tstock"  ] );
                 $stock = array( 'unitinstock'   => $temp[0]
@@ -402,7 +402,11 @@ SCRIPT;
                                 ,'boxinstock'   => $temp[2] );
 
                 Product::updateStock( $products[$i], $stock );
-                Inventory::updateInventory( $products[$i], $stock );
+                $savedInventory = Inventory::updateInventory( $products[$i], $stock );
+                if ($savedInventory)
+                    $saleproduct->avgbuypriceunit = $savedInventory->avgbuypriceunit;
+
+                $saleproduct->save();
             }
             //insert loan 
             if ($sale->sotid == 2){

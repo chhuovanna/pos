@@ -251,6 +251,7 @@ function getTotal(){
     var impup   ;
     var imppp   ;
     var impbp   ;
+    var source = event.target;
 
 
     if ( !$('#importunit').val() || isNaN( $('#importunit').val() )){
@@ -286,6 +287,14 @@ function getTotal(){
     total       = total.add(    imppp.mul(  $('#importpack').val()  )   );
     total       = total.add(    impbp.mul(  $('#importbox').val()  )   );
     $('#amount').val(total);
+
+    if (source.id == 'importunit')
+        $('#unitinstock').keyup();
+    else if ( source.id == 'importpack')
+        $('#packinstock').keyup();
+    else if ( source.id == 'importbox')
+        $('#boxinstock').keyup();
+
     
 }
 
@@ -306,7 +315,7 @@ function alertUnmatched(event){
             }
             break;
         case 'packinstock':
-            if ( $(source).val() != $('#importpack').val() ){
+            if ( parseInt($(source).val()) != $('#importpack').val() ){
                 $('#packinstock').css("background-color", "#f9b3b3");
             }else{
                 $('#packinstock').css("background-color", "white");
@@ -586,7 +595,7 @@ SCRIPT;
 
             $form->saved(function (Form $form) {
                 Inventory::updatestock($form->model()->pid);
-                Inventory::updateavgbuypricebox($form->model()->pid);
+                Inventory::updateavgbuypriceboxedit($form->model()->pid);
             });
         });
         
@@ -706,6 +715,7 @@ SCRIPT;
             $inventory = Inventory::where('invid',$id)->first();
             if ($this->formEdit()->destroy($id)) {
                 Inventory::updatestock($inventory->pid);
+                Inventory::updateavgbuypriceboxedit($inventory->pid);
                 return response()->json([
                     'status'  => true,
                     'message' => trans('admin::lang.delete_succeeded'),
