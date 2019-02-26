@@ -37,14 +37,7 @@ From  sales s
 	
 EOT;
  
-        $sqlprize = <<<END
-select pid
-    , sum(unitquantity) as unitprize
-    , sum(packquantity) as packprize 
-    , sum(boxquantity)  as boxprize
-from sales s join saleproducts
-    using(saleid)
-END;
+        
 
     	if (array_key_exists('saleid', $searchkey) ){
     		$where[] = " `s`.`saleid` = " 
@@ -72,7 +65,6 @@ END;
     			. $searchkey['cusid']  . " ";	
     	}
 
-        $sqlprizewhere = "";
 
         if (array_key_exists('sotid', $searchkey) ){
             $where[] = " `s`.`sotid` = " 
@@ -81,8 +73,6 @@ END;
                 $prize = false;
             }
 
-        }else{
-            $sqlprizewhere = " `s`.`sotid` = 3 "; //winning product prize
         }
         
         $sqlwhere = "";
@@ -100,9 +90,6 @@ END;
 
             $sql .= ("Where " . $sqlwhere );      
             
-            if ($sqlprizewhere){
-                $sqlprizewhere .= " AND ";
-            }
     	}
     	
 
@@ -118,6 +105,28 @@ END;
 
 			$saleids = substr($saleids, 0, strlen($saleids)-1) . ")";
 
+            $sqlpurchaseexpense = <<<EOT
+select sum((sp.unitquantity 
+        + (p.unitperpack *sp.packquantity)
+        + (p.unitperbox *sp.boxquantity)) * avgbuypriceunit) as  purchaseexpense
+
+from saleproducts sp join products p
+    on sp.pid = p.pid
+where saleid in $saleids;
+EOT;
+            $purchaseexpense = DB::select($sqlpurchaseexpense);
+            if (sizeof($purchaseexpense) > 0){
+                $purchaseexpense = $purchaseexpense[0];
+                $purchaseexpense = $purchaseexpense->purchaseexpense;
+
+            }else{
+                $purchaseexpense = 0;
+            }
+
+
+
+            
+/*
 			$sql = <<<EOT
 Select pid
 	, sum(unitquantity) as sumunit
@@ -164,26 +173,35 @@ EOT;
 
             $productprices = $temp;
             unset($temp);
-
+*/
+            $prizepurchaseexpense = 0;
             if ($prize){
                 //data of win product prize
 
-                $sqlprize .= ("Where " . $sqlprizewhere . $sqlwhere ." group by pid");
-                $prizeproducts = DB::select($sqlprize);
-                $temp = array();
+                $sqlprize = <<<END
+select sum((sp.unitquantity 
+        + (p.unitperpack *sp.packquantity)
+        + (p.unitperbox *sp.boxquantity)) * avgbuypriceunit) as prizepurchaseexpense
 
-                foreach ($prizeproducts as $prizeproduct) {
-                    $temp[$prizeproduct->pid] = $prizeproduct;
+from sales s
+    join saleproducts sp 
+    join products p 
+    on (sp.pid = p.pid and s.saleid = sp.saleid)
+where  s.sotid = 3 and s.saleid in $saleids;
+END;
+
+                $prizepurchaseexpense = DB::select($sqlprize);
+                if(sizeof($prizepurchaseexpense) > 0){
+                    $prizepurchaseexpense = $prizepurchaseexpense[0];
+                    $prizepurchaseexpense = $prizepurchaseexpense->prizepurchaseexpense;
+                }else{
+                    $prizepurchaseexpense = 0;
                 }
-
-                $prizeproducts = $temp;
-                unset($temp);
             }
 
-			return array('sales' 		=> $sales 
-    				, 'saleproducts' 	=> $saleproducts
-    				, 'productprices' 	=> $productprices
-                    , 'prizeproducts'   => $prizeproducts
+			return array('sales' 		      => $sales 
+    				, 'purchaseexpense'       => $purchaseexpense
+                    , 'prizepurchaseexpense'  => $prizepurchaseexpense
                 );
 
 		}

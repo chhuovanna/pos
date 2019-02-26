@@ -255,14 +255,16 @@ tr.darker-border td{
                 $('#salereportbody').append("<tr class='darker-border'><td></td><td>Income plus loan</td><td>" 
                                             + data.Income.toFixed(4)  + "</td></tr>");
                 $('#salereportbody').append("<tr><td></td><td>Estimated Imported Cost</td><td>" 
-                                            + data.Expense.toFixed(4)  + "</td></tr>");
+                                                + data.Expense  + "</td></tr>");
+                                            //+ data.Expense.toFixed(4)  + "</td></tr>");
                 $('#salereportbody').append("<tr><td></td><td>Estimated Profit</td><td>" 
                                             + data.Profit.toFixed(4)  + "</td></tr>");
                 $('#salereportbody').append("<tr class='darker-border'><td></td><td>Sum loan amount</td><td>" 
                                             + data.Loan.samount.toFixed(4) + "</td></tr>");                
 
                 $('#salereportbody').append("<tr'><td></td><td>Estimated expense for winning product prize</td><td>" 
-                                            + data.Prize.prizeexpense.toFixed(4) + "</td></tr>");       
+                                            + data.Prize.prizeexpense + "</td></tr>"); 
+                                            //+ data.Prize.prizeexpense.toFixed(4) + "</td></tr>");       
                 
             },
             error: function(xhr, status, error){

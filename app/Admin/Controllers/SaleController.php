@@ -609,7 +609,7 @@ SCRIPT;
             }
 
             
-
+/*
             foreach ($res['saleproducts'] as $key => $value) {
                 $expense += $value->sumunit*$res['productprices'][$key]->buypriceunit
                             + $value->sumpack*$res['productprices'][$key]->buypricepack
@@ -622,8 +622,10 @@ SCRIPT;
                             + $value->packprize*$res['productprices'][$key]->buypricepack
                             + $value->boxprize*$res['productprices'][$key]->buypricebox;
             }
+*/
+            $prize['prizeexpense'] = $res['prizepurchaseexpense'];
 
-            $prize['prizeexpense'] = $prizeexpense;
+            $expense = $res['purchaseexpense'];
 
             $income = $ordinary['sftotal'] 
                 + $loan['sftotal'] 
@@ -646,7 +648,7 @@ SCRIPT;
                     , 'Income'   => $income
                     , 'Expense'  => $expense
                     , 'Profit'   => $profit
-                    , 'prizeproducts' => $res['prizeproducts']
+                    //, 'prizeproducts' => $res['prizeproducts']
                 );
     }
    
