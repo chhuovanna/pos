@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
 
 class Category extends Model
 {
@@ -24,6 +26,23 @@ class Category extends Model
             $result[$id] = "$id:$name";
         }
         return $result;
+    }
+
+    public static function getList(){
+        $sql = <<<EOT
+select c.catid
+    , name
+    , COALESCE(packname,"") as packname
+    , COALESCE(boxname,"") as boxname
+from categories c 
+    left join categoryunitname cun
+    on c.catid = cun.catid;
+
+EOT;
+
+        
+        
+        return DB::select($sql);
     }
 }
 

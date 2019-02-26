@@ -449,8 +449,9 @@
             $('#recieveenough').val(1);
         }else{
 
-            if (recievedt.lessThan(ftotald)){
+            if (recievedt.sub(ftotald) < -0.1){
                 $('#recieveenough').val(0);
+
             }else{
                 $('#recieveenough').val(1);
             }

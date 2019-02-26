@@ -514,10 +514,11 @@ select
 	where p.pid = 353 and finish = 0 
     ) AS new_avg_price;
 
-#update avg price
-update inventories set avgbuypriceunit = 0.125
-where pid = 179 and finish = 0
-;
+
+
+#create table for unit based on category
+create table categoryunitname (catid int primary key, packname varchar(100), boxname varchar(100)
+	, foreign key (catid) references categories(catid));
 
 
 

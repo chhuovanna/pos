@@ -36,6 +36,21 @@ From  sales s
 
 	
 EOT;
+
+        $sqlsum = <<<EOT
+Select s.saleid 
+    , total
+    , ftotal
+    , cusid
+    , s.sotid
+    , l.amount as amount
+      
+From  sales s 
+    left join loan l
+        on (s.saleid = l.saleid and l.state = 0) 
+
+    
+EOT;
  
         
 
@@ -191,7 +206,7 @@ where  s.sotid = 3 and s.saleid in $saleids;
 END;
 
                 $prizepurchaseexpense = DB::select($sqlprize);
-                if(sizeof($prizepurchaseexpense) > 0){
+                if(sizeof($prizepurchaseexpense) > 0 ){
                     $prizepurchaseexpense = $prizepurchaseexpense[0];
                     $prizepurchaseexpense = $prizepurchaseexpense->prizepurchaseexpense;
                 }else{
@@ -349,7 +364,7 @@ select sum(ftotal) as sftotal
     , year(saledate) as year
     ,month(saledate) as month
 from sales
-where saledate between "$start_date" and curdate()
+where date(saledate) between "$start_date" and curdate()
 group by year(saledate)
     ,month(saledate);
     
@@ -358,18 +373,22 @@ EOT;
 
 
         if ( count($salebymonth) > 0 ){
+           
+
+
             $sql = <<<EOT
         
 select  year(saledate) as year
     ,month(saledate) as month
-    , sum(unitquantity*buypriceunit 
-        + packquantity*buypricepack  
-        + boxquantity*buypricebox ) as stotal
-from (sales s join saleproducts sp on s.saleid = sp.saleid) join inventories i on sp.pid = i.pid 
-where saledate between "$start_date" and curdate()
-    and i.invid = (Select max(invid) as invid
-                        From inventories i1
-                        Where i1.pid = sp.pid)
+    , sum((unitquantity 
+        + (packquantity*unitperpack)  
+        + (boxquantity*unitperbox ))*avgbuypriceunit ) as stotal
+from sales s 
+    join saleproducts sp 
+    join products p
+        on s.saleid = sp.saleid and p.pid = sp.pid
+where date(saledate) between "$start_date" and curdate()
+    
 group by year(saledate)
     ,month(saledate);
 EOT;

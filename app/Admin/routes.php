@@ -24,7 +24,7 @@ Route::group([
     
     
 
-    $router->resource('category', CategoryController::class);
+    //$router->resource('category', CategoryController::class);
     $router->resource('manufacturer', ManufacturerController::class);
     $router->resource('customer', CustomerController::class);
     $router->resource('exchangerate', ExchangerateController::class);
@@ -72,6 +72,7 @@ Route::group([
 
     //for rtpos
     $router->get("loan","LoanController@index");
+
     $router->post("loan/clear/{saleid}","LoanController@clearLoan");
     $router->get('sale/printreceipt', 'SaleController@printReceipt');
     $router->get('sale/viewreceipt', 'SaleController@viewReceipt');
@@ -91,7 +92,11 @@ Route::group([
     $router->get('winmoneyprize/viewdetail', 'WinMoneyPrizeController@viewdetail');
     ///
 
+    ///for packname, boxname base on category
 
+    $router->get('category/setunitname','CategoryController@setunitname');
+    $router->post('category/setunitname/save','CategoryController@setunitnamesave');
+    $router->resource('category', CategoryController::class);
 
 
     

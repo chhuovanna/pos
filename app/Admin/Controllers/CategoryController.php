@@ -11,6 +11,8 @@ use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 
+use Illuminate\Http\Request;
+
 class CategoryController extends Controller
 {
     use ModelForm;
@@ -91,6 +93,18 @@ class CategoryController extends Controller
             $grid->name('name');
             $grid->created_at();
             $grid->updated_at();
+
+            $script = <<<script
+
+$(document).ready(function(){
+
+    
+    $('.form-inline').parent().append('<div class="btn-group pull-right" style="margin-right: 10px"><a href="category/setunitname/" class="btn btn-sm btn-twitter" style="magin-right:20px">&nbsp;Set Unit Name</a></div>');
+});
+
+script;
+            Admin::script($script);
+
         });
     }
 
@@ -108,5 +122,21 @@ class CategoryController extends Controller
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });
+    }
+
+    public function setunitname(){
+        return Admin::content(function (Content $content) {
+
+            $content->header('Category');
+            $content->description('Set Unit Name');
+            $categories = Category::getList();
+            $content->body(view('SetUnitName', ['categories' => $categories]));
+        });
+    }
+
+    public function setunitnamesave(Request $request){
+        $input = $request->all();
+        print_r($input);
+        
     }
 }

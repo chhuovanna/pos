@@ -64,29 +64,42 @@ class HomeController extends Controller
 
                     $currentyear = date('Y');
                     $currentmonth = date('m');
+                    $salebymonth = array();
+                    $expensebymonth = array();
+                    $profitbymonth = array();
                     
                     $months = array();
+                    $monthname = "";
+
                     for ( $i = 5 ; $i >= 0; $i--){
-                        array_push( $months, date('F', strtotime("-".$i." months") ) );
+                        $monthname = date('F', strtotime("-".$i." months") );
+                        $salebymonth[$monthname]=0;
+                        $expensebymonth[$monthname] = 0;
+                        $profitbymonth[$monthname] = 0;
+                        array_push( $months, $monthname );
                     }
+
+
 
                     $start_date = date('Y-m', strtotime("-5 months"))."-01";
 
                     $data = Sale::getSixMonthSale( $start_date ); 
 
                     
-                    $salebymonth = array(0,0,0,0,0,0);
-                    $expensebymonth = array(0,0,0,0,0,0);
-                    $profitbymonth = array(0,0,0,0,0,0);
-
-                    $start = 6 - count( $data['salebymonth'] );
 
 
-                    for ($i=$start; $i<6 ; $i++){
-                        $salebymonth[$i]     = $data['salebymonth'][$i-$start]->sftotal;
-                        $expensebymonth[$i]  = $data['expensebymonth'][$i-$start]->stotal;
-                        $profitbymonth[$i]   = $data['salebymonth'][$i-$start]->sftotal  - $data['expensebymonth'][$i-$start]->stotal ;
+                    $size = sizeof( $data['salebymonth'] );
+                    $monthname = "";
+
+
+                    for ($i=0;  $i < $size ; $i++){
+
+                        $monthname = date('F', mktime(0,0,0,$data['salebymonth'][$i]->month));
+                        $salebymonth[$monthname]    = $data['salebymonth'][$i]->sftotal;
+                        $expensebymonth[$monthname] = $data['expensebymonth'][$i]->stotal;
+                        $profitbymonth[$monthname]  = number_format($data['salebymonth'][$i]->sftotal  - $data['expensebymonth'][$i]->stotal,4,'.','' );
                     }
+                   
                         
                     
 
