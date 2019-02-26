@@ -216,18 +216,6 @@ alter table products modify barcode bigint;
 #win money http://rtpos/admin/winmoneyprize/list
 #loan http://rtpos/admin/loan
 
-
-#change table name to all lower case
-rename table stockoutType	to stockouttype;
-
-#remove .xxx for riel
-alter table sales modify recievedr decimal(8,0);
-alter table sales modify recievedd decimal(10,4);
-alter table sales modify exchangerate decimal(4,0);
-
-alter table winmoneyprize modify exchangerate decimal(4,0);
-
-
 #use to check stock in p and iv
 select p.pid, p.unitinstock, p.packinstock, p.boxinstock, i.invid
 from products p left join  inventories i
@@ -238,6 +226,22 @@ select *
 from products p left join  inventories i
 	using(pid)
 where pid = 3;
+
+
+
+#change table name to all lower case
+rename table stockoutType	to stockouttype;
+
+use mnpos1;
+use rtpos;
+
+
+#remove .xxx for riel
+alter table sales modify recievedr decimal(8,0);
+alter table sales modify recievedd decimal(10,4);
+alter table sales modify exchangerate decimal(4,0);
+
+alter table winmoneyprize modify exchangerate decimal(4,0);
 
 
 
@@ -271,7 +275,7 @@ order by importer, totalboxinstock;
 select * from stockreminder;
 
 ##change quantity with .x
-use mnpos1;
+
 alter table inventories modify importpack decimal(5,1)
 , modify importbox decimal(5,1)
 , modify packinstock decimal(5,1)
@@ -290,39 +294,7 @@ alter table inventories add avgbuypriceunit decimal(10,4);
 
 
 
-
-#get avgpriceunit of finish inve
-
-
-    select importunit, importpack, importbox
-		, buypriceunit, buypricepack
-        , buypricebox
-        , unitperpack
-        , unitperbox
-        , importunit 
-		+ (importpack*unitperpack) 
-		+ (importbox*unitperbox) as totalunit
-        , (importunit*buypriceunit) 
-		+ (importpack*buypricepack) 
-		+ (importbox*buypricebox) as totalcost
-    from products p
-		join inventories inv 
-        on p.pid = inv.pid
-	where p.pid = 42 and finish = 1;
-    
-    select sum((importunit*buypriceunit) 
-		+ (importpack*buypricepack) 
-		+ (importbox*buypricebox) )/sum( importunit 
-		+ (importpack*unitperpack) 
-		+ (importbox*unitperbox) )  as avgprice
-        
-    from products p
-		join inventories inv 
-        on p.pid = inv.pid
-	where p.pid = 86 and finish = 1
-    
-    
-    
+  
     
 # update avg price unit for the past
 
@@ -431,6 +403,72 @@ call  set_avg_buy_price_unit_not_finished_inv();
 
 
 
+
+#get avgpriceunit of finish inve
+
+
+    select importunit, importpack, importbox
+		, buypriceunit, buypricepack
+        , buypricebox
+        , unitperpack
+        , unitperbox
+        , importunit 
+		+ (importpack*unitperpack) 
+		+ (importbox*unitperbox) as totalunit
+        , (importunit*buypriceunit) 
+		+ (importpack*buypricepack) 
+		+ (importbox*buypricebox) as totalcost
+    from products p
+		join inventories inv 
+        on p.pid = inv.pid
+	where p.pid = 353 and finish = 0;
+    
+    select sum((importunit*buypriceunit) 
+		+ (importpack*buypricepack) 
+		+ (importbox*buypricebox) )/sum( importunit 
+		+ (importpack*unitperpack) 
+		+ (importbox*unitperbox) )  as avgprice
+        
+    from products p
+		join inventories inv 
+        on p.pid = inv.pid
+	where p.pid = 353 and finish = 0;
+    
+    
+  
+  
+  
+  
+
+
+    select inv.unitinstock, inv.packinstock, inv.boxinstock
+		, buypriceunit, buypricepack
+        , buypricebox
+        , unitperpack
+        , unitperbox
+        , inv.unitinstock 
+		+ (inv.packinstock*unitperpack) 
+		+ (inv.boxinstock*unitperbox) as totalunit
+        , (inv.unitinstock*buypriceunit) 
+		+ (inv.packinstock*buypricepack) 
+		+ (inv.boxinstock*buypricebox) as totalcost
+    from products p
+		join inventories inv 
+        on p.pid = inv.pid
+	where p.pid = 353 and finish = 0;
+    
+    select sum((inv.unitinstock*buypriceunit) 
+		+ (inv.packinstock*buypricepack) 
+		+ (inv.boxinstock*buypricebox)  )/sum( inv.unitinstock 
+		+ (inv.packinstock*unitperpack) 
+		+ (inv.boxinstock*unitperbox) )  as avgprice
+        
+    from products p
+		join inventories inv 
+        on p.pid = inv.pid
+	where p.pid = 353 and finish = 0;  
+
+
 #get average price 
 select 
 	(select  sum( (inv.unitinstock*inv.buypriceunit) 
@@ -447,6 +485,34 @@ select
 	from products 
 	where pid = 179) as avgbuypriceunit
 ;
+
+
+
+select 
+	(	(select sum((inv.unitinstock 
+			+ (inv.packinstock*unitperpack) 
+			+ (inv.boxinstock*unitperbox))*avgbuypriceunit)
+		from products p
+			join inventories inv 
+			on p.pid = inv.pid
+		where p.pid = 353 and finish = 0 and !isnull(avgbuypriceunit)
+		)
+    +
+		(select sum((inv.unitinstock*buypriceunit) 
+			+ (inv.packinstock*buypricepack) 
+			+ (inv.boxinstock*buypricebox)  ) as totalcost
+		from inventories inv
+		where pid = 353 and finish = 0 and isnull(avgbuypriceunit)
+		)
+	)/
+	(select sum(inv.unitinstock 
+		+ (inv.packinstock*unitperpack) 
+		+ (inv.boxinstock*unitperbox))
+	from products p
+		join inventories inv 
+		on p.pid = inv.pid
+	where p.pid = 353 and finish = 0 
+    ) AS new_avg_price;
 
 #update avg price
 update inventories set avgbuypriceunit = 0.125

@@ -74,6 +74,7 @@ END;
                 $inventories[$i]->finish      = 1;    
                 $inventories[$i]->save();
             }
+            return $inventories[0];
         }else{
             
             if ( $stock['unitinstock'] != 0 || $stock['packinstock'] != 0 || $stock['boxinstock'] != 0 ){
@@ -81,14 +82,17 @@ END;
 
                 $inventories = Inventory::whereRaw('pid = ? and finish = 1', array($pid))->orderBy('invid','DESC')->first();
                 
-                if (count($inventories) > 0){
+                if ($inventories && count($inventories) > 0){
                     $inventories->finish  = 0;
 
                     $inventories->unitinstock = $stock['unitinstock'];
                     $inventories->packinstock = $stock['packinstock'];
                     $inventories->boxinstock  = $stock['boxinstock'];
                     $inventories->save();
+                    return $inventories;
                 }else{
+
+                    return false;
 
                 /*    $inventories = new Inventory();
 
@@ -202,7 +206,7 @@ EOT;
             $myInventory->amount = $myInventory->importbox * $myInventory->buypricebox;
             if ($myInventory->save()){
                 Inventory::updatestock($input['pid']);
-                //Inventory::updateavgbuypricebox($input['pid']);
+                Inventory::updateavgbuypricebox($input['pid']);
                 return true;
             }else{
                 return false;
@@ -229,7 +233,7 @@ EOT;
                 $myInventory->amount = $myInventory->importbox * $myInventory->buypricebox;
                 if ($myInventory->save()){
                     Inventory::updatestock($input['pid']);
-                    //Inventory::updateavgbuypricebox($input['pid']);
+                    Inventory::updateavgbuypricebox($input['pid']);
                     return true;
                 }else{
                     return false;
@@ -245,33 +249,100 @@ EOT;
     }
 
     public static function updateavgbuypricebox($pid){
-       /* $sql = <<<EOT
+
+        $sql = <<<EOT
+
+select count(invid) as numinv
+from inventories
+where finish = 0 and pid = $pid and !isnull(avgbuypriceunit);
+
+EOT;
+        $notfinishinv = DB::select($sql);
+        if ($notfinishinv[0]->numinv > 0){
+            $sql = <<<EOT
 
 select 
-    (select  sum( (inv.unitinstock*inv.buypriceunit) 
-        + (inv.packinstock*inv.buypricepack) 
-        + (inv.boxinstock*inv.buypricebox)) as totalcost
-        
-    from products p 
-        join inventories inv
+    (   (select sum((inv.unitinstock 
+            + (inv.packinstock*unitperpack) 
+            + (inv.boxinstock*unitperbox))*avgbuypriceunit)
+        from products p
+            join inventories inv 
+            on p.pid = inv.pid
+        where p.pid = $pid and finish = 0 and !isnull(avgbuypriceunit)
+        )
+    +
+        COALESCE((select sum((inv.unitinstock*buypriceunit) 
+            + (inv.packinstock*buypricepack) 
+            + (inv.boxinstock*buypricebox)  ) as totalcost
+        from inventories inv
+        where pid = $pid and finish = 0 and isnull(avgbuypriceunit)
+        ),0)
+    )/
+    (select sum(inv.unitinstock 
+        + (inv.packinstock*unitperpack) 
+        + (inv.boxinstock*unitperbox))
+    from products p
+        join inventories inv 
         on p.pid = inv.pid
-    where finish = 0 and p.pid = $pid) / 
-    (select unitinstock 
-        + (packinstock*unitperpack) 
-        + (boxinstock*unitperbox) as totalunit
-    from products 
-    where pid = $pid) as avgbuypriceunit
+    where p.pid = $pid and finish = 0 
+    ) AS new_avg_price;
 
 EOT;
-    $avgbuypriceunit = DB::select($sql);
-    $avgbuypriceunit = $avgbuypriceunit->avgbuypriceunit;
-    
-    $sql = <<<EOT
+            $new_avg_price  = DB::Select($sql);
+            $new_avg_price  = $new_avg_price[0]->new_avg_price;
+            $sql = <<<EOT
+update inventories set avgbuypriceunit = $new_avg_price
+where finish = 0 and pid = $pid;
 
-update inventories set avgbuypriceunit = $avgbuypriceunit
-where pid = $pid and finish = 0
 EOT;
-    DB::statement($sql);*/
+            DB::statement($sql);
+
+        }else{
+            $sql = <<<EOT
+update inventories set avgbuypriceunit = buypriceunit
+where pid = $pid and finish = 0;
+
+EOT;
+            DB::statement($sql);
+        }
+
+    }
+
+    public static function updateavgbuypriceboxedit($pid){
+
+
+        $sql = <<<EOT
+
+select  COALESCE(
+  
+    COALESCE((select sum((inv.unitinstock*buypriceunit) 
+        + (inv.packinstock*buypricepack) 
+        + (inv.boxinstock*buypricebox)  ) as totalcost
+    from inventories inv
+    where pid = $pid and finish = 0 
+    ),0)
+    /
+    (select sum(inv.unitinstock 
+        + (inv.packinstock*unitperpack) 
+        + (inv.boxinstock*unitperbox))
+    from products p
+        join inventories inv 
+        on p.pid = inv.pid
+    where p.pid = $pid and finish = 0 
+    ),0) AS new_avg_price;
+
+EOT;
+        $new_avg_price  = DB::Select($sql);
+        $new_avg_price  = $new_avg_price[0]->new_avg_price;
+        $sql = <<<EOT
+update inventories set avgbuypriceunit = $new_avg_price
+where finish = 0 and pid = $pid;
+
+EOT;
+        DB::statement($sql);
+
+       
+        
 
     }
 
