@@ -236,18 +236,18 @@
 				}
 
 				if ($orderline->packquantity != 0){
-					$quantity .= $orderline->packquantity . "x" . $orderline->unitperpack . " ";
+					$packname = ($unitnames[$orderline->catid][1] !== "")? ' '.$unitnames[$orderline->catid][1]:'x'.$orderline->unitperpack;
+
+					$quantity .= $orderline->packquantity . $packname . " ";
 					$price .= bcdiv($orderline->salepricepack, 1, 2) . " ";
 				}
 
 
 				if ($orderline->boxquantity != 0){
-					if (stristr($orderline->category,'cigaret')){
-						$quantity .= $orderline->boxquantity . "សុង" ;
-					}else{
-						$quantity .= $orderline->boxquantity . "កេស" ;
-					}
-					//$quantity .= $orderline->boxquantity . "x" . $orderline->unitperbox . " ";
+
+					$boxname = ($unitnames[$orderline->catid][2] !== "")? ' '.$unitnames[$orderline->catid][2]:'x'.$orderline->unitperbox;
+
+					$quantity .= $orderline->boxquantity . $boxname . " ";
 					$price .= bcdiv($orderline->salepricebox, 1, 2) . " ";
 				}
 

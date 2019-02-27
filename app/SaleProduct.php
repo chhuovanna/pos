@@ -98,6 +98,7 @@ select saleid
     , boxquantity
     , subtotal
     , c.name as category
+    , c.catid as catid
 from saleproducts sp join products p join categories c
     on sp.pid = p.pid and p.catid = c.catid
 where saleid = $saleid;

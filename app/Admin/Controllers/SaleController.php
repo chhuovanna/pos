@@ -669,6 +669,7 @@ SCRIPT;
                         'sale'         => $sale
                         ,'orderlines'   => $orderlines
                         ,'user'         => Admin::user()->name
+                        ,'unitnames'    => Category::getAssociateArray()
                     ]);
         //}
 
@@ -687,6 +688,7 @@ SCRIPT;
                     'sale'         => $sale
                     ,'orderlines'   => $orderlines
                     ,'user'         => Admin::user()->name
+                    ,'unitnames'    => Category::getAssociateArray()
                 ]);
 
         //}

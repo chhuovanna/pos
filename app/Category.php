@@ -27,7 +27,7 @@ class Category extends Model
         }
         return $result;
     }
-
+ 
     public static function getList(){
         $sql = <<<EOT
 select c.catid
@@ -44,5 +44,49 @@ EOT;
         
         return DB::select($sql);
     }
-}
 
+    public static function getAssociateArray(){
+        $sql = <<<EOT
+select c.catid
+    , name
+    , COALESCE(packname,"") as packname
+    , COALESCE(boxname,"") as boxname
+from categories c 
+    left join categoryunitname cun
+    on c.catid = cun.catid;
+
+EOT;
+
+        $res = DB::select($sql);
+        $assores = array();
+        foreach ($res as $category) {
+            $catid = $category->catid;
+            $assores[$catid] = array($category->name, $category->packname, $category->boxname);
+        }
+        return $assores;
+    }
+
+   public static function saveunitname($input){
+        
+        DB::transaction(function () use ($input){
+            $catids = Category::select('catid')->get();
+           // print_r($input);
+            foreach ($catids as $catid) {
+
+                $id = $catid->catid;
+                $packnamekey = $id.'_packname';
+                $boxnamekey = $id.'_boxname';
+
+                DB::statement('insert into categoryunitname values(?,?,?) ON DUPLICATE KEY UPDATE  packname = ?, boxname = ? '
+                    , [$id
+                    , $input[$packnamekey]
+                    , $input[$boxnamekey]
+                    , $input[$packnamekey]
+                    , $input[$boxnamekey]]);
+            }
+        });
+
+        DB::commit();
+ 
+    }
+}

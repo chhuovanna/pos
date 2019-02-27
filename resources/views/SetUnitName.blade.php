@@ -54,8 +54,8 @@ th, td {
 
             <tr>
                 <td>{{$category->catid}} {{$category->name}}</td>
-                <td><input id='{{$category->catid}}_packname' name='{{$category->catid}}_packname' class='packname' value='' style='width: 200px; background-color:#def9fc' value='{{$category->packname}}' ></td>
-                <td><input id='{{$category->catid}}_boxname' name='{{$category->catid}}_boxname' class='boxname' value='' style='width: 200px; background-color:#def9fc' value='{{$category->boxname}}' ></td>
+                <td><input id='{{$category->catid}}_packname' name='{{$category->catid}}_packname' class='packname'  style='width: 200px; background-color:#def9fc' value='{{$category->packname}}' ></td>
+                <td><input id='{{$category->catid}}_boxname' name='{{$category->catid}}_boxname' class='boxname'  style='width: 200px; background-color:#def9fc' value='{{$category->boxname}}' ></td>
             </tr>
         @endforeach
             
@@ -71,6 +71,15 @@ th, td {
    
 </div>
 <script type="text/javascript">
+
+    $(document).ready(function(){
+        var url = new URL(window.location.href);
+        var save = url.searchParams.get("save")
+        
+        if (save == 'success'){
+            toastr.success('Save Success');
+        }
+    });
 
     $('#savesubmit').off('click');
     $('#savesubmit').on('click', function (){

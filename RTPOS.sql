@@ -519,6 +519,6 @@ select
 #create table for unit based on category
 create table categoryunitname (catid int primary key, packname varchar(100), boxname varchar(100)
 	, foreign key (catid) references categories(catid));
-
+ 
 
 

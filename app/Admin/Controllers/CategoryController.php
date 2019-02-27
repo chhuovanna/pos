@@ -136,7 +136,9 @@ script;
 
     public function setunitnamesave(Request $request){
         $input = $request->all();
-        print_r($input);
+        Category::saveunitname($input);
+        $url = strtok(url()->previous(), '?')."?save=success";
+        return redirect($url);   
         
     }
 }
