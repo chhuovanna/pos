@@ -99,7 +99,8 @@ class CategoryController extends Controller
 $(document).ready(function(){
 
     
-    $('.form-inline').parent().append('<div class="btn-group pull-right" style="margin-right: 10px"><a href="category/setunitname/" class="btn btn-sm btn-twitter" style="magin-right:20px">&nbsp;Set Unit Name</a></div>');
+    $('.form-inline').parent().append('<a href="category/setunitname/" class="btn btn-sm btn-twitter" style="magin-right:20px">&nbsp;Set Unit Name</a>');
+    $('.form-inline').parent().append('&nbsp;&nbsp;&nbsp;&nbsp;');
 });
 
 script;

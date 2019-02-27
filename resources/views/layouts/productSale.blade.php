@@ -185,7 +185,7 @@
                             <span class="input-group-addon">$</span>
                             <input style="width: 220px" type="number"   id="ftotald" name="ftotald" value="0" class="form-control ftotald" placeholder="Amount to Be Paid in USD" readonly="readonly" />
                             <span class="input-group-addon">៛</span>
-                            <input style="width: 220px" type="number"   id="ftotalr" name="ftotalr" value="0" class="form-control ftotalr" placeholder="Amount to Be Paid in Riel" readonly="readonly" />
+                            <input style="width: 220px"  id="ftotalr" name="ftotalr" value="0" class="form-control ftotalr" placeholder="Amount to Be Paid in Riel" readonly="readonly" />
 
                          </div>
                     </div>
@@ -327,6 +327,7 @@
         var discount = $('#discount').val();
         var discountamount;
         var subtotal= new Decimal(0);
+        var ftotalr ;
 
 
         initiateNumber(pid + 'up');
@@ -366,7 +367,9 @@
 
 
         $('#ftotald').val(totald.sub(discountamount));
-        $('#ftotalr').val(Math.ceil(totald.sub(discountamount).mul(exchangerate)));
+        ftotalr = Number(Math.ceil(totald.sub(discountamount).mul(exchangerate)));
+        //alert(ftotalr.toLocaleString('en-US').replace(',', ' ') );
+        $('#ftotalr').val(ftotalr.toLocaleString('en-US').replace(',', ' '));
         getChange();
 
     }
@@ -387,6 +390,7 @@
         var discountamount;
         var discountr;
         var ftotald;
+        var ftotalr;
 
         switch (inputid){
             case 'discount':
@@ -415,7 +419,9 @@
 
         ftotald = new Decimal(totald.sub(discountamount));
         $('#ftotald').val(ftotald);
-        $('#ftotalr').val(Math.ceil(ftotald.mul(exchangerate)));
+
+        ftotalr = Number(Math.ceil(ftotald.mul(exchangerate)));
+        $('#ftotalr').val(ftotalr.toLocaleString('en-US').replace(',', ' '));
 
         getChange();    
     }
@@ -584,11 +590,11 @@
 
 
         var stocku  = parseInt($('#'+pid+'su').val());
-        var stockp  = parseInt($('#'+pid+'sp').val());
-        var stockb  = parseInt($('#'+pid+'sb').val());
+        var stockp  = Number($('#'+pid+'sp').val());
+        var stockb  = Number($('#'+pid+'sb').val());
         var qu      = parseInt($('#'+pid+'qu').val());
-        var qp      = parseInt($('#'+pid+'qp').val());
-        var qb      = parseInt($('#'+pid+'qb').val());
+        var qp      = Number($('#'+pid+'qp').val());
+        var qb      = Number($('#'+pid+'qb').val());
         var upp     = parseInt($('#'+pid+'upp').val());
         var upb     = parseInt($('#'+pid+'upb').val());
         var uinstock    = stocku + stockp*upp + stockb*upb;

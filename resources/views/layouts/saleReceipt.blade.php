@@ -238,6 +238,10 @@
 				if ($orderline->packquantity != 0){
 					$packname = ($unitnames[$orderline->catid][1] !== "")? ' '.$unitnames[$orderline->catid][1]:'x'.$orderline->unitperpack;
 
+					if ($orderline->packquantity == (int) $orderline->packquantity){
+						$orderline->packquantity = (int) $orderline->packquantity;
+					}
+
 					$quantity .= $orderline->packquantity . $packname . " ";
 					$price .= bcdiv($orderline->salepricepack, 1, 2) . " ";
 				}
@@ -246,6 +250,11 @@
 				if ($orderline->boxquantity != 0){
 
 					$boxname = ($unitnames[$orderline->catid][2] !== "")? ' '.$unitnames[$orderline->catid][2]:'x'.$orderline->unitperbox;
+
+
+					if (($orderline->boxquantity == (int) $orderline->boxquantity)){
+						$orderline->boxquantity = (int) $orderline->boxquantity;
+					}
 
 					$quantity .= $orderline->boxquantity . $boxname . " ";
 					$price .= bcdiv($orderline->salepricebox, 1, 2) . " ";

@@ -376,6 +376,7 @@ $(document).ready(function(){
     $("[name='impid']").select2({ width: '170px' });
     
     $('.form-inline').parent().append('<a  href="javascript:void(0);" id="print" class="btn btn-sm btn-twitter" ><i class="fa fa-print"></i>&nbsp;&nbsp;Print</a>');
+    $('.form-inline').parent().append('&nbsp;&nbsp;&nbsp;&nbsp;');
     $('#print').click(function(){
         var pid = $('[name="pid"]').val();
         var keyword = $('[placeholder="Keyword"]').val();

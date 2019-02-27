@@ -520,5 +520,9 @@ select
 create table categoryunitname (catid int primary key, packname varchar(100), boxname varchar(100)
 	, foreign key (catid) references categories(catid));
  
+ use mnpos1;
+ #change pack and box instock to decimal
+ alter table products modify packinstock decimal(5,1)
+	, modify boxinstock decimal(5,1);
 
 
