@@ -76,13 +76,9 @@ EOT;
                 $id = $catid->catid;
                 $packnamekey = $id.'_packname';
                 $boxnamekey = $id.'_boxname';
+                $sql = 'insert into categoryunitname values('.$id. ',"'.$input[$packnamekey].'","'.$input[$boxnamekey].'") ON DUPLICATE KEY UPDATE  packname = "'.$input[$packnamekey].'", boxname = "'.$input[$boxnamekey].'"  ';
 
-                DB::statement('insert into categoryunitname values(?,?,?) ON DUPLICATE KEY UPDATE  packname = ?, boxname = ? '
-                    , [$id
-                    , $input[$packnamekey]
-                    , $input[$boxnamekey]
-                    , $input[$packnamekey]
-                    , $input[$boxnamekey]]);
+                DB::statement($sql);
             }
         });
 
