@@ -41,7 +41,7 @@
 			/*font-weight: bold;*/
 		}
 		.table-contact{
-			font-size: 13px;
+			font-size: 12px;
 			text-align: center;
 			width: 100%;
 
@@ -129,19 +129,43 @@
 			padding-right: 3px;
 			border-right: solid 1px black;
 			border-top: solid 1px black;
-			width: 70%;
+			width: 65%;
 
 		}
 		.td-currencyr{
 			text-align: right;
 			padding-right: 3px;
 			border: solid 1px black;
+			width: 20%;
+		}
+		.td-currencyr-and{
+			text-align: right;
+			padding-right: 3px;
+			border: solid 1px black;
+			border-right: none;
+			width: 20%;
+		}
+
+		.table-sign{
+			font-size: 13px;
+			width: 100%;
+			position: static;
+			bottom: 0px;
+			margin-bottom: 10px
+		}
+		.td-buyer{
+			text-align: left;
+			padding-left: 50px;
+		}
+		.td-seller{
+			text-align: right;
 			width: 15%;
 		}
 		.td-currencyd{
 			text-align: right;
 			padding-right: 3px;
 			border: solid 1px black;
+			border-left: none;
 			width: 15%;
 		}
 
@@ -317,7 +341,7 @@
 				<p>{{ number_format($sale->totalr,0,'.',' ') }}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p>ឬ&nbsp;&nbsp;&nbsp;{{ bcdiv($sale->total, 1, 2) }}$</p>
+				<p>{{ bcdiv($sale->total, 1, 2) }}$</p>
 			</td>
 			
 		</tr>		
@@ -330,7 +354,7 @@
 				<p>{{ number_format($sale->discountr,0,'.', ' ') }}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p>ឬ&nbsp;&nbsp;&nbsp; {{bcdiv( $sale->discountd,1, 2) }}$ </p>
+				<p>{{bcdiv( $sale->discountd,1, 2) }}$ </p>
 			</td>
 		</tr>
 		@endif
@@ -344,7 +368,7 @@
 				<p>{{ number_format($sale->ftotalr,0, '.', ' ')}}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p>ឬ&nbsp;&nbsp;&nbsp; {{ bcdiv( $sale->ftotal, 1, 2) }}$</p>
+				<p>{{ bcdiv( $sale->ftotal, 1, 2) }}$</p>
 			</td>
 		</tr>
 
@@ -353,11 +377,11 @@
 			<td class="td-labelpayment">
 				<p>បង់រួចៈ</p>
 			</td>
-			<td class="td-currencyr">
+			<td class="td-currencyr-and">
 				<p> {{ number_format($sale->recievedr,0,'.',' ') }}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p> {{ bcdiv($sale->recievedd,1, 2) }}$ </p>
+				<p>និង{{bcdiv($sale->recievedd,1, 2)}}$</p>
 			</td>
 			
 		</tr>
@@ -372,25 +396,41 @@
 				<p>{{ number_format($sale->loanr,0,'.',' ') }}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p>ឬ&nbsp;&nbsp;&nbsp;{{ bcdiv( $sale->loand , 1, 2)}}$</p>
+				<p>{{ bcdiv( $sale->loand , 1, 2)}}$</p>
 			</td>
 			
 		</tr>		
 		@endif
 
-		@if($sale->changed > 0 || $sale->changer > 0)
+		@if(number_format($sale->changer,0 , '.',' ') > 0 
+			|| bcdiv($sale->changed, 1, 2) > 0)
 		<tr >
 			<td class="td-labelpayment">
 				<p>អាប់ៈ</p>
 			</td>
-			<td class="td-currencyd" colspan="2" style="width:30%">
-				<p> {{ number_format($sale->changer,0 , '.',' ') }}៛ និង&nbsp;&nbsp;&nbsp;{{ bcdiv($sale->changed, 1, 2) }}$ </p>
+			<td class="td-currencyr-and">
+				<p> {{ number_format($sale->changer,0 , '.',' ') }}៛ </p>
+			</td>
+			<td class="td-currencyd">
+				<p>និង{{bcdiv($sale->changed, 1, 2)}}$ </p>
+			</td>
+		</tr>
+		<tr>
+			<td class="td-labelpayment">
+				
+			</td>
+			<td class="td-currencyr">
 				@if ($sale->changer != $sale->changertotal)
-				<p> ឬ&nbsp;&nbsp;&nbsp;{{ number_format($sale->changertotal,0, '.', ' ') }}៛ </p>
+				<p> ឬ&nbsp;{{ number_format($sale->changertotal,0, '.', ' ') }}៛ </p>
 				@endif
 			</td>
-			
+			<td class="td-currencyd"></td>
 		</tr>
+
+			
+
+			
+		
 		@endif
 
 	</table>

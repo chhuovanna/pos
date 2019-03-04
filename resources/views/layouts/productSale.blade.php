@@ -369,7 +369,7 @@
         $('#ftotald').val(totald.sub(discountamount));
         ftotalr = Number(Math.ceil(totald.sub(discountamount).mul(exchangerate)));
         //alert(ftotalr.toLocaleString('en-US').replace(',', ' ') );
-        $('#ftotalr').val(ftotalr.toLocaleString('en-US').replace(',', ' '));
+        $('#ftotalr').val(ftotalr.toLocaleString('en-US').replace(new RegExp(',', 'g'), ' '));
         getChange();
 
     }
@@ -421,7 +421,7 @@
         $('#ftotald').val(ftotald);
 
         ftotalr = Number(Math.ceil(ftotald.mul(exchangerate)));
-        $('#ftotalr').val(ftotalr.toLocaleString('en-US').replace(',', ' '));
+        $('#ftotalr').val(ftotalr.toLocaleString('en-US').replace(new RegExp(',', 'g'), ' '));
 
         getChange();    
     }
