@@ -26,22 +26,22 @@
 		}
 
 		.shop-name { 
-			font-size: 14px;
+			font-size: 16px;
 			text-align: center;
 			/*font-weight: bold;*/
 		}
 		.shop-des { 
-			font-size: 12px;
+			font-size: 14px;
 			text-align: center;
 			/*font-weight: bold;*/
 		}
 		.receipt{
-			font-size: 12px;
+			font-size: 13px;
 			text-align: center;
 			/*font-weight: bold;*/
 		}
 		.table-contact{
-			font-size: 12px;
+			font-size: 13px;
 			text-align: center;
 			width: 100%;
 
@@ -62,7 +62,7 @@
 		}
 
 		.table-orderline{
-			font-size: 12px;
+			font-size: 13px;
 			width: 100%;
 		}
 		.td-num{
@@ -96,7 +96,7 @@
 
 
 		.table-payment {
-			font-size: 12px;
+			font-size: 13px;
 			width: 100%;
 		}
 
@@ -146,7 +146,7 @@
 		}
 
 		.table-sign{
-			font-size: 12px;
+			font-size: 13px;
 			width: 100%;
 			position: static;
 			bottom: 0px;
@@ -230,34 +230,51 @@
 				$price = "";
 				$i ++;
 
-				if ($orderline->unitquantity != 0){
-					$quantity .= $orderline->unitquantity . " ";
-					$price .= bcdiv($orderline->salepriceunit ,1,2). " ";
-				}
+				if ( ($orderline->unitquantity != 0 && $orderline->packquantity != 0)
+					|| ($orderline->unitquantity != 0 && $orderline->boxquantity != 0)
+					|| ($orderline->boxquantity != 0 && $orderline->packquantity != 0)
+				){
+					$quantity = $orderline->unitquantity 
+						+ ($orderline->packquantity*$orderline->unitperpack)
+						+ ($orderline->boxquantity*$orderline->unitperbox)
+						;
+					$price = bcdiv($orderline->subtotal,$quantity,4);
+				}else{
+					if ($orderline->unitquantity != 0){
+						$quantity = $orderline->unitquantity;
+						$price = bcdiv($orderline->salepriceunit ,1,2);
+					}elseif ($orderline->packquantity != 0){
+						if ($orderline->packquantity == (int) $orderline->packquantity){
+							$orderline->packquantity = (int) $orderline->packquantity;
+						}
 
-				if ($orderline->packquantity != 0){
-					$packname = ($unitnames[$orderline->catid][1] !== "")? ' '.$unitnames[$orderline->catid][1]:'x'.$orderline->unitperpack;
+						if ($unitnames[$orderline->catid][1] !== ""){
+							if ($unitnames[$orderline->catid][1] == "កន្លះឡូ" && $orderline->packquantity == 1){
+								$quantity = $unitnames[$orderline->catid][1];
+							}else{
+								$quantity = $orderline->packquantity. " " .$unitnames[$orderline->catid][1];
+							}
+							$price = bcdiv($orderline->salepricepack, 1, 2);
+						}else{
+							$orderline->unitperpack = (int) $orderline->unitperpack;
+							$quantity = $orderline->packquantity*$orderline->unitperpack;
+							$price = bcdiv($orderline->subtotal, $quantity, 4);
+						}
 
-					if ($orderline->packquantity == (int) $orderline->packquantity){
-						$orderline->packquantity = (int) $orderline->packquantity;
+					}elseif ($orderline->boxquantity != 0){
+						if ($orderline->boxquantity == (int) $orderline->boxquantity){
+							$orderline->boxquantity = (int) $orderline->boxquantity;
+						}
+
+						if ($unitnames[$orderline->catid][2] !== ""){
+							$quantity = $orderline->boxquantity. " " .$unitnames[$orderline->catid][2];
+							$price = bcdiv($orderline->salepricebox, 1, 2);
+						}else{
+							$orderline->unitperbox = (int) $orderline->unitperbox;
+							$quantity = $orderline->boxquantity*$orderline->unitperbox;
+							$price = bcdiv($orderline->subtotal, $quantity, 4);
+						}
 					}
-
-					$quantity .= $orderline->packquantity . $packname . " ";
-					$price .= bcdiv($orderline->salepricepack, 1, 2) . " ";
-				}
-
-
-				if ($orderline->boxquantity != 0){
-
-					$boxname = ($unitnames[$orderline->catid][2] !== "")? ' '.$unitnames[$orderline->catid][2]:'x'.$orderline->unitperbox;
-
-
-					if (($orderline->boxquantity == (int) $orderline->boxquantity)){
-						$orderline->boxquantity = (int) $orderline->boxquantity;
-					}
-
-					$quantity .= $orderline->boxquantity . $boxname . " ";
-					$price .= bcdiv($orderline->salepricebox, 1, 2) . " ";
 				}
 
 				
@@ -283,10 +300,15 @@
 		</tr>
 
 		@endforeach
+		<tr ><td style="border-bottom: solid 1px black" colspan="5" style="width:100%"></td></tr>
 
 	</table>
 	<table class='table-payment' >
 				
+
+
+		
+		@if ($sale->discountd>0)
 		<tr >
 			<td class="td-labeltotal">
 				<p>សរុប:</p>
@@ -295,13 +317,10 @@
 				<p>{{ number_format($sale->totalr,0,'.',' ') }}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p>{{ bcdiv($sale->total, 1, 2) }}$</p>
+				<p>ឬ&nbsp;&nbsp;&nbsp;{{ bcdiv($sale->total, 1, 2) }}$</p>
 			</td>
 			
-		</tr>
-
-		</tr>
-		@if ($sale->discountd>0)
+		</tr>		
 		<tr >
 			<td class="td-labelpayment">
 				<p>បញ្ចុះតំលៃៈ</p>
@@ -311,7 +330,7 @@
 				<p>{{ number_format($sale->discountr,0,'.', ' ') }}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p> {{bcdiv( $sale->discountd,1, 2) }}$ </p>
+				<p>ឬ&nbsp;&nbsp;&nbsp; {{bcdiv( $sale->discountd,1, 2) }}$ </p>
 			</td>
 		</tr>
 		@endif
@@ -325,10 +344,11 @@
 				<p>{{ number_format($sale->ftotalr,0, '.', ' ')}}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p> {{ bcdiv( $sale->ftotal, 1, 2) }}$</p>
+				<p>ឬ&nbsp;&nbsp;&nbsp; {{ bcdiv( $sale->ftotal, 1, 2) }}$</p>
 			</td>
 		</tr>
 
+		@if($sale->recievedr != 0 || $sale->recievedd != 0)
 		<tr >
 			<td class="td-labelpayment">
 				<p>បង់រួចៈ</p>
@@ -340,7 +360,8 @@
 				<p> {{ bcdiv($sale->recievedd,1, 2) }}$ </p>
 			</td>
 			
-		</tr>		
+		</tr>
+		@endif		
 
 		@if($sale->loand>0)
 		<tr >
@@ -351,41 +372,26 @@
 				<p>{{ number_format($sale->loanr,0,'.',' ') }}៛</p>
 			</td>
 			<td class="td-currencyd">
-				<p>{{ bcdiv( $sale->loand , 1, 2)}}$</p>
+				<p>ឬ&nbsp;&nbsp;&nbsp;{{ bcdiv( $sale->loand , 1, 2)}}$</p>
 			</td>
 			
 		</tr>		
 		@endif
 
-		@if($sale->changed > 0)
+		@if($sale->changed > 0 || $sale->changer > 0)
 		<tr >
 			<td class="td-labelpayment">
 				<p>អាប់ៈ</p>
 			</td>
-			<td class="td-currencyr">
-				<p> {{ number_format($sale->changer,0 , '.',' ') }}៛ </p>
-			</td>
-			<td class="td-currencyd">
-				<p> {{ bcdiv($sale->changed, 1, 2) }}$ </p>
+			<td class="td-currencyd" colspan="2" style="width:30%">
+				<p> {{ number_format($sale->changer,0 , '.',' ') }}៛ និង&nbsp;&nbsp;&nbsp;{{ bcdiv($sale->changed, 1, 2) }}$ </p>
+				@if ($sale->changer != $sale->changertotal)
+				<p> ឬ&nbsp;&nbsp;&nbsp;{{ number_format($sale->changertotal,0, '.', ' ') }}៛ </p>
+				@endif
 			</td>
 			
 		</tr>
 		@endif
-
-		@if($sale->changertotal>0)
-		<tr >
-			<td class="td-labelpayment">
-				<p>អាប់ៈ</p>
-			</td>
-			<td class="td-currencyr">
-				<p> {{ number_format($sale->changertotal,0, '.', ' ') }}៛ </p>
-			</td>
-			<td class="td-currencyd">
-				<p> </p>
-			</td>
-			
-		</tr>	
-		@endif	
 
 	</table>
 
