@@ -447,7 +447,7 @@ script;
             $form->text('importpriceunit','Import Pice Per Unit')->rules('required')->attribute($style1)->value(0);
             $form->text('ipur','In Riel')->readOnly()->attribute($style);
 
-            $form->text('boxinstock','Import Boxs (Optional)')->attribute($attribute1);
+            $form->text('boxinstock','Box In Stock (Optional)')->attribute($attribute1);
 
             
 
