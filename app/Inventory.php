@@ -184,6 +184,8 @@ EOT;
     }
 
     public static function quickAdd($input){
+
+   
         
         $importedprices = Inventory::where('pid', '=' , $input['pid'])->orderBy('invid','DESC')->first();
 

@@ -8,6 +8,7 @@ use App\Manufacturer;
 use App\Exchangerate;
 use App\StockReminder;
 use App\Importer;
+use App\Inventory;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -427,14 +428,17 @@ script;
             $form->textarea('description', 'Description');
 
             $attribute = array('pattern'=>'[0-9]+', "autocomplete"=>"off", "style"=>"width: 200px");            
+            $attribute1 = array('pattern'=>'[0-9]+', "autocomplete"=>"off", "style"=>"width: 200px;background-color:#f2cff7");            
             $style = ["style"=>"width:115px"];
             $style1 = ["style"=>"width:115px; background-color:#def9fc"];
             $style2 = ["style"=>"width:115px; background-color:#b6d0f9"];
+
             
             $form->text('exchangerate','Exchange Rate')->readOnly()->attribute($style)->value($exchangerate->amount);
             
-            $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute)->value(0);
             $form->text('unitperbox','Number of Units Per Box')->rules('required')->attribute($attribute)->value(0);
+            $form->text('unitperpack','Number of Units Per Pack')->rules('required')->attribute($attribute)->value(0);
+            
 
             $form->text('importpricebox','Import Pice Per Box')->rules('required')->attribute($style1)->value(0);
             $form->text('ipbr','In Riel')->readOnly()->attribute($style);
@@ -442,6 +446,9 @@ script;
             $form->text('ippr','In Riel')->readOnly()->attribute($style);
             $form->text('importpriceunit','Import Pice Per Unit')->rules('required')->attribute($style1)->value(0);
             $form->text('ipur','In Riel')->readOnly()->attribute($style);
+
+            $form->text('boxinstock','Import Boxs (Optional)')->attribute($attribute1);
+
             
 
 
@@ -459,8 +466,18 @@ script;
             $manufacturers = Manufacturer::pluck('name','mid');
             $form->select('mid', 'Product Manufacturer')->options($manufacturers)->value(-1);
 
+            //$form->ignore('importbox');
+
 
             Admin::script($script);
+
+            $form->saved(function (Form $form) {
+                if($form->model()->boxinstock > 0){
+                    $input =  ['pid'=>$form->model()->pid, 'box' =>$form->model()->boxinstock];
+                    Inventory::quickAdd($input);
+                }
+
+            });
 
         });
     }
@@ -534,6 +551,14 @@ SCRIPT;
 public function update($id)
     {
         return $this->formEdit()->update($id);
+    }
+
+
+public function store()
+    {
+
+        
+        return $this->form()->store();
     }
 
 public function printStockReminder(Request $request){
