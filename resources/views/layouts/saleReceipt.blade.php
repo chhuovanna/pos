@@ -387,7 +387,7 @@
 		</tr>
 		@endif		
 
-		@if($sale->loand>0)
+		@if($sale->loand > 0 && $sale->loanstate == 0)
 		<tr >
 			<td class="td-labelpayment">
 				<p>នៅសល់ៈ</p>

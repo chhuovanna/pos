@@ -437,6 +437,7 @@ select name
     , recievedd
     , recievedr
     , l.amount as loand
+    , l.state as loanstate
     , cast( l.amount * exchangerate as Decimal(10))as loanr
     , 0 as changed 
     , 0 as changer
@@ -446,7 +447,7 @@ from ( sales s join customers c
         on  s.cusid = c.cusid) 
         left join loan l
         on s.saleid = l.saleid
-where s.saleid = $saleid;
+where s.saleid = $saleid ;
 EOT;
         $sale = DB::select($sql);
 
