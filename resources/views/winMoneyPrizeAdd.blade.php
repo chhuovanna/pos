@@ -302,7 +302,7 @@
                 $('#unit_' + id).attr('disabled', 'disabled');
                 $('#paysubtotal_' + id).attr('disabled', 'disabled');
                 $('#winsubtotal_' + id).attr('disabled', 'disabled');
-            }else{
+            }/*else{
                 //remove the same product
                 for (j = 0 ; j< selectlist.length ;j++){
                     if ( i != j &&  (  $(selectlist[i]).val() == $(selectlist[j]).val() ) 
@@ -319,7 +319,7 @@
                         break;
                     } 
                 }
-            }
+            }*/
         }
     
     });

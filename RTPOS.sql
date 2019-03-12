@@ -525,5 +525,9 @@ use rtpos;
  alter table products modify packinstock decimal(5,1)
 	, modify boxinstock decimal(5,1);
 
+use rtpos;
+use mnpos1;
+#different prize
+alter table winmoneyprizeproduct drop primary key , add primary key (wmpid, pid, winamount);
 
 
